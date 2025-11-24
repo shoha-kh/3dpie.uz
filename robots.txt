@@ -1,0 +1,31 @@
+# https://www.robotstxt.org/robotstxt.html
+
+# Для всех поисковых роботов
+User-agent: *
+Allow: /
+
+# Запрещаем индексацию служебных файлов
+Disallow: /admin/
+Disallow: /private/
+
+# Карта сайта
+Sitemap: https://3dpie.uz/sitemap.xml
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Clean-param: utm_source&utm_medium&utm_campaign
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Оптимальная задержка между запросами
+Crawl-delay: 0
+
+# Host - основное зеркало сайта
+Host: https://3dpie.uz
