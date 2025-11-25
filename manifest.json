@@ -1,7 +1,7 @@
 {
-  "name": "3DPie - Студия 3D-печати",
+  "name": "3DPie - Студия 3D-печати | 3D-chop etish studiyasi",
   "short_name": "3DPie",
-  "description": "Профессиональная 3D-печать пластиковых изделий на заказ в Узбекистане",
+  "description": "Профессиональная 3D-печать пластиковых изделий на заказ в Узбекистане | O'zbekistonda buyurtma asosida plastik mahsulotlarni professional 3D-chop etish",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -21,6 +21,7 @@
       "purpose": "any maskable"
     }
   ],
-  "lang": "ru",
-  "categories": ["business", "manufacturing", "technology"]
+  "lang": "ru-UZ",
+  "dir": "ltr",
+  "categories": ["business", "manufacturing", "technology", "3d-printing"]
 }
