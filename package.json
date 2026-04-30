@@ -1,0 +1,14 @@
+{
+  "name": "3dpie-uz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "3DPie.uz — landing page (static HTML/CSS/JS). Build script generates gallery from data/gallery.json.",
+  "scripts": {
+    "build:gallery": "node scripts/build-gallery.js",
+    "build": "npm run build:gallery",
+    "prepush": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -2,8 +2,10 @@
   'use strict';
 
   const state = {
-    items: [],      // array of {type:'images'|'video', title, description, medias:[{type:'image'|'video', src}]}
-    current: { cardIndex: 0, mediaIndex: 0 }
+    items: [],      // array of {type:'images'|'video', title, description, medias:[{type:'image'|'video', src, poster?}]}
+    current: { cardIndex: 0, mediaIndex: 0 },
+    // Remembers playback position per "cardIndex:mediaIndex" so video resumes after navigating away
+    videoTimes: {}
   };
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -20,13 +22,20 @@
       const type = card.dataset.type; // images | video
       const title = card.querySelector('.work-meta h3')?.textContent?.trim() || '';
       const description = card.querySelector('.work-meta p')?.textContent?.trim() || '';
-        const medias = Array.from(card.querySelectorAll('.work-media')).map(a => ({
-          type: a.dataset.type || 'image',
-          src: a.getAttribute('href'),
-          caption: a.dataset.caption || ''
-        }));
+      const longDescEl = card.querySelector('.work-long-desc');
+      const longDescription = longDescEl ? longDescEl.innerHTML.trim() : '';
+      // Try to find a poster from the inline thumbnail video (set by server-side render)
+      const thumbVideo = card.querySelector('video.work-video');
+      const thumbPoster = thumbVideo?.getAttribute('poster') || '';
+      const medias = Array.from(card.querySelectorAll('.work-media')).map(a => ({
+        type: a.dataset.type || 'image',
+        src: a.getAttribute('href'),
+        caption: a.dataset.caption || '',
+        // Use the card's poster as a fallback for video thumbnails
+        poster: a.dataset.poster || (a.dataset.type === 'video' ? thumbPoster : '')
+      }));
 
-      state.items.push({ type, title, description, medias, el: card });
+      state.items.push({ type, title, description, longDescription, medias, el: card });
 
       // Hover autoplay for videos (thumbnail)
       if(type === 'video'){
@@ -63,12 +72,13 @@
         <button class="work-modal__nav work-modal__prev" aria-label="Предыдущий">❮</button>
         <button class="work-modal__nav work-modal__next" aria-label="Следующий">❯</button>
         <div class="work-modal__media"></div>
+        <div class="work-thumbs" hidden></div>
         <div class="work-modal__caption">
           <div class="work-modal__title"></div>
           <div class="work-modal__counter"></div>
           <div class="work-modal__desc" hidden></div>
+          <div class="work-modal__long-desc" hidden></div>
         </div>
-        <div class="work-thumbs" hidden></div>
       </div>`;
 
     document.body.appendChild(modal);
@@ -96,6 +106,7 @@
     const titleEl = modal.querySelector('.work-modal__title');
   const counterEl = modal.querySelector('.work-modal__counter');
   const descEl = modal.querySelector('.work-modal__desc');
+  const longDescEl = modal.querySelector('.work-modal__long-desc');
     const thumbsEl = modal.querySelector('.work-thumbs');
 
     state.current.cardIndex = cardIndex;
@@ -119,15 +130,35 @@
       descEl.textContent = '';
     }
 
-    // Thumbs for multiple images
-    if(item.type === 'images' && item.medias.length > 1){
+    // Long description (full text shown only inside the modal)
+    if(item.longDescription){
+      longDescEl.innerHTML = item.longDescription;
+      longDescEl.hidden = false;
+    } else {
+      longDescEl.hidden = true;
+      longDescEl.innerHTML = '';
+    }
+
+    // Thumbs for any card with multiple medias (images and/or video)
+    if(item.medias.length > 1){
       thumbsEl.hidden = false;
       thumbsEl.innerHTML = '';
       item.medias.forEach((m, i)=>{
         const b = document.createElement('button');
-        b.innerHTML = `<img src="${m.src}" alt="thumbnail ${i+1}">`;
+        b.type = 'button';
+        const thumbSrc = m.type === 'video' ? (m.poster || '') : m.src;
+        const isVideo = m.type === 'video';
+        b.innerHTML = `
+          <img src="${thumbSrc}" alt="thumbnail ${i+1}" loading="lazy">
+          ${isVideo ? '<span class="work-thumbs__play" aria-hidden="true">▶</span>' : ''}
+        `;
         if(i === state.current.mediaIndex) b.classList.add('active');
-        b.addEventListener('click', ()=>{ state.current.mediaIndex = i; openModal(cardIndex, i); });
+        b.addEventListener('click', ()=>{
+          if(state.current.mediaIndex === i) return;
+          rememberVideoTime();
+          state.current.mediaIndex = i;
+          reopen();
+        });
         thumbsEl.appendChild(b);
       });
     } else {
@@ -145,15 +176,32 @@
   function renderMedia(container, item, mediaIndex){
     container.innerHTML = '';
     const m = item.medias[mediaIndex] || item.medias[0] || { type: item.type, src: '' };
+    // Effective media type — prefer the one declared on the media itself, fall back to card type
+    const mediaType = m.type || item.type;
 
-    if(m.type === 'video' || item.type === 'video'){
+    if(mediaType === 'video'){
       const video = document.createElement('video');
       video.src = m.src || item.medias[0]?.src || '';
+      if(m.poster) video.poster = m.poster;
       video.controls = true;
       video.autoplay = true; // autoplay in modal
       video.muted = false; // allow audio in modal
       video.playsInline = true;
       video.style.background = '#000';
+
+      // Restore previous playback time, if any
+      const key = videoKey(state.current.cardIndex, mediaIndex);
+      const savedTime = state.videoTimes[key];
+      if(savedTime && isFinite(savedTime)){
+        video.addEventListener('loadedmetadata', () => {
+          try{ video.currentTime = savedTime; }catch(e){}
+        }, { once: true });
+      }
+      // Persist time periodically while playing
+      video.addEventListener('timeupdate', () => {
+        state.videoTimes[key] = video.currentTime;
+      });
+
       container.appendChild(video);
     } else {
       const img = document.createElement('img');
@@ -161,6 +209,21 @@
       img.alt = item.title || 'Изображение';
       container.appendChild(img);
     }
+  }
+
+  function videoKey(cardIndex, mediaIndex){
+    return cardIndex + ':' + mediaIndex;
+  }
+
+  // Pause currently playing video and persist its time before navigating away
+  function rememberVideoTime(){
+    const modal = document.querySelector('.work-modal');
+    if(!modal) return;
+    const v = modal.querySelector('video');
+    if(!v) return;
+    const key = videoKey(state.current.cardIndex, state.current.mediaIndex);
+    state.videoTimes[key] = v.currentTime;
+    try{ v.pause(); }catch(e){}
   }
 
   function closeModal(){
@@ -174,15 +237,17 @@
 
   function prev(){
     const item = state.items[state.current.cardIndex];
-    if(item.type === 'images' && item.medias.length > 1){
-      state.current.mediaIndex = Math.max(0, state.current.mediaIndex - 1);
+    if(item.medias.length > 1 && state.current.mediaIndex > 0){
+      rememberVideoTime();
+      state.current.mediaIndex -= 1;
       reopen();
     }
   }
   function next(){
     const item = state.items[state.current.cardIndex];
-    if(item.type === 'images' && item.medias.length > 1){
-      state.current.mediaIndex = Math.min(item.medias.length - 1, state.current.mediaIndex + 1);
+    if(item.medias.length > 1 && state.current.mediaIndex < item.medias.length - 1){
+      rememberVideoTime();
+      state.current.mediaIndex += 1;
       reopen();
     }
   }
@@ -228,7 +293,7 @@
     const prevBtn = modal.querySelector('.work-modal__prev');
     const nextBtn = modal.querySelector('.work-modal__next');
     const item = state.items[state.current.cardIndex];
-    const hasMultiple = item.type === 'images' && item.medias.length > 1;
+    const hasMultiple = item.medias.length > 1;
 
     prevBtn.style.display = hasMultiple && state.current.mediaIndex > 0 ? 'grid' : 'none';
     nextBtn.style.display = hasMultiple && state.current.mediaIndex < item.medias.length - 1 ? 'grid' : 'none';

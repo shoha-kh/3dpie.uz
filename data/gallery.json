@@ -1,0 +1,164 @@
+{
+  "$schema": "./gallery.schema.json",
+  "version": 1,
+  "updated": "2026-05-01",
+  "items": [
+    {
+      "id": "tweeter-mounts",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "./gallery/tweeter-mounts/tweeter-mounts-1.png",
+      "title": {
+        "ru": "Накладки для твитеров (пищалок)",
+        "uz": "Tweeter (pishalka) uchun nakladkalar"
+      },
+      "description": {
+        "ru": "Готовые накладки для установки твитеров — улучшаем автоакустику",
+        "uz": "Tweeter o'rnatish uchun tayyor nakladkalar — avtoakustikani yaxshilash"
+      },
+      "longDescription": {
+        "ru": "Накладки для установки твитеров (пищалок) — готовый продукт студии 3DPie. Изготовлены методом высококачественной 3D-печати. Улучшите акустику вашего автомобиля прямо сейчас!\n\nУслуги нашей студии 3D-печати:\nМы предлагаем не только готовые накладки для твитеров. Наша студия изготавливает любые пластиковые детали на заказ для любых автомобилей. Обращайтесь со своими чертежами или эскизами — для восстановления повреждённых элементов или реализации уникальных проектов.\n\nДля приобретения накладок или оформления заказа пишите нам прямо сейчас!",
+        "uz": "Tweeter (pishalka) o'rnatishga mo'ljallangan, yuqori sifatli 3D pechatda tayyorlangan maxsus nakladkalar. Avtomobilingizning akustikasini hoziroq yaxshilang!\n\nBizning 3D pechat studiyamiz xizmatlari:\nBiz faqat tayyor tweeter nakladkalari bilan cheklanib qolmaymiz. Studiyamizda har qanday avtomobil uchun istalgan plastik detalni buyurtma asosida ishlab chiqaramiz. Buzilgan qismlarni tiklash yoki noyob loyihalarni amalga oshirish uchun chizma yoki eskizlaringiz bilan murojaat qiling.\n\nNakladka sotib olish yoki buyurtma berish uchun hoziroq bizga yozing!"
+      },
+      "tags": ["твитер", "пищалки", "автоакустика", "tweeter", "pishalka", "avtoakustika", "автотюнинг"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts.mp4",
+          "poster": "./gallery/tweeter-mounts/tweeter-mounts-1.png",
+          "caption": {
+            "ru": "Накладки для твитеров — демонстрация",
+            "uz": "Tweeter nakladkalari — namoyish"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts-1.png",
+          "alt": {
+            "ru": "Накладки для установки твитеров — 3D-печать на заказ в Чирчике",
+            "uz": "Tweeter o'rnatish uchun nakladkalar — Chirchiqda buyurtma asosida 3D-chop etish"
+          },
+          "caption": {
+            "ru": "Готовая накладка — общий вид",
+            "uz": "Tayyor nakladka — umumiy ko'rinish"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts-2.png",
+          "alt": {
+            "ru": "Накладка для твитера — крупный план",
+            "uz": "Tweeter nakladkasi — yaqin plan"
+          },
+          "caption": {
+            "ru": "Накладка для твитера — крупный план",
+            "uz": "Tweeter nakladkasi — yaqin plan"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts-3.png",
+          "alt": {
+            "ru": "Установленная накладка для твитера в автомобиле",
+            "uz": "Avtomobilda o'rnatilgan tweeter nakladkasi"
+          },
+          "caption": {
+            "ru": "Накладка установлена в автомобиле",
+            "uz": "Nakladka avtomobilda o'rnatilgan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "socket-box-caps",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "",
+      "title": {
+        "ru": "Заглушки для подрозетников",
+        "uz": "Podrozetniklar uchun himoya qopqoqlari"
+      },
+      "description": {
+        "ru": "Защита подрозетников при ремонте — с кнопкой и без",
+        "uz": "Ta'mirlash vaqtida podrozetniklarni himoya qilish — tugmali va tugmasiz"
+      },
+      "longDescription": {
+        "ru": "Заглушки для подрозетников помогают сохранять монтажные коробки чистыми во время ремонта и малярных работ — пыль, шпаклёвка и краска не попадают внутрь. При этом они не мешают мастерам выполнять свою работу.\nУниверсальный дизайн: подходят практически для любых подрозетников.\nДоступны два варианта — с кнопкой и без кнопки.",
+        "uz": "Podrozetniklar uchun himoya qopqoqlari ta'mirlash va bo'yash ishlari paytida montaj qutilarini toza saqlashga yordam beradi — chang, shpaklyovka va bo'yoq ichkariga tushmaydi. Shu bilan birga, ustalarning ishiga xalaqit bermaydi.\nUniversal dizayn: deyarli barcha podrozetniklarga mos keladi.\nIkki xil turi mavjud — tugmali va tugmasiz."
+      },
+      "tags": ["подрозетник", "электрика", "ремонт", "podrozetnik", "elektrika", "ta'mirlash"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/socket-box-caps/socket-box-caps.mp4",
+          "caption": {
+            "ru": "Заглушки для подрозетников — демонстрация",
+            "uz": "Podrozetniklar uchun himoya qopqoqlari — namoyish"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lada-vesta-exhaust",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.jpg",
+      "title": {
+        "ru": "Декоративный выхлоп для Lada Vesta",
+        "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimi"
+      },
+      "description": {
+        "ru": "Процесс изготовления декоративного выхлопа для Lada Vesta",
+        "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimini tayyorlash jarayoni"
+      },
+      "tags": ["Lada Vesta", "выхлоп", "автотюнинг", "avtotuning", "chiqindi gaz"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust.mp4",
+          "poster": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.jpg",
+          "caption": {
+            "ru": "Процесс изготовления декоративного выхлопа для Lada Vesta",
+            "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimini tayyorlash jarayoni"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.jpg",
+          "alt": {
+            "ru": "Декоративный выхлоп для Lada Vesta — 3D-печать на заказ в Чирчике",
+            "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimi — Chirchiqda 3D-chop etish"
+          },
+          "caption": {
+            "ru": "Готовая деталь — этап 1",
+            "uz": "Tayyor qism — 1-bosqich"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-2.jpg",
+          "alt": {
+            "ru": "Декоративный выхлоп Lada Vesta — крупный план",
+            "uz": "Lada Vesta dekorativ chiqindi gaz — yaqin plan"
+          },
+          "caption": {
+            "ru": "Декоративный выхлоп — крупный план",
+            "uz": "Dekorativ chiqindi gaz — yaqin plan"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-3.jpg",
+          "alt": {
+            "ru": "Декоративный выхлоп Lada Vesta — установка",
+            "uz": "Lada Vesta dekorativ chiqindi gaz — o'rnatish"
+          },
+          "caption": {
+            "ru": "Декоративный выхлоп — установка",
+            "uz": "Dekorativ chiqindi gaz — o'rnatish"
+          }
+        }
+      ]
+    }
+  ]
+}
