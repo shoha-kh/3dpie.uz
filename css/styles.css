@@ -544,13 +544,30 @@ footer p {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  header {
+    padding: 12px 0;
+  }
+
   .nav-links {
     display: none;
   }
 
+  .logo {
+    gap: 6px;
+  }
+
+  .logo img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo span {
+    display: none;
+  }
+
   .header-phone {
-    font-size: 14px;
-    padding: 8px 12px;
+    font-size: 13px;
+    padding: 6px 10px;
   }
 
   .header-actions {
@@ -560,6 +577,10 @@ footer p {
   .lang-switcher .lang-btn {
     font-size: 12px;
     padding: 5px 9px;
+  }
+
+  .hero {
+    margin-top: 58px;
   }
 
   .hero h1 {
