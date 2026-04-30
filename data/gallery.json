@@ -52,7 +52,7 @@
       "id": "designer-lamps",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "",
+      "thumb": "./gallery/designer-lamps/designer-lamps-1.png",
       "title": {
         "ru": "Дизайнерские светильники",
         "uz": "Dizayner chiroqlar"
@@ -73,11 +73,144 @@
       "tags": ["светильник", "дизайнерский светильник", "лампа", "освещение", "интерьер", "оптом", "chiroq", "dizayner chiroq", "yoritish", "interyer", "ulgurji"],
       "medias": [
         {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-1.png",
+          "alt": {
+            "ru": "Дизайнерский светильник из 3D-печати в современном интерьере",
+            "uz": "3D-pechatdan dizayner chiroq zamonaviy interyerda"
+          },
+          "caption": {
+            "ru": "Дизайнерский светильник в современном интерьере",
+            "uz": "Zamonaviy interyerdagi dizayner chiroq"
+          }
+        },
+        {
           "type": "video",
           "src": "./gallery/designer-lamps/designer-lamps-3d-printing.mp4",
+          "poster": "./gallery/designer-lamps/designer-lamps-1.png",
           "caption": {
             "ru": "Дизайнерские светильники — обзор моделей",
             "uz": "Dizayner chiroqlar — modellar sharhi"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-sculptural-orange.png",
+          "alt": {
+            "ru": "Скульптурный светильник с тёплым оранжевым свечением",
+            "uz": "Iliq to'q sariq nurli skulptural chiroq"
+          },
+          "caption": {
+            "ru": "Скульптурный светильник с тёплым свечением",
+            "uz": "Iliq nurli skulptural chiroq"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.png",
+          "alt": {
+            "ru": "Текстурный плафон дизайнерского светильника — крупный план",
+            "uz": "Dizayner chiroq plafoni teksturasi — yaqin plan"
+          },
+          "caption": {
+            "ru": "Текстура плафона — крупный план",
+            "uz": "Plafon teksturasi — yaqin plan"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-desk-workspace.png",
+          "alt": {
+            "ru": "Настольный дизайнерский светильник для рабочего места",
+            "uz": "Ish joyi uchun stol dizayner chirog'i"
+          },
+          "caption": {
+            "ru": "Светильник для рабочего стола",
+            "uz": "Ish stoli uchun chiroq"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-swirling-shade.png",
+          "alt": {
+            "ru": "Светильник со спиральным текстурным плафоном",
+            "uz": "Spiralsimon teksturali plafonli chiroq"
+          },
+          "caption": {
+            "ru": "Спиральный плафон",
+            "uz": "Spiralsimon plafon"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-bedroom-sculptural.png",
+          "alt": {
+            "ru": "Скульптурный светильник в спальне — мягкое освещение",
+            "uz": "Yotoqxonadagi skulptural chiroq — yumshoq yoritish"
+          },
+          "caption": {
+            "ru": "Светильник для спальни",
+            "uz": "Yotoqxona uchun chiroq"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-twisted-ribbed.png",
+          "alt": {
+            "ru": "Светильник с витым ребристым плафоном",
+            "uz": "Buralgan qovurg'ali plafonli chiroq"
+          },
+          "caption": {
+            "ru": "Витой ребристый плафон",
+            "uz": "Buralgan qovurg'ali plafon"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-minimalist-textured.png",
+          "alt": {
+            "ru": "Минималистичный светильник с текстурным плафоном",
+            "uz": "Minimalistik teksturali plafonli chiroq"
+          },
+          "caption": {
+            "ru": "Минимализм и текстура",
+            "uz": "Minimalizm va tekstura"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-trio-minimalist.png",
+          "alt": {
+            "ru": "Три минималистичных дизайнерских светильника в ряд",
+            "uz": "Uchta minimalistik dizayner chiroq qatori"
+          },
+          "caption": {
+            "ru": "Серия минималистичных светильников",
+            "uz": "Minimalistik chiroqlar seriyasi"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-modern-rustic.png",
+          "alt": {
+            "ru": "Дизайнерский светильник в стиле модерн-рустик",
+            "uz": "Modern-rustik uslubidagi dizayner chiroq"
+          },
+          "caption": {
+            "ru": "Стиль модерн-рустик",
+            "uz": "Modern-rustik uslubi"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/designer-lamps/designer-lamps-trio-contemporary.png",
+          "alt": {
+            "ru": "Три современных светильника с витыми текстурными плафонами",
+            "uz": "Buralgan teksturali plafonli uchta zamonaviy chiroq"
+          },
+          "caption": {
+            "ru": "Серия современных светильников",
+            "uz": "Zamonaviy chiroqlar seriyasi"
           }
         }
       ]

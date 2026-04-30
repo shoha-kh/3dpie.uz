@@ -167,20 +167,29 @@ function buildProductSchema(item, lang) {
   const title = pickLang(item.title, lang);
   const description = pickLang(item.description, lang);
   const pageUrl = `${SITE_URL}${lang === 'uz' ? '/uz.html' : '/'}#work-${item.id}`;
-  const firstImage = (item.medias || []).find(m => m.type === 'image') || {};
-  const image = absoluteUrl(item.thumb || firstImage.src || (item.medias && item.medias[0] && item.medias[0].poster) || '');
+  // Try to find an image — first explicit thumb, then any image media, then any video poster
+  const medias = item.medias || [];
+  const firstImage = medias.find(m => m.type === 'image');
+  const firstPoster = medias.find(m => m.poster);
+  const imageRel = item.thumb || (firstImage && firstImage.src) || (firstPoster && firstPoster.poster) || '';
+  const image = imageRel ? absoluteUrl(imageRel) : '';
 
-  const product = {
-    '@type': 'Product',
+  const hasOffer = !!(item.price && item.price.current != null);
+
+  // Items without an offer are CreativeWork (Google does not require offers/review/aggregateRating).
+  // Priced items are full Product entries with Offer (image required by Google).
+  const node = {
+    '@type': hasOffer ? 'Product' : 'CreativeWork',
     'name': title,
     'description': description,
     'url': pageUrl,
     'brand': { '@type': 'Brand', 'name': '3DPie' }
   };
-  if (image) product.image = image;
 
-  if (item.price && item.price.current != null) {
-    product.offers = {
+  if (hasOffer) {
+    // Product requires an image — fall back to brand logo if portfolio image is missing.
+    node.image = image || `${SITE_URL}/images/logo.jpg`;
+    node.offers = {
       '@type': 'Offer',
       'price': String(item.price.current),
       'priceCurrency': 'UZS',
@@ -188,8 +197,11 @@ function buildProductSchema(item, lang) {
       'url': pageUrl,
       'seller': { '@type': 'Organization', 'name': '3DPie' }
     };
+  } else if (image) {
+    node.image = image;
   }
-  return product;
+
+  return node;
 }
 
 function renderSchemaBlock(items, lang) {
