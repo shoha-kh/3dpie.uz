@@ -1,33 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
     <url>
         <loc>https://3dpie.uz/</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2026-04-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz.html"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/"/>
+        <image:image>
+            <image:loc>https://3dpie.uz/images/logo.jpg</image:loc>
+            <image:title>3DPie — 3D-печать в Чирчике и Ташкенте</image:title>
+        </image:image>
     </url>
+
+    <url>
+        <loc>https://3dpie.uz/uz.html</loc>
+        <lastmod>2026-04-30</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz.html"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/"/>
+        <image:image>
+            <image:loc>https://3dpie.uz/images/logo.jpg</image:loc>
+            <image:title>3DPie — Chirchiq va Toshkentda 3D chop etish</image:title>
+        </image:image>
+    </url>
+
     <url>
         <loc>https://3dpie.uz/#services</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2026-04-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>https://3dpie.uz/uz.html#services</loc>
+        <lastmod>2026-04-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
         <loc>https://3dpie.uz/#gallery</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2026-04-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://3dpie.uz/#advantages</loc>
-        <lastmod>2025-01-15</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://3dpie.uz/uz.html#gallery</loc>
+        <lastmod>2026-04-30</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
     </url>
+
     <url>
         <loc>https://3dpie.uz/#contact</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2026-04-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/uz.html#contact</loc>
+        <lastmod>2026-04-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
