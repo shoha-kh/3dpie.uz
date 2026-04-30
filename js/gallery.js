@@ -24,6 +24,8 @@
       const description = card.querySelector('.work-meta p')?.textContent?.trim() || '';
       const longDescEl = card.querySelector('.work-long-desc');
       const longDescription = longDescEl ? longDescEl.innerHTML.trim() : '';
+      const priceEl = card.querySelector('.work-price-data');
+      const priceHtml = priceEl ? priceEl.innerHTML.trim() : '';
       // Try to find a poster from the inline thumbnail video (set by server-side render)
       const thumbVideo = card.querySelector('video.work-video');
       const thumbPoster = thumbVideo?.getAttribute('poster') || '';
@@ -35,7 +37,7 @@
         poster: a.dataset.poster || (a.dataset.type === 'video' ? thumbPoster : '')
       }));
 
-      state.items.push({ type, title, description, longDescription, medias, el: card });
+      state.items.push({ type, title, description, longDescription, priceHtml, medias, el: card });
 
       // Hover autoplay for videos (thumbnail)
       if(type === 'video'){
@@ -74,9 +76,14 @@
         <div class="work-modal__media"></div>
         <div class="work-thumbs" hidden></div>
         <div class="work-modal__caption">
-          <div class="work-modal__title"></div>
+          <div class="work-modal__header">
+            <div class="work-modal__header-text">
+              <div class="work-modal__title"></div>
+              <div class="work-modal__desc" hidden></div>
+            </div>
+            <div class="work-modal__price" hidden></div>
+          </div>
           <div class="work-modal__counter"></div>
-          <div class="work-modal__desc" hidden></div>
           <div class="work-modal__long-desc" hidden></div>
         </div>
       </div>`;
@@ -105,6 +112,7 @@
     const content = modal.querySelector('.work-modal__media');
     const titleEl = modal.querySelector('.work-modal__title');
   const counterEl = modal.querySelector('.work-modal__counter');
+  const priceEl = modal.querySelector('.work-modal__price');
   const descEl = modal.querySelector('.work-modal__desc');
   const longDescEl = modal.querySelector('.work-modal__long-desc');
     const thumbsEl = modal.querySelector('.work-thumbs');
@@ -119,6 +127,10 @@
 
     // Caption
     titleEl.textContent = item.title || 'Работа';
+    if(priceEl){
+      if(item.priceHtml){ priceEl.innerHTML = item.priceHtml; priceEl.hidden = false; }
+      else { priceEl.innerHTML = ''; priceEl.hidden = true; }
+    }
     const total = item.medias.length || 1;
     counterEl.textContent = total > 1 ? `${state.current.mediaIndex+1} / ${total}` : '';
     const mediaObj = item.medias[state.current.mediaIndex];
@@ -260,6 +272,7 @@
     const content = modal.querySelector('.work-modal__media');
     const titleEl = modal.querySelector('.work-modal__title');
   const counterEl = modal.querySelector('.work-modal__counter');
+  const priceEl = modal.querySelector('.work-modal__price');
   const descEl = modal.querySelector('.work-modal__desc');
     const thumbsEl = modal.querySelector('.work-thumbs');
 
@@ -267,6 +280,10 @@
     renderMedia(content, item, state.current.mediaIndex);
 
     titleEl.textContent = item.title || 'Работа';
+    if(priceEl){
+      if(item.priceHtml){ priceEl.innerHTML = item.priceHtml; priceEl.hidden = false; }
+      else { priceEl.innerHTML = ''; priceEl.hidden = true; }
+    }
     const total = item.medias.length || 1;
     counterEl.textContent = total > 1 ? `${state.current.mediaIndex+1} / ${total}` : '';
     const mediaObj = item.medias[state.current.mediaIndex];

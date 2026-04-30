@@ -51,6 +51,29 @@ function pickLang(field, lang) {
   return field[lang] || field.ru || field.uz || '';
 }
 
+function formatNumber(n) {
+  // Use narrow no-break space (U+202F) as thousands separator
+  return Number(n).toLocaleString('ru-RU').replace(/\s/g, '\u202F');
+}
+
+function renderCardPriceTag(price, lang) {
+  if (!price || price.current == null) return '';
+  const currency = pickLang(price.currency, lang) || (lang === 'uz' ? "so'm" : 'сум');
+  const current = formatNumber(price.current);
+  let html = '<div class="work-price-tag">';
+  if (price.original != null && Number(price.original) > Number(price.current)) {
+    const original = formatNumber(price.original);
+    const discount = Math.round((1 - Number(price.current) / Number(price.original)) * 100);
+    html += `<span class="work-price-tag__old">${escapeHtml(original)}</span>`;
+    html += `<span class="work-price-tag__current">${escapeHtml(current)}\u00A0${escapeHtml(currency)}</span>`;
+    html += `<span class="work-price-tag__discount">-${discount}%</span>`;
+  } else {
+    html += `<span class="work-price-tag__current">${escapeHtml(current)}\u00A0${escapeHtml(currency)}</span>`;
+  }
+  html += '</div>';
+  return html;
+}
+
 // ------- renderers -------
 
 function renderMedia(media, lang) {
@@ -77,18 +100,22 @@ function renderCard(item, lang) {
     // Without a poster, preload metadata so the browser can show the first frame.
     const preload = poster ? 'none' : 'metadata';
     const posterAttr = poster ? ` poster="${poster}"` : '';
+    const cardPriceTag = renderCardPriceTag(item.price, lang);
+    const cardPriceHtml = cardPriceTag ? `\n                        ${cardPriceTag}` : '';
     thumbHtml =
 `                    <div class="work-thumb">
                         <video class="work-video" src="${videoSrc}" muted loop playsinline preload="${preload}"${posterAttr}></video>
-                        <div class="work-badge">${escapeHtml(badge)}</div>
+                        <div class="work-badge">${escapeHtml(badge)}</div>${cardPriceHtml}
                     </div>`;
   } else {
     const firstImage = (item.medias || []).find(m => m.type === 'image') || {};
     const thumbSrc = escapeAttr(item.thumb || firstImage.src || '');
     const altText = pickLang(firstImage.alt, lang) || title;
+    const cardPriceTag = renderCardPriceTag(item.price, lang);
+    const cardPriceHtml = cardPriceTag ? `\n                        ${cardPriceTag}` : '';
     thumbHtml =
 `                    <div class="work-thumb">
-                        <img src="${thumbSrc}" alt="${escapeAttr(altText)}" loading="lazy">
+                        <img src="${thumbSrc}" alt="${escapeAttr(altText)}" loading="lazy">${cardPriceHtml}
                     </div>`;
   }
 
@@ -98,8 +125,15 @@ function renderCard(item, lang) {
   // Long description (optional) — rendered as a hidden block so JS can pick it up for the modal.
   // Newlines are converted to <br> for display.
   const longDescription = pickLang(item.longDescription, lang);
-  const longDescHtml = longDescription
-    ? `\n                    <div class="work-long-desc" hidden aria-hidden="true">${escapeHtml(longDescription).replace(/\n/g, '<br>')}</div>`
+  const priceHtml = renderCardPriceTag(item.price, lang);
+  const longDescBody = longDescription
+    ? escapeHtml(longDescription).replace(/\n/g, '<br>')
+    : '';
+  const longDescHtml = longDescBody
+    ? `\n                    <div class="work-long-desc" hidden aria-hidden="true">${longDescBody}</div>`
+    : '';
+  const priceBlockHtml = priceHtml
+    ? `\n                    <div class="work-price-data" hidden aria-hidden="true">${priceHtml}</div>`
     : '';
 
   return `                <article${idAttr} class="work-card" data-type="${escapeAttr(type)}" aria-label="${ariaLabel}">
@@ -107,7 +141,7 @@ ${thumbHtml}
                     <div class="work-meta">
                         <h3>${escapeHtml(title)}</h3>
                         <p>${escapeHtml(description)}</p>
-                    </div>${longDescHtml}
+                    </div>${priceBlockHtml}${longDescHtml}
 ${mediasHtml}
                 </article>`;
 }

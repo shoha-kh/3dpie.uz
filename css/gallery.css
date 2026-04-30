@@ -80,6 +80,73 @@
   font-size: 14px;
 }
 
+/* Compact price tag overlaid on the card thumbnail (top-right) */
+.work-price-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 20px);
+  padding: 5px 9px;
+  background: rgba(0, 0, 0, .78);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.1;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+
+.work-price-tag__current {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.work-price-tag__old {
+  color: rgba(255, 255, 255, .6);
+  text-decoration: line-through;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.work-price-tag__discount {
+  background: #e53935;
+  color: #fff;
+  font-weight: 700;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  letter-spacing: .3px;
+}
+
+/* Larger variant when used inside the modal header (not overlaid) */
+.work-modal__price .work-price-tag {
+  position: static;
+  font-size: 14px;
+  padding: 7px 12px;
+  gap: 8px;
+  border-radius: 10px;
+  max-width: none;
+}
+
+.work-modal__price .work-price-tag__current {
+  font-size: 16px;
+}
+
+.work-modal__price .work-price-tag__old {
+  font-size: 12px;
+}
+
+.work-modal__price .work-price-tag__discount {
+  font-size: 11px;
+  padding: 3px 6px;
+}
+
 /* ====== Modal viewer ====== */
 .work-modal {
   position: fixed;
@@ -142,18 +209,42 @@
   background: #fff;
   color: #111;
   padding: 14px 18px 16px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: start;
-  gap: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
 }
 
+/* Header row: title+desc on the left, price on the right */
+.work-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.work-modal__header-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .work-modal__title {
   font-size: 18px;
   font-weight: 700;
+}
+
+.work-modal__price {
+  flex: 0 0 auto;
+}
+
+.work-modal__price[hidden] {
+  display: none !important;
 }
 
 .work-modal__counter {
@@ -163,15 +254,12 @@
 }
 
 .work-modal__desc {
-  grid-column: 1 / -1;
-  margin-top: 4px;
   color: #444;
   font-size: 14px;
   line-height: 1.5;
 }
 
 .work-modal__long-desc {
-  grid-column: 1 / -1;
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid #eee;
@@ -184,6 +272,14 @@
   display: block;
   content: "";
   margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .work-modal__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }
 
 /* ====== Controls ====== */

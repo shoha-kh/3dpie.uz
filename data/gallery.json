@@ -4,6 +4,201 @@
   "updated": "2026-05-01",
   "items": [
     {
+      "id": "ventilation-grille",
+      "type": "images",
+      "badge": { "ru": "Фото", "uz": "Foto" },
+      "thumb": "./gallery/ventilation-grille/ventilation-grille-1.jpg",
+      "title": {
+        "ru": "Вентиляционная решётка под заказ",
+        "uz": "Buyurtma asosida ventilyatsiya panjarasi"
+      },
+      "description": {
+        "ru": "Вентиляционная решётка под заказ — изготовлено на 3D-принтере",
+        "uz": "Buyurtma asosida ventilyatsiya panjarasi — 3D-printerda tayyorlangan"
+      },
+      "longDescription": {
+        "ru": "Вентиляционная решётка под заказ.\nИзготовлено на 3D-принтере в студии 3DPie.\n\nИзготавливаем вентиляционные решётки любой формы и размера — для квартир, домов, офисов, кафе и автомобилей. Если оригинальная решётка повреждена или нестандартного размера — смоделируем и напечатаем точную копию по вашему образцу или эскизу.\n\nПишите нам, чтобы заказать решётку под свои размеры.",
+        "uz": "Buyurtma asosida ventilyatsiya panjarasi.\n3DPie studiyasida 3D-printerda tayyorlangan.\n\nIstalgan shakl va o'lchamdagi ventilyatsiya panjaralarini tayyorlaymiz — kvartira, uy, ofis, kafe va avtomobillar uchun. Agar original panjara buzilgan yoki nostandart o'lchamda bo'lsa — namunangiz yoki eskizingiz asosida aniq nusxasini modellashtirib chop etamiz.\n\nO'z o'lchamlaringiz bo'yicha panjara buyurtma qilish uchun bizga yozing."
+      },
+      "tags": ["вентиляционная решётка", "вентиляция", "решётка на заказ", "3D печать", "автотюнинг", "ventilyatsiya panjarasi", "buyurtma asosida", "3D pechat"],
+      "medias": [
+        {
+          "type": "image",
+          "src": "./gallery/ventilation-grille/ventilation-grille-1.jpg",
+          "alt": {
+            "ru": "Вентиляционная решётка на заказ — 3D-печать в Чирчике",
+            "uz": "Buyurtma asosida ventilyatsiya panjarasi — Chirchiqda 3D-chop etish"
+          },
+          "caption": {
+            "ru": "Вентиляционная решётка — общий вид",
+            "uz": "Ventilyatsiya panjarasi — umumiy ko'rinish"
+          }
+        },
+        {
+          "type": "image",
+          "src": "./gallery/ventilation-grille/ventilation-grille-2.jpg",
+          "alt": {
+            "ru": "Вентиляционная решётка из 3D-принтера — крупный план",
+            "uz": "3D-printerdan ventilyatsiya panjarasi — yaqin plan"
+          },
+          "caption": {
+            "ru": "Вентиляционная решётка — крупный план",
+            "uz": "Ventilyatsiya panjarasi — yaqin plan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "designer-lamps",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "",
+      "title": {
+        "ru": "Дизайнерские светильники",
+        "uz": "Dizayner chiroqlar"
+      },
+      "description": {
+        "ru": "Дизайнерские светильники — оптом и поштучно",
+        "uz": "Dizayner chiroqlar — ulgurji va dona-dona"
+      },
+      "longDescription": {
+        "ru": "Дизайнерские светильники из 3D-печати — оптом и поштучно.\n\nИзготавливаем стильные светильники любой формы и размера. Подходят для квартир, кафе, ресторанов, шоурумов, фотостудий и подарков. Принимаем заказы оптом со скидкой.\n\nПишите нам, чтобы выбрать модель или обсудить индивидуальный дизайн.",
+        "uz": "3D-pechatda tayyorlangan dizayner chiroqlar — ulgurji va dona-dona.\n\nIstalgan shakl va o'lchamdagi zamonaviy chiroqlarni tayyorlaymiz. Kvartiralar, kafe, restoran, shourum, foto studiya va sovg'a uchun mos. Ulgurji buyurtmalarga chegirma beriladi.\n\nModelni tanlash yoki shaxsiy dizaynni muhokama qilish uchun bizga yozing."
+      },
+      "price": {
+        "original": 250000,
+        "current": 150000,
+        "currency": { "ru": "сум", "uz": "so'm" }
+      },
+      "tags": ["светильник", "дизайнерский светильник", "лампа", "освещение", "интерьер", "оптом", "chiroq", "dizayner chiroq", "yoritish", "interyer", "ulgurji"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/designer-lamps/designer-lamps-3d-printing.mp4",
+          "caption": {
+            "ru": "Дизайнерские светильники — обзор моделей",
+            "uz": "Dizayner chiroqlar — modellar sharhi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "car-air-deflector",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "",
+      "title": {
+        "ru": "Дефлектор для иномарки",
+        "uz": "Chet el avtomobili uchun deflektor"
+      },
+      "description": {
+        "ru": "Дефлектор воздуховода для иномарки — изготовлен на 3D-принтере",
+        "uz": "Chet el avtomobili uchun havo deflektori — 3D-printerda tayyorlangan"
+      },
+      "longDescription": {
+        "ru": "Дефлектор для иномарки — изготовлен в студии 3DPie методом высококачественной 3D-печати.\n\nВосстанавливаем утерянные и сломанные пластиковые детали салона любых автомобилей. Если оригинальная запчасть недоступна или стоит слишком дорого — мы смоделируем и напечатаем точную копию по вашему образцу или эскизу.\n\nПишите нам, чтобы заказать деталь для своего авто.",
+        "uz": "Chet el avtomobili uchun deflektor — 3DPie studiyasida yuqori sifatli 3D pechat usulida tayyorlangan.\n\nIstalgan avtomobillar salonidagi yo'qolgan yoki sinib ketgan plastik detallarni qayta tiklaymiz. Agar original qism mavjud bo'lmasa yoki juda qimmat bo'lsa — namunangiz yoki eskizingiz asosida aniq nusxasini modellashtirib chop etamiz.\n\nO'z avtomobilingiz uchun detal buyurtma qilish uchun bizga yozing."
+      },
+      "tags": ["дефлектор", "иномарка", "автозапчасти", "автотюнинг", "3D печать для авто", "deflektor", "avto ehtiyot qismlar", "avtotuning"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/car-air-deflector/car-air-deflector-3d-printing.mp4",
+          "caption": {
+            "ru": "Дефлектор для иномарки — демонстрация",
+            "uz": "Chet el avtomobili uchun deflektor — namoyish"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flexible-rubber-parts",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "",
+      "title": {
+        "ru": "Гибкие резиновые изделия из 3D-принтера",
+        "uz": "3D-printerda chop etilgan egiluvchan rezina buyumlar"
+      },
+      "description": {
+        "ru": "Гибкие, износостойкие детали из эластичного материала — служат дольше силикона",
+        "uz": "Egiluvchan, yeyilishga chidamli detallar — silikondan ham uzoqroq xizmat qiladi"
+      },
+      "longDescription": {
+        "ru": "Это не жвачка 🍬\nЭто резиновые изделия, напечатанные на 3D-принтере.\n\n✔ гибкие\n✔ износостойкие\n✔ служат дольше силикона\n\nЦвет — чистый кайф 😄\n\nНужно повторить деталь или сделать лучше?\nПишите в директ 📩",
+        "uz": "Bu saqich emas 🍬\nBu 3D-printerda chop etilgan rezina buyumlar.\n\n✔ egiluvchan\n✔ yeyilishga chidamli\n✔ silikonga qaraganda uzoqroq xizmat qiladi\n\nDetalni takrorlash yoki undan ham yaxshiroq qilish kerakmi?\nDirektga yozing 📩"
+      },
+      "tags": ["резиновые изделия", "гибкая печать", "TPU", "эластичная 3D печать", "силикон", "rezina detallar", "egiluvchan 3D pechat", "TPU pechat"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/flexible-rubber-parts/flexible-rubber-parts-3d-printing.mp4",
+          "caption": {
+            "ru": "Гибкие резиновые изделия из 3D-принтера — демонстрация",
+            "uz": "3D-printerda chop etilgan egiluvchan rezina buyumlar — namoyish"
+          }
+        }
+      ]
+    },
+    {
+      "id": "microchip-cases",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "",
+      "title": {
+        "ru": "Корпус для микросхем на заказ",
+        "uz": "Mikrosxemalar uchun korpus — buyurtma asosida"
+      },
+      "description": {
+        "ru": "Корпус для микросхем и другие детали — моделирование по запросу клиента",
+        "uz": "Mikrosxemalar uchun korpus va boshqa detallar — mijoz so‘roviga ko‘ra"
+      },
+      "longDescription": {
+        "ru": "Корпус для микросхем и прочее. Смоделирован по запросу клиента!\n\nСтудия 3DPie изготавливает корпусы и пластиковые детали любой сложности по вашим чертежам или эскизам. Прототипирование, мелкосерийное производство, ремонт и восстановление утерянных деталей — всё это доступно благодаря 3D-моделированию и высококачественной 3D-печати.\n\nНапишите нам, чтобы обсудить ваш проект.",
+        "uz": "Mikrosxemalar uchun korpus va boshqa detallar — mijoz so‘roviga ko‘ra modellashtirdik!\n\n3DPie studiyasi sizning chizmalaringiz yoki eskizlaringiz asosida har qanday murakkablikdagi korpus va plastik detallarni tayyorlaydi. Prototiplash, kichik seriyali ishlab chiqarish, ta'mirlash va yo‘qolgan detallarni qayta tiklash — bularning barchasi 3D modellashtirish va yuqori sifatli 3D pechat orqali amalga oshiriladi.\n\nLoyihangizni muhokama qilish uchun bizga yozing."
+      },
+      "tags": ["корпус для микросхем", "электроника", "корпус на заказ", "3D моделирование", "прототип", "mikrosxema korpusi", "elektronika", "buyurtma asosida", "prototip"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/microchip-cases/microchip-cases-3d-printing.mp4",
+          "caption": {
+            "ru": "Корпус для микросхем — моделирование по запросу клиента",
+            "uz": "Mikrosxemalar uchun korpus — mijoz so‘roviga ko‘ra modellashtirilgan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "valentines-day",
+      "type": "video",
+      "badge": { "ru": "Видео", "uz": "Video" },
+      "thumb": "",
+      "title": {
+        "ru": "С Днём святого Валентина ❤️",
+        "uz": "Sevishganlar kuni muborak ❤️"
+      },
+      "description": {
+        "ru": "Поздравление с Днём влюблённых от студии 3DPie",
+        "uz": "Sevishganlar kuni bilan tabriklash — 3DPie studiyasidan"
+      },
+      "longDescription": {
+        "ru": "С Днём святого Валентина ❤️\nПусть рядом всегда будет тот, кто вдохновляет, поддерживает и делает каждый день особенным.\nЛюбите, цените и не забывайте радовать друг друга ✨",
+        "uz": "Sevishganlar kuni muborak ❤️\nYoningizda doimo ilhomlantiradigan, qo‘llab-quvvatlaydigan va har bir kunni alohida qiladigan inson bo‘lsin.\nSeving, qadrlang va bir-biringizni xursand qilishni unutmang ✨"
+      },
+      "tags": ["день святого валентина", "14 февраля", "праздник", "подарок", "sevishganlar kuni", "valentin kuni", "sovg'a", "3D печать"],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/valentines-day/valentines-day-3d-printing.mp4",
+          "caption": {
+            "ru": "Поздравление с Днём святого Валентина от 3DPie",
+            "uz": "3DPie'dan Sevishganlar kuni bilan tabriklash"
+          }
+        }
+      ]
+    },
+    {
       "id": "tweeter-mounts",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
