@@ -52,7 +52,7 @@
       "id": "designer-lamps",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "./gallery/designer-lamps/designer-lamps-1.png",
+      "thumb": "./gallery/designer-lamps/designer-lamps-1.webp",
       "title": {
         "ru": "Дизайнерские светильники",
         "uz": "Dizayner chiroqlar"
@@ -74,7 +74,7 @@
       "medias": [
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-1.png",
+          "src": "./gallery/designer-lamps/designer-lamps-1.webp",
           "alt": {
             "ru": "Дизайнерский светильник из 3D-печати в современном интерьере",
             "uz": "3D-pechatdan dizayner chiroq zamonaviy interyerda"
@@ -87,7 +87,7 @@
         {
           "type": "video",
           "src": "./gallery/designer-lamps/designer-lamps-3d-printing.mp4",
-          "poster": "./gallery/designer-lamps/designer-lamps-1.png",
+          "poster": "./gallery/designer-lamps/designer-lamps-1.webp",
           "caption": {
             "ru": "Дизайнерские светильники — обзор моделей",
             "uz": "Dizayner chiroqlar — modellar sharhi"
@@ -95,7 +95,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-sculptural-orange.png",
+          "src": "./gallery/designer-lamps/designer-lamps-sculptural-orange.webp",
           "alt": {
             "ru": "Скульптурный светильник с тёплым оранжевым свечением",
             "uz": "Iliq to'q sariq nurli skulptural chiroq"
@@ -107,7 +107,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.png",
+          "src": "./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.webp",
           "alt": {
             "ru": "Текстурный плафон дизайнерского светильника — крупный план",
             "uz": "Dizayner chiroq plafoni teksturasi — yaqin plan"
@@ -119,7 +119,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-desk-workspace.png",
+          "src": "./gallery/designer-lamps/designer-lamps-desk-workspace.webp",
           "alt": {
             "ru": "Настольный дизайнерский светильник для рабочего места",
             "uz": "Ish joyi uchun stol dizayner chirog'i"
@@ -131,7 +131,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-swirling-shade.png",
+          "src": "./gallery/designer-lamps/designer-lamps-swirling-shade.webp",
           "alt": {
             "ru": "Светильник со спиральным текстурным плафоном",
             "uz": "Spiralsimon teksturali plafonli chiroq"
@@ -143,7 +143,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-bedroom-sculptural.png",
+          "src": "./gallery/designer-lamps/designer-lamps-bedroom-sculptural.webp",
           "alt": {
             "ru": "Скульптурный светильник в спальне — мягкое освещение",
             "uz": "Yotoqxonadagi skulptural chiroq — yumshoq yoritish"
@@ -155,7 +155,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-twisted-ribbed.png",
+          "src": "./gallery/designer-lamps/designer-lamps-twisted-ribbed.webp",
           "alt": {
             "ru": "Светильник с витым ребристым плафоном",
             "uz": "Buralgan qovurg'ali plafonli chiroq"
@@ -167,7 +167,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-minimalist-textured.png",
+          "src": "./gallery/designer-lamps/designer-lamps-minimalist-textured.webp",
           "alt": {
             "ru": "Минималистичный светильник с текстурным плафоном",
             "uz": "Minimalistik teksturali plafonli chiroq"
@@ -179,7 +179,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-trio-minimalist.png",
+          "src": "./gallery/designer-lamps/designer-lamps-trio-minimalist.webp",
           "alt": {
             "ru": "Три минималистичных дизайнерских светильника в ряд",
             "uz": "Uchta minimalistik dizayner chiroq qatori"
@@ -191,7 +191,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-modern-rustic.png",
+          "src": "./gallery/designer-lamps/designer-lamps-modern-rustic.webp",
           "alt": {
             "ru": "Дизайнерский светильник в стиле модерн-рустик",
             "uz": "Modern-rustik uslubidagi dizayner chiroq"
@@ -203,7 +203,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-trio-contemporary.png",
+          "src": "./gallery/designer-lamps/designer-lamps-trio-contemporary.webp",
           "alt": {
             "ru": "Три современных светильника с витыми текстурными плафонами",
             "uz": "Buralgan teksturali plafonli uchta zamonaviy chiroq"
@@ -335,7 +335,7 @@
       "id": "tweeter-mounts",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "./gallery/tweeter-mounts/tweeter-mounts-1.png",
+      "thumb": "./gallery/tweeter-mounts/tweeter-mounts-1.webp",
       "title": {
         "ru": "Накладки для твитеров (пищалок)",
         "uz": "Tweeter (pishalka) uchun nakladkalar"
@@ -353,7 +353,7 @@
         {
           "type": "video",
           "src": "./gallery/tweeter-mounts/tweeter-mounts.mp4",
-          "poster": "./gallery/tweeter-mounts/tweeter-mounts-1.png",
+          "poster": "./gallery/tweeter-mounts/tweeter-mounts-1.webp",
           "caption": {
             "ru": "Накладки для твитеров — демонстрация",
             "uz": "Tweeter nakladkalari — namoyish"
@@ -361,7 +361,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/tweeter-mounts/tweeter-mounts-1.png",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts-1.webp",
           "alt": {
             "ru": "Накладки для установки твитеров — 3D-печать на заказ в Чирчике",
             "uz": "Tweeter o'rnatish uchun nakladkalar — Chirchiqda buyurtma asosida 3D-chop etish"
@@ -373,7 +373,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/tweeter-mounts/tweeter-mounts-2.png",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts-2.webp",
           "alt": {
             "ru": "Накладка для твитера — крупный план",
             "uz": "Tweeter nakladkasi — yaqin plan"
@@ -385,7 +385,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/tweeter-mounts/tweeter-mounts-3.png",
+          "src": "./gallery/tweeter-mounts/tweeter-mounts-3.webp",
           "alt": {
             "ru": "Установленная накладка для твитера в автомобиле",
             "uz": "Avtomobilda o'rnatilgan tweeter nakladkasi"

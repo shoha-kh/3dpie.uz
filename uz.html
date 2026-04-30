@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <meta name="description" content="3DPie — Chirchiq va Toshkentda 3D chop etish studiyasi. Plastik qismlarni buyurtma asosida tayyorlash butun O'zbekiston bo'ylab: tishli g'ildiraklar, avtoehtiyot qismlar, deflektor, prototip. Toshkent va Toshkent viloyati bo'ylab yetkazib berish. ☎ +998 90 139 10 94">
     <meta name="keywords" content="3D chop etish Toshkent, 3D chop etish Chirchiq, 3D chop etish O'zbekiston, 3D printer Toshkent, plastik qismlar Toshkent, tishli g'ildiraklar buyurtma, avtoehtiyot qismlar 3D, prototiplash Toshkent, ommaviy ishlab chiqarish, 3D printer xizmati, plastik mahsulotlar tayyorlash Chirchiq, 3dpie">
     <meta property="og:title" content="3DPie — Chirchiq va Toshkentda 3D chop etish | Plastik qismlar buyurtma">
@@ -41,7 +38,7 @@
     <link rel="stylesheet" href="./css/gallery.css?v=202605011300">
     <link rel="preconnect" href="https://images.unsplash.com">
     <link rel="dns-prefetch" href="https://images.unsplash.com">
-    <link rel="preload" href="./video/hero-bg.mp4" as="video" type="video/mp4">
+    <link rel="preload" as="image" href="./images/hero-bg.webp" type="image/webp" fetchpriority="high">
 
     <meta name="yandex-verification" content="e333c0d704796c01" />
     <!-- Yandex.Metrika -->
@@ -91,7 +88,7 @@
     <!-- Hero -->
     <section class="hero" aria-label="Bosh bo'lim">
         <div class="hero-video-container">
-            <video autoplay muted loop playsinline class="hero-video">
+            <video autoplay muted loop playsinline preload="metadata" poster="./images/hero-bg.webp" aria-hidden="true" class="hero-video">
                 <source src="./video/hero-bg.mp4" type="video/mp4">
             </video>
             <div class="hero-overlay"></div>
@@ -169,7 +166,7 @@
 
                 <article id="work-designer-lamps" class="work-card" data-type="video" aria-label="Dizayner chiroqlar">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" muted loop playsinline preload="none" poster="./gallery/designer-lamps/designer-lamps-1.png"></video>
+                        <video class="work-video" src="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" muted loop playsinline preload="none" poster="./gallery/designer-lamps/designer-lamps-1.webp"></video>
                         <div class="work-badge">Video</div>
                         <div class="work-price-tag"><span class="work-price-tag__old">250 000</span><span class="work-price-tag__current">150 000 so&#39;m</span><span class="work-price-tag__discount">-40%</span></div>
                     </div>
@@ -179,23 +176,23 @@
                     </div>
                     <div class="work-price-data" hidden aria-hidden="true"><div class="work-price-tag"><span class="work-price-tag__old">250 000</span><span class="work-price-tag__current">150 000 so&#39;m</span><span class="work-price-tag__discount">-40%</span></div></div>
                     <div class="work-long-desc" hidden aria-hidden="true">3D-pechatda tayyorlangan dizayner chiroqlar — ulgurji va dona-dona.<br><br>Istalgan shakl va o&#39;lchamdagi zamonaviy chiroqlarni tayyorlaymiz. Kvartiralar, kafe, restoran, shourum, foto studiya va sovg&#39;a uchun mos. Ulgurji buyurtmalarga chegirma beriladi.<br><br>Modelni tanlash yoki shaxsiy dizaynni muhokama qilish uchun bizga yozing.</div>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-1.png" data-type="image" data-caption="Zamonaviy interyerdagi dizayner chiroq" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" data-type="video" data-poster="./gallery/designer-lamps/designer-lamps-1.png" data-caption="Dizayner chiroqlar — modellar sharhi" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-sculptural-orange.png" data-type="image" data-caption="Iliq nurli skulptural chiroq" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.png" data-type="image" data-caption="Plafon teksturasi — yaqin plan" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-desk-workspace.png" data-type="image" data-caption="Ish stoli uchun chiroq" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-swirling-shade.png" data-type="image" data-caption="Spiralsimon plafon" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-bedroom-sculptural.png" data-type="image" data-caption="Yotoqxona uchun chiroq" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-twisted-ribbed.png" data-type="image" data-caption="Buralgan qovurg&#39;ali plafon" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-minimalist-textured.png" data-type="image" data-caption="Minimalizm va tekstura" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-minimalist.png" data-type="image" data-caption="Minimalistik chiroqlar seriyasi" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-modern-rustic.png" data-type="image" data-caption="Modern-rustik uslubi" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-contemporary.png" data-type="image" data-caption="Zamonaviy chiroqlar seriyasi" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-1.webp" data-type="image" data-caption="Zamonaviy interyerdagi dizayner chiroq" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" data-type="video" data-poster="./gallery/designer-lamps/designer-lamps-1.webp" data-caption="Dizayner chiroqlar — modellar sharhi" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-sculptural-orange.webp" data-type="image" data-caption="Iliq nurli skulptural chiroq" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.webp" data-type="image" data-caption="Plafon teksturasi — yaqin plan" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-desk-workspace.webp" data-type="image" data-caption="Ish stoli uchun chiroq" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-swirling-shade.webp" data-type="image" data-caption="Spiralsimon plafon" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-bedroom-sculptural.webp" data-type="image" data-caption="Yotoqxona uchun chiroq" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-twisted-ribbed.webp" data-type="image" data-caption="Buralgan qovurg&#39;ali plafon" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-minimalist-textured.webp" data-type="image" data-caption="Minimalizm va tekstura" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-minimalist.webp" data-type="image" data-caption="Minimalistik chiroqlar seriyasi" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-modern-rustic.webp" data-type="image" data-caption="Modern-rustik uslubi" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-contemporary.webp" data-type="image" data-caption="Zamonaviy chiroqlar seriyasi" aria-hidden="true"></a>
                 </article>
 
                 <article id="work-car-air-deflector" class="work-card" data-type="video" aria-label="Chet el avtomobili uchun deflektor">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/car-air-deflector/car-air-deflector-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/car-air-deflector/car-air-deflector-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Video</div>
                     </div>
                     <div class="work-meta">
@@ -208,7 +205,7 @@
 
                 <article id="work-flexible-rubber-parts" class="work-card" data-type="video" aria-label="3D-printerda chop etilgan egiluvchan rezina buyumlar">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/flexible-rubber-parts/flexible-rubber-parts-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/flexible-rubber-parts/flexible-rubber-parts-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Video</div>
                     </div>
                     <div class="work-meta">
@@ -221,7 +218,7 @@
 
                 <article id="work-microchip-cases" class="work-card" data-type="video" aria-label="Mikrosxemalar uchun korpus — buyurtma asosida">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/microchip-cases/microchip-cases-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/microchip-cases/microchip-cases-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Video</div>
                     </div>
                     <div class="work-meta">
@@ -234,7 +231,7 @@
 
                 <article id="work-valentines-day" class="work-card" data-type="video" aria-label="Sevishganlar kuni muborak ❤️">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/valentines-day/valentines-day-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/valentines-day/valentines-day-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Video</div>
                     </div>
                     <div class="work-meta">
@@ -247,7 +244,7 @@
 
                 <article id="work-tweeter-mounts" class="work-card" data-type="video" aria-label="Tweeter (pishalka) uchun nakladkalar">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/tweeter-mounts/tweeter-mounts.mp4" muted loop playsinline preload="none" poster="./gallery/tweeter-mounts/tweeter-mounts-1.png"></video>
+                        <video class="work-video" src="./gallery/tweeter-mounts/tweeter-mounts.mp4" muted loop playsinline preload="none" poster="./gallery/tweeter-mounts/tweeter-mounts-1.webp"></video>
                         <div class="work-badge">Video</div>
                     </div>
                     <div class="work-meta">
@@ -255,15 +252,15 @@
                         <p>Tweeter o&#39;rnatish uchun tayyor nakladkalar — avtoakustikani yaxshilash</p>
                     </div>
                     <div class="work-long-desc" hidden aria-hidden="true">Tweeter (pishalka) o&#39;rnatishga mo&#39;ljallangan, yuqori sifatli 3D pechatda tayyorlangan maxsus nakladkalar. Avtomobilingizning akustikasini hoziroq yaxshilang!<br><br>Bizning 3D pechat studiyamiz xizmatlari:<br>Biz faqat tayyor tweeter nakladkalari bilan cheklanib qolmaymiz. Studiyamizda har qanday avtomobil uchun istalgan plastik detalni buyurtma asosida ishlab chiqaramiz. Buzilgan qismlarni tiklash yoki noyob loyihalarni amalga oshirish uchun chizma yoki eskizlaringiz bilan murojaat qiling.<br><br>Nakladka sotib olish yoki buyurtma berish uchun hoziroq bizga yozing!</div>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts.mp4" data-type="video" data-poster="./gallery/tweeter-mounts/tweeter-mounts-1.png" data-caption="Tweeter nakladkalari — namoyish" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-1.png" data-type="image" data-caption="Tayyor nakladka — umumiy ko&#39;rinish" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-2.png" data-type="image" data-caption="Tweeter nakladkasi — yaqin plan" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-3.png" data-type="image" data-caption="Nakladka avtomobilda o&#39;rnatilgan" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts.mp4" data-type="video" data-poster="./gallery/tweeter-mounts/tweeter-mounts-1.webp" data-caption="Tweeter nakladkalari — namoyish" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-1.webp" data-type="image" data-caption="Tayyor nakladka — umumiy ko&#39;rinish" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-2.webp" data-type="image" data-caption="Tweeter nakladkasi — yaqin plan" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-3.webp" data-type="image" data-caption="Nakladka avtomobilda o&#39;rnatilgan" aria-hidden="true"></a>
                 </article>
 
                 <article id="work-socket-box-caps" class="work-card" data-type="video" aria-label="Podrozetniklar uchun himoya qopqoqlari">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/socket-box-caps/socket-box-caps.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/socket-box-caps/socket-box-caps.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Video</div>
                     </div>
                     <div class="work-meta">
@@ -543,7 +540,7 @@
               "@type": "Brand",
               "name": "3DPie"
             },
-            "image": "https://3dpie.uz/gallery/designer-lamps/designer-lamps-1.png",
+            "image": "https://3dpie.uz/gallery/designer-lamps/designer-lamps-1.webp",
             "offers": {
               "@type": "Offer",
               "price": "150000",
@@ -625,7 +622,7 @@
               "@type": "Brand",
               "name": "3DPie"
             },
-            "image": "https://3dpie.uz/gallery/tweeter-mounts/tweeter-mounts-1.png"
+            "image": "https://3dpie.uz/gallery/tweeter-mounts/tweeter-mounts-1.webp"
           }
         },
         {

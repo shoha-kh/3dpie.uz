@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <meta name="description" content="3DPie — студия 3D-печати в Чирчике и Ташкенте. Изготовление пластиковых деталей на заказ по всему Узбекистану: шестерни, автозапчасти, дефлекторы, прототипы. Доставка по г. Ташкент и Ташкентской области. ☎ +998 90 139 10 94">
     <meta name="keywords" content="3D печать Ташкент, 3D печать Чирчик, 3D печать Узбекистан, 3D принтер Ташкент, 3D печать на заказ, печать пластиком Ташкент, изготовление деталей Чирчик, шестерни на заказ Ташкент, автозапчасти 3D печать, прототипирование Ташкент, 3D chop etish Toshkent, 3D chop etish Chirchiq, 3D chop etish O'zbekiston, 3D printer Toshkent, plastik qismlar Toshkent, tishli g'ildiraklar buyurtma, avtoehtiyot qismlar 3D, prototiplash Toshkent, ommaviy ishlab chiqarish, 3dpie">
     <meta name="description" lang="uz" content="3dpie - O'zbekistonda professional 3D-chop etish studiyasi. Plastik qismlarni buyurtma asosida tayyorlash: tishli g'ildiraklar, avtoehtiyot qismlar, deflektor. Sifat kafolati va tez ishlab chiqarish.">
@@ -43,7 +40,7 @@
     <link rel="stylesheet" href="./css/gallery.css?v=202605011300">
     <link rel="preconnect" href="https://images.unsplash.com">
     <link rel="dns-prefetch" href="https://images.unsplash.com">
-    <link rel="preload" href="./video/hero-bg.mp4" as="video" type="video/mp4">
+    <link rel="preload" as="image" href="./images/hero-bg.webp" type="image/webp" fetchpriority="high">
 
     <meta name="yandex-verification" content="e333c0d704796c01" />
     <!-- Yandex.Metrika counter -->
@@ -97,7 +94,7 @@
     <!-- Hero Section -->
     <section class="hero" aria-label="Главная секция">
         <div class="hero-video-container">
-            <video autoplay muted loop playsinline class="hero-video">
+            <video autoplay muted loop playsinline preload="metadata" poster="./images/hero-bg.webp" aria-hidden="true" class="hero-video">
                 <source src="./video/hero-bg.mp4" type="video/mp4">
                 <!-- <source src="./video/hero-bg.webm" type="video/webm"> -->
             </video>
@@ -186,7 +183,7 @@
 
                 <article id="work-designer-lamps" class="work-card" data-type="video" aria-label="Дизайнерские светильники">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" muted loop playsinline preload="none" poster="./gallery/designer-lamps/designer-lamps-1.png"></video>
+                        <video class="work-video" src="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" muted loop playsinline preload="none" poster="./gallery/designer-lamps/designer-lamps-1.webp"></video>
                         <div class="work-badge">Видео</div>
                         <div class="work-price-tag"><span class="work-price-tag__old">250 000</span><span class="work-price-tag__current">150 000 сум</span><span class="work-price-tag__discount">-40%</span></div>
                     </div>
@@ -196,23 +193,23 @@
                     </div>
                     <div class="work-price-data" hidden aria-hidden="true"><div class="work-price-tag"><span class="work-price-tag__old">250 000</span><span class="work-price-tag__current">150 000 сум</span><span class="work-price-tag__discount">-40%</span></div></div>
                     <div class="work-long-desc" hidden aria-hidden="true">Дизайнерские светильники из 3D-печати — оптом и поштучно.<br><br>Изготавливаем стильные светильники любой формы и размера. Подходят для квартир, кафе, ресторанов, шоурумов, фотостудий и подарков. Принимаем заказы оптом со скидкой.<br><br>Пишите нам, чтобы выбрать модель или обсудить индивидуальный дизайн.</div>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-1.png" data-type="image" data-caption="Дизайнерский светильник в современном интерьере" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" data-type="video" data-poster="./gallery/designer-lamps/designer-lamps-1.png" data-caption="Дизайнерские светильники — обзор моделей" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-sculptural-orange.png" data-type="image" data-caption="Скульптурный светильник с тёплым свечением" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.png" data-type="image" data-caption="Текстура плафона — крупный план" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-desk-workspace.png" data-type="image" data-caption="Светильник для рабочего стола" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-swirling-shade.png" data-type="image" data-caption="Спиральный плафон" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-bedroom-sculptural.png" data-type="image" data-caption="Светильник для спальни" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-twisted-ribbed.png" data-type="image" data-caption="Витой ребристый плафон" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-minimalist-textured.png" data-type="image" data-caption="Минимализм и текстура" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-minimalist.png" data-type="image" data-caption="Серия минималистичных светильников" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-modern-rustic.png" data-type="image" data-caption="Стиль модерн-рустик" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-contemporary.png" data-type="image" data-caption="Серия современных светильников" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-1.webp" data-type="image" data-caption="Дизайнерский светильник в современном интерьере" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-3d-printing.mp4" data-type="video" data-poster="./gallery/designer-lamps/designer-lamps-1.webp" data-caption="Дизайнерские светильники — обзор моделей" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-sculptural-orange.webp" data-type="image" data-caption="Скульптурный светильник с тёплым свечением" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.webp" data-type="image" data-caption="Текстура плафона — крупный план" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-desk-workspace.webp" data-type="image" data-caption="Светильник для рабочего стола" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-swirling-shade.webp" data-type="image" data-caption="Спиральный плафон" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-bedroom-sculptural.webp" data-type="image" data-caption="Светильник для спальни" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-twisted-ribbed.webp" data-type="image" data-caption="Витой ребристый плафон" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-minimalist-textured.webp" data-type="image" data-caption="Минимализм и текстура" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-minimalist.webp" data-type="image" data-caption="Серия минималистичных светильников" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-modern-rustic.webp" data-type="image" data-caption="Стиль модерн-рустик" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/designer-lamps/designer-lamps-trio-contemporary.webp" data-type="image" data-caption="Серия современных светильников" aria-hidden="true"></a>
                 </article>
 
                 <article id="work-car-air-deflector" class="work-card" data-type="video" aria-label="Дефлектор для иномарки">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/car-air-deflector/car-air-deflector-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/car-air-deflector/car-air-deflector-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Видео</div>
                     </div>
                     <div class="work-meta">
@@ -225,7 +222,7 @@
 
                 <article id="work-flexible-rubber-parts" class="work-card" data-type="video" aria-label="Гибкие резиновые изделия из 3D-принтера">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/flexible-rubber-parts/flexible-rubber-parts-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/flexible-rubber-parts/flexible-rubber-parts-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Видео</div>
                     </div>
                     <div class="work-meta">
@@ -238,7 +235,7 @@
 
                 <article id="work-microchip-cases" class="work-card" data-type="video" aria-label="Корпус для микросхем на заказ">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/microchip-cases/microchip-cases-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/microchip-cases/microchip-cases-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Видео</div>
                     </div>
                     <div class="work-meta">
@@ -251,7 +248,7 @@
 
                 <article id="work-valentines-day" class="work-card" data-type="video" aria-label="С Днём святого Валентина ❤️">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/valentines-day/valentines-day-3d-printing.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/valentines-day/valentines-day-3d-printing.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Видео</div>
                     </div>
                     <div class="work-meta">
@@ -264,7 +261,7 @@
 
                 <article id="work-tweeter-mounts" class="work-card" data-type="video" aria-label="Накладки для твитеров (пищалок)">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/tweeter-mounts/tweeter-mounts.mp4" muted loop playsinline preload="none" poster="./gallery/tweeter-mounts/tweeter-mounts-1.png"></video>
+                        <video class="work-video" src="./gallery/tweeter-mounts/tweeter-mounts.mp4" muted loop playsinline preload="none" poster="./gallery/tweeter-mounts/tweeter-mounts-1.webp"></video>
                         <div class="work-badge">Видео</div>
                     </div>
                     <div class="work-meta">
@@ -272,15 +269,15 @@
                         <p>Готовые накладки для установки твитеров — улучшаем автоакустику</p>
                     </div>
                     <div class="work-long-desc" hidden aria-hidden="true">Накладки для установки твитеров (пищалок) — готовый продукт студии 3DPie. Изготовлены методом высококачественной 3D-печати. Улучшите акустику вашего автомобиля прямо сейчас!<br><br>Услуги нашей студии 3D-печати:<br>Мы предлагаем не только готовые накладки для твитеров. Наша студия изготавливает любые пластиковые детали на заказ для любых автомобилей. Обращайтесь со своими чертежами или эскизами — для восстановления повреждённых элементов или реализации уникальных проектов.<br><br>Для приобретения накладок или оформления заказа пишите нам прямо сейчас!</div>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts.mp4" data-type="video" data-poster="./gallery/tweeter-mounts/tweeter-mounts-1.png" data-caption="Накладки для твитеров — демонстрация" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-1.png" data-type="image" data-caption="Готовая накладка — общий вид" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-2.png" data-type="image" data-caption="Накладка для твитера — крупный план" aria-hidden="true"></a>
-                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-3.png" data-type="image" data-caption="Накладка установлена в автомобиле" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts.mp4" data-type="video" data-poster="./gallery/tweeter-mounts/tweeter-mounts-1.webp" data-caption="Накладки для твитеров — демонстрация" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-1.webp" data-type="image" data-caption="Готовая накладка — общий вид" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-2.webp" data-type="image" data-caption="Накладка для твитера — крупный план" aria-hidden="true"></a>
+                    <a class="work-media" href="./gallery/tweeter-mounts/tweeter-mounts-3.webp" data-type="image" data-caption="Накладка установлена в автомобиле" aria-hidden="true"></a>
                 </article>
 
                 <article id="work-socket-box-caps" class="work-card" data-type="video" aria-label="Заглушки для подрозетников">
                     <div class="work-thumb">
-                        <video class="work-video" src="./gallery/socket-box-caps/socket-box-caps.mp4" muted loop playsinline preload="metadata"></video>
+                        <video class="work-video" src="./gallery/socket-box-caps/socket-box-caps.mp4" muted loop playsinline preload="none"></video>
                         <div class="work-badge">Видео</div>
                     </div>
                     <div class="work-meta">
@@ -421,6 +418,7 @@
             <div class="map-container">
                 <h3>Как нас найти</h3>
                 <iframe 
+                    title="Карта: студия 3DPie на ул. Амира Тимура 62а, Чирчик"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1301.6256151982968!2d69.5570212281913!3d41.45332872531939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aefb69d2c4e733%3A0x655af263ac156173!2z0YPQu9C40YbQsCDQkNC80LjRgNCwINCi0LXQvNGD0YDQsCA2MiDQsCwg0KfQuNGA0YfQuNC6LCDQotCw0YjQutC10L3RgtGB0LrQsNGPINC-0LHQu9Cw0YHRgtGMLCDQo9C30LHQtdC60LjRgdGC0LDQvQ!5e0!3m2!1sru!2s!4v1762893583444!5m2!1sru!2s" 
                     width="100%" 
                     height="450" 
@@ -715,7 +713,7 @@
               "@type": "Brand",
               "name": "3DPie"
             },
-            "image": "https://3dpie.uz/gallery/designer-lamps/designer-lamps-1.png",
+            "image": "https://3dpie.uz/gallery/designer-lamps/designer-lamps-1.webp",
             "offers": {
               "@type": "Offer",
               "price": "150000",
@@ -797,7 +795,7 @@
               "@type": "Brand",
               "name": "3DPie"
             },
-            "image": "https://3dpie.uz/gallery/tweeter-mounts/tweeter-mounts-1.png"
+            "image": "https://3dpie.uz/gallery/tweeter-mounts/tweeter-mounts-1.webp"
           }
         },
         {

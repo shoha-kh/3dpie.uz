@@ -101,14 +101,13 @@ function renderCard(item, lang) {
     const videoSrc = escapeAttr(firstVideo.src || '');
     const poster = escapeAttr(firstVideo.poster || item.thumb || '');
     const badge = pickLang(item.badge, lang) || (lang === 'uz' ? 'Video' : 'Видео');
-    // Without a poster, preload metadata so the browser can show the first frame.
-    const preload = poster ? 'none' : 'metadata';
+    // Always use preload="none" — card videos only autoplay on hover, full load happens in modal.
     const posterAttr = poster ? ` poster="${poster}"` : '';
     const cardPriceTag = renderCardPriceTag(item.price, lang);
     const cardPriceHtml = cardPriceTag ? `\n                        ${cardPriceTag}` : '';
     thumbHtml =
 `                    <div class="work-thumb">
-                        <video class="work-video" src="${videoSrc}" muted loop playsinline preload="${preload}"${posterAttr}></video>
+                        <video class="work-video" src="${videoSrc}" muted loop playsinline preload="none"${posterAttr}></video>
                         <div class="work-badge">${escapeHtml(badge)}</div>${cardPriceHtml}
                     </div>`;
   } else {
