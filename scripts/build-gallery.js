@@ -28,7 +28,11 @@ const TARGETS = [
 
 const START_MARKER = '<!-- GALLERY:START -->';
 const END_MARKER   = '<!-- GALLERY:END -->';
+const SCHEMA_START = '<!-- GALLERY-SCHEMA:START -->';
+const SCHEMA_END   = '<!-- GALLERY-SCHEMA:END -->';
 const GENERATED_NOTICE = '<!-- Auto-generated from data/gallery.json by scripts/build-gallery.js. Do not edit by hand. -->';
+
+const SITE_URL = 'https://3dpie.uz';
 
 // ------- helpers -------
 
@@ -151,22 +155,84 @@ function renderGallery(items, lang) {
   return `                ${START_MARKER}\n                ${GENERATED_NOTICE}\n${cards}\n                ${END_MARKER}`;
 }
 
+// ------- Schema.org JSON-LD generation -------
+
+function absoluteUrl(rel) {
+  if (!rel) return '';
+  if (/^https?:\/\//i.test(rel)) return rel;
+  return SITE_URL + '/' + String(rel).replace(/^\.?\//, '');
+}
+
+function buildProductSchema(item, lang) {
+  const title = pickLang(item.title, lang);
+  const description = pickLang(item.description, lang);
+  const pageUrl = `${SITE_URL}${lang === 'uz' ? '/uz.html' : '/'}#work-${item.id}`;
+  const firstImage = (item.medias || []).find(m => m.type === 'image') || {};
+  const image = absoluteUrl(item.thumb || firstImage.src || (item.medias && item.medias[0] && item.medias[0].poster) || '');
+
+  const product = {
+    '@type': 'Product',
+    'name': title,
+    'description': description,
+    'url': pageUrl,
+    'brand': { '@type': 'Brand', 'name': '3DPie' }
+  };
+  if (image) product.image = image;
+
+  if (item.price && item.price.current != null) {
+    product.offers = {
+      '@type': 'Offer',
+      'price': String(item.price.current),
+      'priceCurrency': 'UZS',
+      'availability': 'https://schema.org/InStock',
+      'url': pageUrl,
+      'seller': { '@type': 'Organization', 'name': '3DPie' }
+    };
+  }
+  return product;
+}
+
+function renderSchemaBlock(items, lang) {
+  const products = items.map((item, idx) => ({
+    '@type': 'ListItem',
+    'position': idx + 1,
+    'item': buildProductSchema(item, lang)
+  }));
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    'name': lang === 'uz'
+      ? '3DPie ishlari galereyasi — 3D-chop etish namunalari'
+      : 'Галерея работ 3DPie — примеры 3D-печати',
+    'itemListElement': products
+  };
+  const json = JSON.stringify(itemList, null, 2)
+    .split('\n').map(l => '    ' + l).join('\n');
+  return `    ${SCHEMA_START}\n    <script type="application/ld+json">\n${json}\n    </script>\n    ${SCHEMA_END}`;
+}
+
 // ------- injector -------
 
-function injectGallery(html, renderedBlock, fileLabel) {
-  const startIdx = html.indexOf(START_MARKER);
-  const endIdx   = html.indexOf(END_MARKER);
+function injectBlock(html, startMarker, endMarker, renderedBlock, fileLabel) {
+  const startIdx = html.indexOf(startMarker);
+  const endIdx   = html.indexOf(endMarker);
   if (startIdx === -1 || endIdx === -1 || endIdx < startIdx) {
     throw new Error(
-      `Markers not found in ${fileLabel}. Expected "${START_MARKER}" ... "${END_MARKER}".`
+      `Markers not found in ${fileLabel}. Expected "${startMarker}" ... "${endMarker}".`
     );
   }
-
-  // Replace from the start of the line containing START_MARKER to the end of END_MARKER
   const lineStart = html.lastIndexOf('\n', startIdx) + 1;
-  const blockEnd  = endIdx + END_MARKER.length;
-
+  const blockEnd  = endIdx + endMarker.length;
   return html.slice(0, lineStart) + renderedBlock + html.slice(blockEnd);
+}
+
+function injectGallery(html, renderedBlock, fileLabel) {
+  return injectBlock(html, START_MARKER, END_MARKER, renderedBlock, fileLabel);
+}
+
+function injectSchema(html, renderedBlock, fileLabel) {
+  if (html.indexOf(SCHEMA_START) === -1) return html; // markers optional
+  return injectBlock(html, SCHEMA_START, SCHEMA_END, renderedBlock, fileLabel);
 }
 
 // ------- main -------
@@ -198,7 +264,9 @@ function main() {
     }
     const html = fs.readFileSync(target.file, 'utf8');
     const block = renderGallery(items, target.lang);
-    const next = injectGallery(html, block, path.basename(target.file));
+    let next = injectGallery(html, block, path.basename(target.file));
+    const schemaBlock = renderSchemaBlock(items, target.lang);
+    next = injectSchema(next, schemaBlock, path.basename(target.file));
     if (next !== html) {
       fs.writeFileSync(target.file, next, 'utf8');
       updated++;

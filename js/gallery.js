@@ -39,6 +39,26 @@
 
       state.items.push({ type, title, description, longDescription, priceHtml, medias, el: card });
 
+      // Blur-up: mark thumbnail as loaded once the image/video frame is ready
+      const thumbImg = card.querySelector('.work-thumb img');
+      if(thumbImg){
+        if(thumbImg.complete && thumbImg.naturalWidth > 0){
+          thumbImg.classList.add('is-loaded');
+        } else {
+          thumbImg.addEventListener('load', () => thumbImg.classList.add('is-loaded'), { once: true });
+          thumbImg.addEventListener('error', () => thumbImg.classList.add('is-loaded'), { once: true });
+        }
+      }
+      const thumbVid = card.querySelector('.work-thumb video');
+      if(thumbVid){
+        if(thumbVid.readyState >= 2 || thumbVid.poster){
+          thumbVid.classList.add('is-loaded');
+        } else {
+          thumbVid.addEventListener('loadeddata', () => thumbVid.classList.add('is-loaded'), { once: true });
+          thumbVid.addEventListener('error', () => thumbVid.classList.add('is-loaded'), { once: true });
+        }
+      }
+
       // Hover autoplay for videos (thumbnail)
       if(type === 'video'){
         const vid = card.querySelector('video.work-video');
