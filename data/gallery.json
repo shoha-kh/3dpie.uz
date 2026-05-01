@@ -219,7 +219,7 @@
       "id": "car-air-deflector",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "",
+      "thumb": "./gallery/car-air-deflector/car-air-deflector-poster.webp",
       "title": {
         "ru": "Дефлектор для иномарки",
         "uz": "Chet el avtomobili uchun deflektor"
@@ -248,7 +248,7 @@
       "id": "flexible-rubber-parts",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "",
+      "thumb": "./gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp",
       "title": {
         "ru": "Гибкие резиновые изделия из 3D-принтера",
         "uz": "3D-printerda chop etilgan egiluvchan rezina buyumlar"
@@ -277,7 +277,7 @@
       "id": "microchip-cases",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "",
+      "thumb": "./gallery/microchip-cases/microchip-cases-poster.webp",
       "title": {
         "ru": "Корпус для микросхем на заказ",
         "uz": "Mikrosxemalar uchun korpus — buyurtma asosida"
@@ -306,7 +306,7 @@
       "id": "valentines-day",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "",
+      "thumb": "./gallery/valentines-day/valentines-day-poster.webp",
       "title": {
         "ru": "С Днём святого Валентина ❤️",
         "uz": "Sevishganlar kuni muborak ❤️"
@@ -401,7 +401,7 @@
       "id": "socket-box-caps",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "",
+      "thumb": "./gallery/socket-box-caps/socket-box-caps-poster.webp",
       "title": {
         "ru": "Заглушки для подрозетников",
         "uz": "Podrozetniklar uchun himoya qopqoqlari"
@@ -430,7 +430,7 @@
       "id": "lada-vesta-exhaust",
       "type": "video",
       "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.jpg",
+      "thumb": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.webp",
       "title": {
         "ru": "Декоративный выхлоп для Lada Vesta",
         "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimi"
@@ -444,7 +444,7 @@
         {
           "type": "video",
           "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust.mp4",
-          "poster": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.jpg",
+          "poster": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.webp",
           "caption": {
             "ru": "Процесс изготовления декоративного выхлопа для Lada Vesta",
             "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimini tayyorlash jarayoni"
@@ -452,7 +452,7 @@
         },
         {
           "type": "image",
-          "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.jpg",
+          "src": "./gallery/lada-vesta-exhaust/lada-vesta-exhaust-1.webp",
           "alt": {
             "ru": "Декоративный выхлоп для Lada Vesta — 3D-печать на заказ в Чирчике",
             "uz": "Lada Vesta uchun dekorativ chiqindi gaz tizimi — Chirchiqda 3D-chop etish"
