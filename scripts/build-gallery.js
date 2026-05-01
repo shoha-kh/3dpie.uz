@@ -86,7 +86,7 @@ function renderMedia(media, lang) {
   const caption = pickLang(media.caption, lang);
   const captionAttr = caption ? ` data-caption="${escapeAttr(caption)}"` : '';
   const posterAttr = (type === 'video' && media.poster) ? ` data-poster="${escapeAttr(media.poster)}"` : '';
-  return `                    <a class="work-media" href="${href}" data-type="${escapeAttr(type)}"${posterAttr}${captionAttr} aria-hidden="true"></a>`;
+  return `                    <a class="work-media" href="${href}" data-type="${escapeAttr(type)}"${posterAttr}${captionAttr} aria-hidden="true" tabindex="-1"></a>`;
 }
 
 function renderCard(item, lang) {
