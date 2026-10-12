@@ -7,7 +7,7 @@
 
 const { SITE_URL, CONTACTS, T, STEPS, STEPS_TITLE, STEP_LABEL, CALC, CALC_T, businessNode } = require('./site');
 
-const ASSET_VERSION = '20261012f';
+const ASSET_VERSION = '20261012g';
 
 function esc(str) {
   return String(str == null ? '' : str)
@@ -403,7 +403,7 @@ function money(n) {
 function renderCalc(lang) {
   const c = CALC_T[lang];
   const mats = CALC.materials.map(m =>
-    `<option value="${m.id}">${esc(m.name)} — ${money(m.price)} ${esc(c.sum)}/${esc(c.g)}</option>`).join('');
+    `<option value="${m.id}"${m.id === CALC.materialDefault ? ' selected' : ''}>${esc(m.name)} — ${money(m.price)} ${esc(c.sum)}/${esc(c.g)}</option>`).join('');
   const infill = CALC.infill.map(v => `
                             <label><input type="radio" name="calc-infill" value="${v}"${v === CALC.infillDefault ? ' checked' : ''}><span>${esc(c.infillNames[v])}<b>${v}%</b></span></label>`).join('');
   const units = CALC.units.map(([id]) => `<option value="${id}">${esc(c.unitNames[id])}</option>`).join('');
@@ -426,7 +426,12 @@ function renderCalc(lang) {
                         <span class="calc-drop-hint">${esc(c.dropHint)}</span>
                         <noscript><span class="calc-drop-hint">${esc(c.noscript)}</span></noscript>
                     </label>
-                    <canvas class="calc-canvas" hidden></canvas>
+                    <canvas class="calc-canvas" tabindex="0" hidden></canvas>
+                    <div class="calc-zoom" hidden>
+                        <button type="button" data-zoom="in" aria-label="${esc(c.zoomIn)}" title="${esc(c.zoomIn)}">+</button>
+                        <button type="button" data-zoom="out" aria-label="${esc(c.zoomOut)}" title="${esc(c.zoomOut)}">−</button>
+                        <button type="button" data-zoom="fit" aria-label="${esc(c.zoomFit)}" title="${esc(c.zoomFit)}"><span aria-hidden="true">⤢</span></button>
+                    </div>
                     <div class="calc-bar" hidden>
                         <span class="calc-name"></span>
                         <span class="calc-legend">${esc(c.legend)}</span>
@@ -438,6 +443,16 @@ function renderCalc(lang) {
                     <div class="calc-field">
                         <label for="calc-mat">${esc(c.material)}</label>
                         <select id="calc-mat" class="calc-mat">${mats}</select>
+                    </div>
+                    <div class="calc-field">
+                        <span class="calc-label" id="calc-orient-label">${esc(c.orient)}</span>
+                        <div class="calc-orient" role="group" aria-labelledby="calc-orient-label">
+                            <button type="button" data-orient="auto" title="${esc(c.orientAutoTitle)}" disabled>${esc(c.orientAuto)}</button>
+                            <button type="button" data-orient="face" aria-pressed="false" disabled>${esc(c.orientFace)}</button>
+                            <button type="button" data-orient="x" aria-label="${esc(c.orientX)}" title="${esc(c.orientX)}" disabled><span aria-hidden="true">↻</span> X</button>
+                            <button type="button" data-orient="y" aria-label="${esc(c.orientY)}" title="${esc(c.orientY)}" disabled><span aria-hidden="true">↻</span> Y</button>
+                            <button type="button" data-orient="reset" disabled>${esc(c.orientReset)}</button>
+                        </div>
                     </div>
                     <fieldset class="calc-field">
                         <legend>${esc(c.infill)}</legend>
