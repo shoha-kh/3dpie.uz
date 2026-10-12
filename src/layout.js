@@ -66,6 +66,7 @@ function renderHead(page, alternates) {
 
   return `<head>
     <meta charset="UTF-8">
+    <script>if(location.protocol==='http:'&&location.hostname==='3dpie.uz')location.replace('https:'+location.href.slice(5))</script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${esc(page.title)}</title>
     <meta name="description" content="${esc(page.description)}">
@@ -89,6 +90,7 @@ ${altLinks}${xDefault}
     <meta name="theme-color" content="#0c0e0f">
     <meta name="yandex-verification" content="e333c0d704796c01">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/icon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icon-192.png">
     <link rel="apple-touch-icon" href="/images/icon-192.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">

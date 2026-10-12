@@ -91,7 +91,7 @@ module.exports = [
     nav: 'materials',
     breadcrumb: 'Qaysi plastikni tanlash kerak',
     navTitle: 'Qaysi plastikni tanlash kerak',
-    title: 'PLA, PETG, ABS, TPU yoki Nylon: 3D chop etish uchun qaysi plastikni tanlash kerak | 3DPie',
+    title: 'PLA, PETG, ABS, TPU yoki Nylon: qaysi plastikni tanlash kerak | 3DPie',
     description: "3D chop etish plastiklarini taqqoslash: PLA, PETG, ABS, TPU, Nylon — mustahkamlik, issiqqa chidamlilik, egiluvchanlik va har biri qaysi detallar uchun mos. Avtoehtiyot qismlar, tishli g'ildiraklar va ko'cha detallari uchun maslahatlar.",
     kicker: 'Maqola · materiallar',
     h1: '3D chop etish uchun qaysi plastikni tanlash kerak',

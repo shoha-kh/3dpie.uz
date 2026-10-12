@@ -68,7 +68,7 @@ module.exports = [
     nav: 'services',
     breadcrumb: '3D modellashtirish',
     navTitle: "Namuna bo'yicha 3D modellashtirish",
-    title: "Toshkentda buyurtma asosida 3D modellashtirish — rasm va namuna bo'yicha model | 3DPie",
+    title: "3D modellashtirish Toshkentda — rasm va namuna bo'yicha | 3DPie",
     description: "Toshkent va Chirchiqda buyurtma asosida 3D modellashtirish: chizg'ichli rasm, siniq bo'lak yoki eskiz bo'yicha detalning 3D modelini yaratamiz va chop etamiz. Murakkab shakllarni 3D skanerlash, STL va STEP fayllar. Konsultatsiya bepul.",
     kicker: 'Xizmat · 3D modellashtirish',
     h1: "Rasm, namuna va eskiz bo'yicha detallarni 3D modellashtirish",

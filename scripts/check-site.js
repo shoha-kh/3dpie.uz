@@ -44,7 +44,7 @@ for (const u of urls) {
   const h1 = (h.match(/<h1[\s>]/g) || []).length;
   if (h1 !== 1) problems.push(`${u}: ${h1} <h1> tags`);
   const title = (h.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
-  if (title.length > 90) problems.push(`${u}: title too long (${title.length})`);
+  if (title.length > 80) problems.push(`${u}: title too long (${title.length})`);
   for (const m of h.matchAll(/(?:href|src|poster|data-poster)="(\/[^"#?]*)/g)) {
     const p = m[1];
     if (!fs.existsSync(path.join(ROOT, p.endsWith('/') ? p + 'index.html' : p))) problems.push(`${u}: missing ${p}`);

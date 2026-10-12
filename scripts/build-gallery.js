@@ -189,9 +189,12 @@ function buildProductSchema(item, lang) {
     '@type': hasOffer ? 'Product' : 'CreativeWork',
     'name': title,
     'description': description,
-    'url': pageUrl,
-    'brand': { '@type': 'Brand', 'name': '3DPie' }
+    'url': pageUrl
   };
+
+  // brand is valid only for Product; a portfolio CreativeWork links to the business as creator.
+  if (hasOffer) node.brand = { '@type': 'Brand', 'name': '3DPie' };
+  else node.creator = { '@id': `${SITE_URL}/#business` };
 
   if (hasOffer) {
     // Product requires an image — fall back to brand logo if portfolio image is missing.
