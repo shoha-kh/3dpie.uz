@@ -1,0 +1,218 @@
+'use strict';
+
+/**
+ * taplink.html — the link-in-bio page for Instagram (noindex, blocked in robots.txt).
+ * Built by scripts/build-site.js from the same facts as the site (CONTACTS, CALC), so prices
+ * and contacts never drift. RU/UZ in one file: [data-l] spans, switched by the lang button.
+ * Site links carry UTM tags so Instagram traffic is visible in Metrika / GA.
+ */
+
+const { CONTACTS, CALC, T } = require('./site');
+const { esc, ANALYTICS } = require('./layout');
+
+const UTM = '?utm_source=instagram&utm_medium=social&utm_campaign=taplink';
+const money = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+const cheapest = Math.min(...CALC.materials.map(m => m.price));
+
+// [ru, uz] pairs
+const TXT = {
+  title: ['3DPie — 3D-печать в Ташкенте и Чирчике', '3DPie — Toshkent va Chirchiqda 3D chop etish'],
+  tagline: ['3D-печать, 3D-сканирование и моделирование.<br>Детали из пластика и резины на заказ', "3D chop etish, 3D skanerlash va modellashtirish.<br>Buyurtma asosida plastik va rezina detallar"],
+  min: [`Заказ от ${money(CALC.minOrder)} сум`, `Buyurtma ${money(CALC.minOrder)} so'mdan`],
+  cta: ['Отправить фото детали в Telegram', 'Detal rasmini Telegramga yuborish'],
+  ctaSub: ['Консультация бесплатная', 'Konsultatsiya bepul'],
+  calc: ['Есть STL-файл? Посчитать цену', 'STL fayl bormi? Narxni hisoblash'],
+  calcSub: [`от ${money(cheapest)} сум за грамм · файл не загружается`, `grammi ${money(cheapest)} so'mdan · fayl yuklanmaydi`],
+  contact: ['Связаться', "Bog'lanish"],
+  call: ['Позвонить', "Qo'ng'iroq qilish"],
+  site: ['На сайте', 'Saytda'],
+  works: ['Примеры работ', 'Ishlarimiz'],
+  worksSub: ['Фото и видео готовых деталей', 'Tayyor detallar rasm va videolari'],
+  scan: ['3D-сканирование', '3D skanerlash'],
+  scanSub: ['Копия сложной или сломанной детали', 'Murakkab yoki singan detal nusxasi'],
+  auto: ['Автозапчасти', 'Avtoehtiyot qismlar'],
+  autoSub: ['Клипсы, заглушки, дефлекторы, решётки', 'Klipsa, tiqin, deflektor, panjara'],
+  mat: ['Какой пластик выбрать', 'Qaysi plastikni tanlash kerak'],
+  matSub: ['PLA, PETG, PETG-CF, ABS, TPU, Nylon', 'PLA, PETG, PETG-CF, ABS, TPU, Nylon'],
+  where: ['Адрес и доставка', 'Manzil va yetkazib berish'],
+  addr: ['Производство', 'Ishlab chiqarish'],
+  delivery: ['Доставка', 'Yetkazib berish'],
+  deliverySub: ['Курьер по Ташкенту, в регионы — BTS / Яндекс', "Toshkent bo'ylab kuryer, viloyatlarga — BTS / Yandex"],
+};
+
+const PATHS = {
+  works: ['/#gallery', '/uz.html#gallery'],
+  calc: ['/ceny/#calc', '/uz/narxlar/#calc'],
+  scan: ['/3d-skanirovanie/', '/uz/3d-skanerlash/'],
+  auto: ['/avtozapchasti/', '/uz/avtoehtiyot-qismlar/'],
+  mat: ['/materialy/', '/uz/materiallar/'],
+  home: ['/#contact', '/uz.html#contact'],
+};
+
+// Inline text in both languages; CSS hides the inactive one.
+const L = key => `<span data-l="ru">${TXT[key][0]}</span><span data-l="uz">${TXT[key][1]}</span>`;
+// Same link in both languages: two <a>, one hidden.
+const siteHref = (key, i) => {
+  const [p, hash] = PATHS[key][i].split('#');
+  return `${p}${UTM}${hash ? '#' + hash : ''}`;
+};
+
+const ICONS = {
+  tg: '<svg viewBox="0 0 24 24"><path d="M21.5 4.3 2.9 11.5c-1.3.5-1.3 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.1.9.8.9.5 0 .7-.2 1-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.2-15c.3-1.3-.5-1.9-1.6-1.4ZM8.9 14l9.3-5.9c.5-.3.9-.1.5.2l-8 7.2-.3 3.3L8.9 14Z"/></svg>',
+  phone: '<svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>',
+  wa: '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.6 14.1c-.2.7-1.3 1.2-1.8 1.3-.5.1-1.1.1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.7-1.2-4.5-4-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .7.5l.9 2.2c.1.2.1.3 0 .5l-.3.5-.4.5c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.2.5.1.7-.1l1-1.2c.2-.3.4-.3.7-.2l2 1c.3.2.5.2.6.3.1.2.1.7-.2 1.4Z"/></svg>',
+  ig: '<svg viewBox="0 0 24 24"><path d="M12 7.3a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm6-7.9a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0ZM21 8c0-1.6-.4-3-1.6-4.2C18.3 2.6 16.8 2.3 15.2 2.2H8.8c-1.6 0-3 .4-4.2 1.6C3.4 4.9 3.1 6.4 3 8v8c0 1.6.4 3 1.6 4.2 1.2 1.2 2.6 1.5 4.2 1.6h6.4c1.6 0 3-.4 4.2-1.6 1.2-1.2 1.5-2.6 1.6-4.2V8Zm-2 9.6a2.6 2.6 0 0 1-1.5 1.5c-1 .4-3.4.3-4.5.3s-3.5.1-4.5-.3a2.6 2.6 0 0 1-1.5-1.5c-.4-1-.3-3.4-.3-4.5s-.1-3.5.3-4.5A2.6 2.6 0 0 1 6.5 5c1-.4 3.4-.3 4.5-.3h1c1.1 0 3.5-.1 4.5.3.7.3 1.2.8 1.5 1.5.4 1 .3 3.4.3 4.5s.1 3.5-.3 4.5Z"/></svg>',
+  pin: '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg>',
+  box: '<svg viewBox="0 0 24 24"><path d="M12 2 3 6.5v11L12 22l9-4.5v-11L12 2Zm0 2.2 6.6 3.3L12 10.8 5.4 7.5 12 4.2ZM5 9.1l6 3v7.5l-6-3V9.1Zm8 10.5v-7.5l6-3v7.5l-6 3Z"/></svg>',
+  calc: '<svg viewBox="0 0 24 24"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1 3v4h10V5H7Zm0 7v2h2v-2H7Zm4 0v2h2v-2h-2Zm4 0v6h2v-6h-2Zm-8 4v2h2v-2H7Zm4 0v2h2v-2h-2Z"/></svg>',
+  grid: '<svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3Zm2 2v4h4V5H5Zm8-2h8v8h-8V3Zm2 2v4h4V5h-4ZM3 13h8v8H3v-8Zm2 2v4h4v-4H5Zm8-2h8v8h-8v-8Zm2 2v4h4v-4h-4Z"/></svg>',
+  scan: '<svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3Zm12 0h6v6h-2V5h-4V3ZM3 15h2v4h4v2H3v-6Zm16 0h2v6h-6v-2h4v-4ZM2 11h20v2H2v-2Z"/></svg>',
+  car: '<svg viewBox="0 0 24 24"><path d="M18.9 6c-.2-.6-.8-1-1.4-1h-11c-.7 0-1.2.4-1.4 1L3 12v8c0 .6.4 1 1 1h1c.6 0 1-.4 1-1v-1h12v1c0 .6.4 1 1 1h1c.6 0 1-.4 1-1v-8l-2.1-6ZM6.5 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm11 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3ZM5 11l1.5-4.5h11L19 11H5Z"/></svg>',
+  layers: '<svg viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7l10-5Zm0 2.2L6.5 7 12 9.8 17.5 7 12 4.2ZM4.2 11.1 12 15l7.8-3.9 2.2 1.1-10 5-10-5 2.2-1.1Zm0 5L12 20l7.8-3.9 2.2 1.1-10 5-10-5 2.2-1.1Z"/></svg>',
+};
+
+// One row. href can be a string (same for both langs) or [ru, uz].
+function row({ href, icon, title, sub, cls = '', ext = false }) {
+  const attrs = ext ? ' target="_blank" rel="noopener"' : '';
+  const inner = `<span class="ic">${ICONS[icon]}</span><span class="tx"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</span><span class="ar" aria-hidden="true">→</span>`;
+  if (Array.isArray(href)) {
+    return `      <a class="row ${cls}" data-l="ru" href="${href[0]}"${attrs}>${inner}</a>
+      <a class="row ${cls}" data-l="uz" href="${href[1]}"${attrs}>${inner}</a>`;
+  }
+  return `      <a class="row ${cls}" href="${href}"${attrs}>${inner}</a>`;
+}
+
+const both = key => [0, 1].map(i => siteHref(key, i));
+
+function render() {
+  const year = new Date().getFullYear();
+  return `<!DOCTYPE html>
+<!-- Generated by scripts/build-site.js from src/taplink.js — edit the source, not this file. -->
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${esc(TXT.title[0])}</title>
+    <meta name="description" content="3D-печать, 3D-сканирование и моделирование на заказ в Ташкенте и Чирчике. Заказ от ${money(CALC.minOrder)} сум.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://3dpie.uz/">
+    <meta name="theme-color" content="#0c0e0f">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icon-32.png">
+    <link rel="apple-touch-icon" href="/images/icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+    <script>try{if(localStorage.getItem('tl-lang')==='uz'||(!localStorage.getItem('tl-lang')&&/^uz/i.test(navigator.language)))document.documentElement.lang='uz'}catch(e){}</script>
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      :root{--bg:#0c0e0f;--panel:#161a1b;--line:#252a2c;--line-2:#343a3d;--text:#eceeed;--text-2:#a9b0b2;--text-3:#6f787b;--accent:#c6f432;--ease:cubic-bezier(.2,.7,.2,1)}
+      html[lang=ru] [data-l=uz],html[lang=uz] [data-l=ru]{display:none!important}
+      body{font-family:'Onest',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:28px 16px 40px;
+        background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.2px);background-size:24px 24px;-webkit-font-smoothing:antialiased}
+      body::before{content:'';position:fixed;left:50%;top:-260px;width:620px;height:520px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(198,244,50,.13),transparent 70%);pointer-events:none}
+      a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+      .page{position:relative;width:100%;max-width:440px;display:flex;flex-direction:column;gap:10px}
+      .top{display:flex;justify-content:flex-end}
+      .lang{font:500 12px 'Onest',sans-serif;color:var(--text-2);background:none;border:1px solid var(--line-2);border-radius:999px;padding:6px 12px;cursor:pointer}
+      .lang:hover{border-color:var(--accent);color:var(--text)}
+      .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:4px 0 10px}
+      .ava{position:relative;width:96px;height:96px;border-radius:24px;overflow:hidden;border:1px solid var(--line-2);background:#fff}
+      .ava img{width:100%;height:100%;object-fit:cover;display:block}
+      .ava::before,.ava::after{content:'';position:absolute;inset:0;pointer-events:none}
+      .ava::before{background:linear-gradient(var(--accent),var(--accent)) top left/14px 2px,linear-gradient(var(--accent),var(--accent)) top left/2px 14px,linear-gradient(var(--accent),var(--accent)) top right/14px 2px,linear-gradient(var(--accent),var(--accent)) top right/2px 14px,linear-gradient(var(--accent),var(--accent)) bottom left/14px 2px,linear-gradient(var(--accent),var(--accent)) bottom left/2px 14px,linear-gradient(var(--accent),var(--accent)) bottom right/14px 2px,linear-gradient(var(--accent),var(--accent)) bottom right/2px 14px;background-repeat:no-repeat;margin:6px}
+      .ava::after{height:40%;background:linear-gradient(to bottom,transparent,rgba(198,244,50,.28) 90%,var(--accent) 97%,transparent);animation:scan 3.6s var(--ease) infinite alternate}
+      @keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(160%)}}
+      h1{font:700 26px/1.1 'Unbounded',sans-serif;letter-spacing:-.5px}
+      .tag{font-size:14px;line-height:1.5;color:var(--text-2);max-width:330px}
+      .pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;padding:6px 14px 6px 12px;border:1px solid var(--line-2);border-radius:999px}
+      .pill::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(198,244,50,.15)}
+      .loc{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+      .label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);padding:12px 4px 2px}
+      .row{position:relative;display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:border-color .2s,transform .2s var(--ease)}
+      .row:hover{border-color:var(--line-2);transform:translateY(-1px)}
+      .row:active{transform:scale(.99)}
+      .ic{flex:0 0 40px;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:#1e2324;border:1px solid var(--line-2)}
+      .ic svg{width:20px;height:20px;fill:var(--text)}
+      .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+      .tx b{font-size:15px;font-weight:600}
+      .tx small{font-size:12.5px;color:var(--text-2);line-height:1.35}
+      .ar{color:var(--text-3);transition:transform .2s var(--ease),color .2s}
+      .row:hover .ar{transform:translateX(3px);color:var(--accent)}
+      .main{background:var(--accent);border-color:var(--accent);color:#0c0e0f;padding:16px}
+      .main .ic{background:#0c0e0f;border-color:#0c0e0f}.main .ic svg{fill:var(--accent)}
+      .main small,.main .ar{color:#2b3307}
+      .main::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(-110%);animation:sweep 4.5s 1.2s var(--ease) infinite}
+      @keyframes sweep{0%{transform:translateX(-110%)}22%,100%{transform:translateX(110%)}}
+      .calc{border-color:rgba(198,244,50,.45);background:linear-gradient(180deg,rgba(198,244,50,.07),rgba(198,244,50,.02)),var(--panel)}
+      .calc .ic{background:rgba(198,244,50,.12);border-color:rgba(198,244,50,.35)}.calc .ic svg{fill:var(--accent)}
+      .calc .ar{color:var(--accent)}
+      .calc::before{content:'.stl';position:absolute;right:46px;top:50%;transform:translateY(-50%);font:700 22px 'Unbounded',sans-serif;color:rgba(198,244,50,.07);pointer-events:none}
+      .duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .duo .row{flex-direction:column;align-items:flex-start;gap:10px;padding:14px}
+      .duo .ar{display:none}
+      .foot{margin-top:18px;text-align:center;font-size:12px;color:var(--text-3)}
+      .foot a{color:var(--text-2);border-bottom:1px solid var(--line-2)}
+      @media (max-width:360px){h1{font-size:23px}.row{padding:12px 13px}.duo{grid-template-columns:1fr}}
+      @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+    </style>${ANALYTICS}
+</head>
+<body>
+  <main class="page">
+    <div class="top"><button class="lang" type="button" aria-label="Язык / Til"><span data-l="ru">O'zbekcha</span><span data-l="uz">Русский</span></button></div>
+
+    <header class="hero">
+      <div class="ava"><img src="/images/logo.webp" width="96" height="96" alt="3DPie"></div>
+      <h1>3DPie</h1>
+      <p class="tag">${L('tagline')}</p>
+      <p class="pill">${L('min')}</p>
+      <p class="loc"><span data-l="ru">${esc(T.ru.address.city)} · Ташкент</span><span data-l="uz">${esc(T.uz.address.city)} · Toshkent</span></p>
+    </header>
+
+${row({ href: CONTACTS.telegram, icon: 'tg', title: L('cta'), sub: L('ctaSub'), cls: 'main', ext: true })}
+${row({ href: both('calc'), icon: 'calc', title: L('calc'), sub: L('calcSub'), cls: 'calc' })}
+
+    <p class="label">${L('contact')}</p>
+    <div class="duo">
+${row({ href: `tel:${CONTACTS.phone}`, icon: 'phone', title: L('call'), sub: CONTACTS.phoneHuman })}
+${row({ href: CONTACTS.whatsapp, icon: 'wa', title: 'WhatsApp', sub: CONTACTS.phoneHuman, ext: true })}
+    </div>
+${row({ href: CONTACTS.telegram, icon: 'tg', title: 'Telegram', sub: CONTACTS.telegramHandle, ext: true })}
+
+    <p class="label">${L('site')}</p>
+${row({ href: both('works'), icon: 'grid', title: L('works'), sub: L('worksSub') })}
+${row({ href: both('scan'), icon: 'scan', title: L('scan'), sub: L('scanSub') })}
+${row({ href: both('auto'), icon: 'car', title: L('auto'), sub: L('autoSub') })}
+${row({ href: both('mat'), icon: 'layers', title: L('mat'), sub: L('matSub') })}
+
+    <p class="label">${L('where')}</p>
+${row({ href: CONTACTS.yandexMap, icon: 'pin', title: L('addr'), sub: `<span data-l="ru">${esc(T.ru.address.city)}, ${esc(T.ru.address.street)}</span><span data-l="uz">${esc(T.uz.address.city)}, ${esc(T.uz.address.street)}</span>`, ext: true })}
+${row({ href: both('home'), icon: 'box', title: L('delivery'), sub: L('deliverySub') })}
+${row({ href: CONTACTS.instagram, icon: 'ig', title: 'Instagram', sub: CONTACTS.instagramHandle, ext: true })}
+
+    <p class="foot">© ${year} 3DPie · <a href="/${UTM}">3dpie.uz</a></p>
+  </main>
+  <script>
+    document.querySelector('.lang').addEventListener('click', function () {
+      var l = document.documentElement.lang === 'uz' ? 'ru' : 'uz';
+      document.documentElement.lang = l;
+      try { localStorage.setItem('tl-lang', l); } catch (e) {}
+    });
+    // Same goals as js/scripts.js
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href]'); if (!a) return;
+      var h = a.getAttribute('href'), g = null;
+      if (h.indexOf('tel:') === 0) g = 'click_phone';
+      else if (h.indexOf('t.me/') !== -1) g = 'click_telegram';
+      else if (h.indexOf('#calc') !== -1) g = 'click_calc';
+      if (!g) return;
+      try { if (typeof ym === 'function') ym(105486503, 'reachGoal', g); } catch (err) {}
+      try { if (typeof gtag === 'function') gtag('event', g, { link_url: h, page_path: location.pathname }); } catch (err) {}
+    });
+  </script>
+</body>
+</html>
+`;
+}
+
+module.exports = { render };

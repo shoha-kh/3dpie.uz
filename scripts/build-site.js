@@ -19,6 +19,7 @@ const path = require('path');
 const layout = require('../src/layout');
 const { SITE_URL, CONTACTS, T } = require('../src/site');
 const gallery = require('./build-gallery');
+const taplink = require('../src/taplink');
 
 const ROOT = path.resolve(__dirname, '..');
 const PAGES_DIR = path.join(ROOT, 'src', 'pages');
@@ -188,6 +189,7 @@ function main() {
   gallery.main();
 
   fs.writeFileSync(path.join(ROOT, '404.html'), render404(pages), 'utf8');
+  fs.writeFileSync(path.join(ROOT, 'taplink.html'), taplink.render(), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), buildSitemap(pages), 'utf8');
   console.log(`[build-site] sitemap.xml — ${pages.length} URLs`);
 }

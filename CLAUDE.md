@@ -22,10 +22,11 @@ GitHub Pages, plain HTML/CSS/JS, Node ≥ 18, **no npm dependencies**. Reply to 
 | Service/article pages (RU+UZ pair per file, linked by `id`) | `src/pages/{modeling,scanning,auto,gears,prices,materials}.js` |
 | Gallery cards + video/photo lists | `data/gallery.json` (CRLF, big — grep by `"id"`) |
 | Styles | `css/styles.css` (tokens in `:root`), `css/gallery.css` (cards + modal) |
+| Instagram link-in-bio page `taplink.html` (RU/UZ, noindex) | `src/taplink.js` |
 | AI summary | `llms.txt` (hand-written, sync with `src/site.js`) |
 | Keywords per page | `KEYWORDS.md` |
 
-Output: `index.html`, `uz.html`, `<slug>/index.html`, `uz/<slug>/index.html`, `404.html` (noindex), `sitemap.xml` — all generated, all committed.
+Output: `index.html`, `uz.html`, `<slug>/index.html`, `uz/<slug>/index.html`, `404.html`, `taplink.html` (both noindex), `sitemap.xml` — all generated, all committed.
 Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywords in the first ~60.
 
 ## Commands

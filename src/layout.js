@@ -518,5 +518,5 @@ function renderPrintViz(lang) {
 }
 
 module.exports = {
-  esc, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
+  ANALYTICS, esc, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
 };

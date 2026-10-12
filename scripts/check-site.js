@@ -26,7 +26,7 @@ const BANNED = [
   [/anycubic|kobra|qidi/i, 'printer brand/model (must not be named)']
 ];
 const BANNED_SCAN = ['.html', '.css', '.js', '.txt', '.xml', '.json'];
-const BANNED_SKIP = /^(\.git|\.github|node_modules|\.shots|\.tools|docs|scripts)([\\/]|$)|^taplink\.html$/;
+const BANNED_SKIP = /^(\.git|\.github|node_modules|\.shots|\.tools|docs|scripts)([\\/]|$)/;
 
 const problems = [];
 const fileOf = p => (p === '/' ? 'index.html' : p.endsWith('.html') ? p.slice(1) : p.slice(1) + 'index.html');

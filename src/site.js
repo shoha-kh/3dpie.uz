@@ -21,6 +21,8 @@ const CONTACTS = {
   mapEmbed:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1301.6256151982968!2d69.5570212281913!3d41.45332872531939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aefb69d2c4e733%3A0x655af263ac156173!2z0YPQu9C40YbQsCDQkNC80LjRgNCwINCi0LXQvNGD0YDQsCA2MiDQsCwg0KfQuNGA0YfQuNC6LCDQotCw0YjQutC10L3RgtGB0LrQsNGPINC-0LHQu9Cw0YHRgtGMLCDQo9C30LHQtdC60LjRgdGC0LDQvQ!5e0!3m2!1sru!2s!4v1762893583444!5m2!1sru!2s',
   mapLink: 'https://maps.google.com/?q=41.453319,69.557021',
+  yandexMap: 'https://yandex.uz/maps/-/CPrdnOOs',
+  whatsapp: 'https://wa.me/998901391094',
 }
 
 const T = {
