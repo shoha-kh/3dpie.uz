@@ -8,6 +8,11 @@
     videoTimes: {}
   };
 
+  const isUz = (document.documentElement.lang || '').toLowerCase().indexOf('uz') === 0;
+  const L = isUz
+    ? { view: "Ishni ko'rish", close: 'Yopish', prev: 'Oldingi', next: 'Keyingi', work: 'Ish', image: 'Rasm' }
+    : { view: 'Просмотр работы', close: 'Закрыть', prev: 'Предыдущий', next: 'Следующий', work: 'Работа', image: 'Изображение' };
+
   document.addEventListener('DOMContentLoaded', () => {
     setupCards();
     injectModal();
@@ -89,10 +94,10 @@
     const modal = document.createElement('div');
     modal.className = 'work-modal';
     modal.innerHTML = `
-      <div class="work-modal__content" role="dialog" aria-modal="true" aria-label="Просмотр работы">
-        <button class="work-modal__close" aria-label="Закрыть">✕</button>
-        <button class="work-modal__nav work-modal__prev" aria-label="Предыдущий">❮</button>
-        <button class="work-modal__nav work-modal__next" aria-label="Следующий">❯</button>
+      <div class="work-modal__content" role="dialog" aria-modal="true" aria-label="${L.view}">
+        <button class="work-modal__close" aria-label="${L.close}">✕</button>
+        <button class="work-modal__nav work-modal__prev" aria-label="${L.prev}">❮</button>
+        <button class="work-modal__nav work-modal__next" aria-label="${L.next}">❯</button>
         <div class="work-modal__media"></div>
         <div class="work-thumbs" hidden></div>
         <div class="work-modal__caption">
@@ -146,7 +151,7 @@
     renderMedia(content, item, state.current.mediaIndex);
 
     // Caption
-    titleEl.textContent = item.title || 'Работа';
+    titleEl.textContent = item.title || L.work;
     if(priceEl){
       if(item.priceHtml){ priceEl.innerHTML = item.priceHtml; priceEl.hidden = false; }
       else { priceEl.innerHTML = ''; priceEl.hidden = true; }
@@ -238,7 +243,7 @@
     } else {
       const img = document.createElement('img');
       img.src = m.src;
-      img.alt = item.title || 'Изображение';
+      img.alt = item.title || L.image;
       container.appendChild(img);
     }
   }
@@ -299,7 +304,7 @@
     const item = state.items[state.current.cardIndex];
     renderMedia(content, item, state.current.mediaIndex);
 
-    titleEl.textContent = item.title || 'Работа';
+    titleEl.textContent = item.title || L.work;
     if(priceEl){
       if(item.priceHtml){ priceEl.innerHTML = item.priceHtml; priceEl.hidden = false; }
       else { priceEl.innerHTML = ''; priceEl.hidden = true; }

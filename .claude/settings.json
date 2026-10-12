@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run check)",
+      "Bash(npm run build && npm run check)",
+      "Bash(npm run shots:*)",
+      "Bash(npm run og)",
+      "Bash(npm run video:*)",
+      "Bash(node scripts/build-site.js)",
+      "Bash(node scripts/check-site.js)",
+      "Bash(node scripts/shots.js:*)",
+      "Bash(node scripts/prepare-video.js:*)",
+      "Bash(ffprobe:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Read(./gallery/**/*.mp4)",
+      "Read(./.tools/**)",
+      "Read(./node_modules/**)"
+    ]
+  }
+}

@@ -1,31 +1,30 @@
-# https://www.robotstxt.org/robotstxt.html
+# 3dpie.uz — robots.txt
+# Сайт полностью открыт для поисковиков и ИИ-ассистентов:
+# чем больше систем знают о 3DPie, тем чаще нас рекомендуют.
 
-# Для всех поисковых роботов
 User-agent: *
 Allow: /
+Disallow: /taplink.html
 
-# Запрещаем индексацию служебных файлов
-Disallow: /admin/
-Disallow: /private/
-
-# Карта сайта
-Sitemap: https://3dpie.uz/sitemap.xml
-
-# Yandex
+# Яндекс: не индексировать дубли страниц с UTM-метками
 User-agent: Yandex
 Allow: /
-Clean-param: utm_source&utm_medium&utm_campaign
+Disallow: /taplink.html
+Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term&yclid&gclid&fbclid
 
-# Google
-User-agent: Googlebot
+# ИИ-поиск и ассистенты — явно разрешены
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: YandexAdditional
+User-agent: YandexAdditionalBot
 Allow: /
 
-# Bing
-User-agent: Bingbot
-Allow: /
-
-# Оптимальная задержка между запросами (только для Yandex)
-# Crawl-delay убран — Google и Bing не поддерживают его стандартно
-
-# Host - основное зеркало сайта (для Яндекса)
-Host: https://3dpie.uz
+Sitemap: https://3dpie.uz/sitemap.xml

@@ -55,6 +55,14 @@ function pickLang(field, lang) {
   return field[lang] || field.ru || field.uz || '';
 }
 
+// Root-relative asset path ("./gallery/x.webp" -> "/gallery/x.webp") so cards
+// render correctly on nested pages (/avtozapchasti/ etc.) as well as on the home pages.
+function assetUrl(rel) {
+  if (!rel) return '';
+  if (/^(https?:)?\/\//i.test(rel) || rel.startsWith('/')) return rel;
+  return '/' + String(rel).replace(/^\.?\//, '');
+}
+
 function formatNumber(n) {
   // Use narrow no-break space (U+202F) as thousands separator
   return Number(n).toLocaleString('ru-RU').replace(/\s/g, '\u202F');
@@ -82,10 +90,10 @@ function renderCardPriceTag(price, lang) {
 
 function renderMedia(media, lang) {
   const type = media.type || 'image';
-  const href = escapeAttr(media.src);
+  const href = escapeAttr(assetUrl(media.src));
   const caption = pickLang(media.caption, lang);
   const captionAttr = caption ? ` data-caption="${escapeAttr(caption)}"` : '';
-  const posterAttr = (type === 'video' && media.poster) ? ` data-poster="${escapeAttr(media.poster)}"` : '';
+  const posterAttr = (type === 'video' && media.poster) ? ` data-poster="${escapeAttr(assetUrl(media.poster))}"` : '';
   return `                    <a class="work-media" href="${href}" data-type="${escapeAttr(type)}"${posterAttr}${captionAttr} aria-hidden="true" tabindex="-1"></a>`;
 }
 
@@ -98,8 +106,8 @@ function renderCard(item, lang) {
   let thumbHtml;
   if (type === 'video') {
     const firstVideo = (item.medias || []).find(m => m.type === 'video') || {};
-    const videoSrc = escapeAttr(firstVideo.src || '');
-    const poster = escapeAttr(firstVideo.poster || item.thumb || '');
+    const videoSrc = escapeAttr(assetUrl(firstVideo.src || ''));
+    const poster = escapeAttr(assetUrl(firstVideo.poster || item.thumb || ''));
     const badge = pickLang(item.badge, lang) || (lang === 'uz' ? 'Video' : 'Видео');
     // Always use preload="none" — card videos only autoplay on hover, full load happens in modal.
     const posterAttr = poster ? ` poster="${poster}"` : '';
@@ -112,7 +120,7 @@ function renderCard(item, lang) {
                     </div>`;
   } else {
     const firstImage = (item.medias || []).find(m => m.type === 'image') || {};
-    const thumbSrc = escapeAttr(item.thumb || firstImage.src || '');
+    const thumbSrc = escapeAttr(assetUrl(item.thumb || firstImage.src || ''));
     const altText = pickLang(firstImage.alt, lang) || title;
     const cardPriceTag = renderCardPriceTag(item.price, lang);
     const cardPriceHtml = cardPriceTag ? `\n                        ${cardPriceTag}` : '';
@@ -290,4 +298,6 @@ function main() {
   console.log(`[build-gallery] Done. ${updated} file(s) updated.`);
 }
 
-main();
+module.exports = { main, renderCard, pickLang, escapeHtml, assetUrl, formatNumber };
+
+if (require.main === module) main();

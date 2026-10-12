@@ -1,0 +1,9 @@
+# dependencies / local tools
+node_modules/
+.tools/
+
+# screenshots, contact sheets, temp renders
+.shots/
+
+# personal Claude Code settings
+.claude/settings.local.json

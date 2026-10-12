@@ -1,7 +1,8 @@
 # Deploy 3DPie.uz to GitHub Pages
 # - Runs on every push to main
-# - Publishes the repository root as a static site
-# - Gallery HTML is generated locally (run `npm run build` before commit)
+# - Publishes only the public site files (sources, scripts and notes are excluded)
+# - HTML is generated locally (run `npm run build` before commit)
+# - After deploy, pings IndexNow (Bing, Yandex) with all sitemap URLs
 
 name: Deploy to GitHub Pages
 
@@ -29,10 +30,19 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Collect public files
+        run: |
+          mkdir _site
+          rsync -a ./ _site/ \
+            --exclude '.git' --exclude '.github' --exclude '_site' \
+            --exclude 'src' --exclude 'scripts' --exclude 'data' --exclude 'node_modules' \
+            --exclude '*.md' --exclude 'package*.json' --exclude '.gitignore' \
+            --exclude '.claude' --exclude '.shots' --exclude '.tools' --exclude 'docs'
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
 
   deploy:
     needs: build
@@ -44,3 +54,20 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Notify IndexNow
+        # Search engines are a courtesy notification — never fail the deploy because of them.
+        continue-on-error: true
+        run: node scripts/indexnow.js

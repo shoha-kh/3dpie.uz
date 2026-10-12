@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- OG image template (1200×630). Rendered by scripts/og-image.js; {{...}} are filled per language. -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=block" rel="stylesheet">
+<style>
+* { margin: 0; box-sizing: border-box; }
+body { width: 1200px; height: 630px; background: #0c0e0f; color: #eceeed; position: relative; overflow: hidden; font-family: 'Onest', sans-serif;
+  background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.2px); background-size: 28px 28px; }
+body:before { content: ''; position: absolute; right: -120px; top: -160px; width: 760px; height: 760px; background: radial-gradient(closest-side, rgba(198,244,50,.16), transparent 70%); }
+.l { position: absolute; left: 70px; top: 60px; width: 640px; }
+.brand { display: flex; align-items: center; gap: 12px; font: 700 30px 'Unbounded', sans-serif; letter-spacing: -1px; margin-bottom: 44px; }
+.brand img { width: 46px; height: 46px; border-radius: 50%; background: #fff; }
+.k { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: #a9b0b2; padding: 7px 14px 7px 12px; border: 1px solid #343a3d; border-radius: 999px; margin-bottom: 22px; }
+.k:before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #c6f432; box-shadow: 0 0 0 4px rgba(198,244,50,.15); }
+h1 { font: 500 50px/1.06 'Unbounded', sans-serif; letter-spacing: -1.5px; }
+h1 em { font-style: normal; color: #c6f432; }
+.ph { position: absolute; left: 70px; bottom: 58px; display: inline-flex; padding: 14px 22px; border-radius: 12px; background: #c6f432; color: #0c0e0f; font: 600 24px 'Onest', sans-serif; }
+.s { position: absolute; left: 380px; bottom: 72px; font-size: 18px; color: #a9b0b2; }
+.card { position: absolute; right: 60px; top: 60px; width: 330px; height: 430px; border-radius: 16px; overflow: hidden; border: 1px solid #343a3d; }
+.card img { width: 100%; height: 100%; object-fit: cover; }
+.card:after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 62%, rgba(198,244,50,.18) 72%, #c6f432 72.6%, transparent 73%); }
+.c { position: absolute; inset: 12px; background:
+  linear-gradient(#c6f432,#c6f432) top left/22px 2px, linear-gradient(#c6f432,#c6f432) top left/2px 22px,
+  linear-gradient(#c6f432,#c6f432) top right/22px 2px, linear-gradient(#c6f432,#c6f432) top right/2px 22px,
+  linear-gradient(#c6f432,#c6f432) bottom left/22px 2px, linear-gradient(#c6f432,#c6f432) bottom left/2px 22px,
+  linear-gradient(#c6f432,#c6f432) bottom right/22px 2px, linear-gradient(#c6f432,#c6f432) bottom right/2px 22px; background-repeat: no-repeat; z-index: 1; }
+.cap { position: absolute; right: 72px; top: 506px; font-size: 15px; color: #a9b0b2; }
+.cap:before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #c6f432; margin-right: 8px; vertical-align: middle; }
+</style></head><body>
+<div class="l"><div class="brand"><img src="/images/logo.jpg" alt="">3DPie</div>
+<div class="k">{{kicker}}</div><h1>{{title}}</h1></div>
+<div class="ph">{{phone}}</div><div class="s">{{sub}}</div>
+<div class="card"><img src="{{img1}}" alt=""><div class="c"></div></div>
+<div class="cap">{{cap1}}</div>
+</body></html>

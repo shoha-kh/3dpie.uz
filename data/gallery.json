@@ -1,8 +1,243 @@
 {
   "$schema": "./gallery.schema.json",
   "version": 1,
-  "updated": "2026-05-01",
+  "updated": "2026-10-12",
   "items": [
+    {
+      "id": "cable-clips-batch",
+      "type": "video",
+      "badge": {
+        "ru": "Видео",
+        "uz": "Video"
+      },
+      "thumb": "./gallery/cable-clips-batch/cable-clips-batch-poster.webp",
+      "title": {
+        "ru": "Партия креплений для кабеля — 200 шт за 2 дня",
+        "uz": "Kabel mahkamlagichlari — 2 kunda 200 dona"
+      },
+      "description": {
+        "ru": "Серийный заказ: 200 одинаковых креплений напечатали за 2 дня",
+        "uz": "Seriyali buyurtma: 200 ta bir xil mahkamlagich 2 kunda chop etildi"
+      },
+      "longDescription": {
+        "ru": "Партия креплений для кабеля, сделанная под заказ. 200 штук были готовы всего за 2 дня.\n\nНужна серия одинаковых деталей? Позвоните или напишите в Telegram. Консультация бесплатная — можно спокойно узнать, сколько будет стоить ваша идея.",
+        "uz": "Kabel uchun mahkamlagichlarning buyurtma asosidagi partiyasi. 200 dona atigi 2 kunda tayyorlandi!\n\nSizga ham bir xil detallar seriyasi kerakmi? Qo'ng'iroq qiling yoki Telegram orqali yozing. Konsultatsiya bepul, shuning uchun istalgan g'oyangizni tayyorlash narxini bemalol so'rashingiz mumkin."
+      },
+      "tags": [
+        "серийное производство",
+        "крепления для кабеля",
+        "партия",
+        "seriyali ishlab chiqarish",
+        "kabel mahkamlagich"
+      ],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/cable-clips-batch/cable-clips-batch.mp4",
+          "poster": "./gallery/cable-clips-batch/cable-clips-batch-poster.webp",
+          "caption": {
+            "ru": "Партия из 200 креплений для кабеля",
+            "uz": "200 ta kabel mahkamlagichi partiyasi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ac-frame",
+      "type": "video",
+      "badge": {
+        "ru": "Видео",
+        "uz": "Video"
+      },
+      "thumb": "./gallery/ac-frame/ac-frame-poster.webp",
+      "title": {
+        "ru": "Декоративная рамка для кондиционера",
+        "uz": "Konditsioner uchun dekorativ ramka"
+      },
+      "description": {
+        "ru": "Рамка для кондиционера в кабине спецтехники — по 3D-скану",
+        "uz": "Maxsus texnika kabinasidagi konditsioner uchun ramka — 3D skan bo'yicha"
+      },
+      "longDescription": {
+        "ru": "Декоративная рамка для кондиционера в кабине спецтехники. Закрывает щели и придаёт установке аккуратный, заводской вид.\n\nСделана индивидуально: сняли форму 3D-сканированием, смоделировали рамку по месту и напечатали.",
+        "uz": "Konditsioner uchun dekorativ ramka. Tirqishlarni yopish va qurilmaga saranjom, zavoddagidek ko'rinish berish uchun individual yondashuv.\n\nShaklini 3D skanerlash orqali oldik, joyiga moslab modellashtirdik va chop etdik."
+      },
+      "tags": [
+        "3d сканирование",
+        "спецтехника",
+        "кондиционер",
+        "рамка",
+        "3d skanerlash",
+        "konditsioner"
+      ],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/ac-frame/ac-frame.mp4",
+          "poster": "./gallery/ac-frame/ac-frame-poster.webp",
+          "caption": {
+            "ru": "Рамка для кондиционера — от скана до установки",
+            "uz": "Konditsioner ramkasi — skandan o'rnatishgacha"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aquarium-skeleton",
+      "type": "video",
+      "badge": {
+        "ru": "Видео",
+        "uz": "Video"
+      },
+      "thumb": "./gallery/aquarium-skeleton/aquarium-skeleton-poster.webp",
+      "title": {
+        "ru": "Танцующий скелет для аквариума",
+        "uz": "Akvarium uchun raqsga tushuvchi skelet"
+      },
+      "description": {
+        "ru": "Декор для аквариума, который «танцует» в воде",
+        "uz": "Suvda «raqs tushadigan» akvarium bezagi"
+      },
+      "longDescription": {
+        "ru": "Скелет-танцор для аквариума. Можно заказать напрямую у нас или купить в зоомагазине @aqua__zoo.\n\nДоставка в другие регионы — через BTS или Яндекс Доставку, доставка платная.",
+        "uz": "Akvarium uchun raqqos skelet. Bevosita bizdan buyurtma qilishingiz yoki @aqua__zoo zoodo'konidan sotib olishingiz mumkin.\n\nBoshqa viloyatlarga BTS yoki Yandex orqali yetkazib beramiz, yetkazib berish pullik."
+      },
+      "tags": [
+        "аквариум",
+        "декор",
+        "скелет",
+        "akvarium",
+        "dekor"
+      ],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/aquarium-skeleton/aquarium-skeleton.mp4",
+          "poster": "./gallery/aquarium-skeleton/aquarium-skeleton-poster.webp",
+          "caption": {
+            "ru": "Скелет-танцор в аквариуме",
+            "uz": "Akvariumdagi raqqos skelet"
+          }
+        }
+      ]
+    },
+    {
+      "id": "broken-part-restore",
+      "type": "video",
+      "badge": {
+        "ru": "Видео",
+        "uz": "Video"
+      },
+      "thumb": "./gallery/broken-part-restore/broken-part-restore-poster.webp",
+      "title": {
+        "ru": "Новая деталь вместо сломанной",
+        "uz": "Singan detal o'rniga yangisi"
+      },
+      "description": {
+        "ru": "Сломанный пластиковый узел заменили напечатанной копией с резьбовыми вставками",
+        "uz": "Singan plastik detal rezbali vtulkali chop etilgan nusxa bilan almashtirildi"
+      },
+      "longDescription": {
+        "ru": "Сломанную пластиковую деталь пытались склеить — мы сделали новую: сняли размеры, смоделировали и напечатали, а для винтов поставили латунные резьбовые вставки.\n\nИзготавливаем резиновые и пластиковые детали для частных клиентов и бизнеса. Также делаем 3D-сканирование, 3D-моделирование и реверс-инжиниринг.",
+        "uz": "Singan plastik detalni yelimlashga urinishgan — biz yangisini tayyorladik: o'lchamlarini oldik, modellashtirdik va chop etdik, vintlar uchun esa latun rezbali vtulkalar o'rnatdik.\n\nJismoniy shaxslar va biznes uchun rezina hamda plastik detallar tayyorlaymiz. Shuningdek, bizda 3D skanerlash, 3D modellashtirish va teskari muhandislik (reverse engineering) xizmatlari mavjud."
+      },
+      "tags": [
+        "восстановление детали",
+        "реверс-инжиниринг",
+        "запчасть",
+        "detalni tiklash",
+        "reverse engineering"
+      ],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/broken-part-restore/broken-part-restore.mp4",
+          "poster": "./gallery/broken-part-restore/broken-part-restore-poster.webp",
+          "caption": {
+            "ru": "Сломанная деталь и новая копия",
+            "uz": "Singan detal va yangi nusxa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ev-charger-adapter",
+      "type": "video",
+      "badge": {
+        "ru": "Видео",
+        "uz": "Video"
+      },
+      "thumb": "./gallery/ev-charger-adapter/ev-charger-adapter-poster.webp",
+      "title": {
+        "ru": "Корпус переходника зарядки электромобиля",
+        "uz": "Elektromobil zaryad adapteri korpusi"
+      },
+      "description": {
+        "ru": "Восстановление: 3D-скан, модель с усиленными стенками, печать",
+        "uz": "Tiklash: 3D skan, devorlari mustahkamlangan model, chop etish"
+      },
+      "longDescription": {
+        "ru": "Восстановление корпуса переходника зарядного устройства для электромобиля. Через такой переходник проходит огромный ток — это не шутки, поэтому чинить его суперклеем не стоит.\n\nСломанный корпус отсканировали на 3D-сканере, построили модель, сделали стенки толще для прочности и напечатали новый корпус.",
+        "uz": "Elektromobil zaryadlovchi adapteri korpusini tiklash. Katta tok o'tadigan adapter korpusi — bu hazil emas! Shuning uchun uni oddiy superkley bilan ta'mirlash emas, balki professionallarga topshirgan ma'qul.\n\nSingan korpusni 3D skanerda skanerladik, model yaratdik, mustahkamroq bo'lishi uchun devorlarini qalinlashtirdik va yangi korpusni chop etdik."
+      },
+      "tags": [
+        "электромобиль",
+        "переходник",
+        "3d сканирование",
+        "реверс-инжиниринг",
+        "elektromobil",
+        "adapter"
+      ],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/ev-charger-adapter/ev-charger-adapter.mp4",
+          "poster": "./gallery/ev-charger-adapter/ev-charger-adapter-poster.webp",
+          "caption": {
+            "ru": "Корпус переходника: скан, модель, готовая деталь",
+            "uz": "Adapter korpusi: skan, model, tayyor detal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "biokamin-box",
+      "type": "video",
+      "badge": {
+        "ru": "Видео",
+        "uz": "Video"
+      },
+      "thumb": "./gallery/biokamin-box/biokamin-box-poster.webp",
+      "title": {
+        "ru": "Декоративный короб для биокамина",
+        "uz": "Biokamin uchun dekorativ quti"
+      },
+      "description": {
+        "ru": "Скрывает зону заправки биокамина. Материал — PETG-CF",
+        "uz": "Biokaminning yonilg'i quyish qismini yashiradi. Material — PETG-CF"
+      },
+      "longDescription": {
+        "ru": "Декоративный короб для скрытия зоны заправки биокамина, материал — PETG-CF (PETG с углеволокном): жёсткий, с матовой фактурой.",
+        "uz": "Biokaminning yonilg'i quyish qismini yashirish uchun dekorativ quti, material — PETG-CF (uglerod tolali PETG): qattiq, mat yuzali."
+      },
+      "tags": [
+        "биокамин",
+        "короб",
+        "PETG-CF",
+        "biokamin"
+      ],
+      "medias": [
+        {
+          "type": "video",
+          "src": "./gallery/biokamin-box/biokamin-box.mp4",
+          "poster": "./gallery/biokamin-box/biokamin-box-poster.webp",
+          "caption": {
+            "ru": "Короб для биокамина — сборка",
+            "uz": "Biokamin qutisi — yig'ish"
+          }
+        }
+      ]
+    },
     {
       "id": "ventilation-grille",
       "type": "images",
@@ -44,173 +279,6 @@
           "caption": {
             "ru": "Вентиляционная решётка — крупный план",
             "uz": "Ventilyatsiya panjarasi — yaqin plan"
-          }
-        }
-      ]
-    },
-    {
-      "id": "designer-lamps",
-      "type": "video",
-      "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "./gallery/designer-lamps/designer-lamps-1.webp",
-      "title": {
-        "ru": "Дизайнерские светильники",
-        "uz": "Dizayner chiroqlar"
-      },
-      "description": {
-        "ru": "Дизайнерские светильники — оптом и поштучно",
-        "uz": "Dizayner chiroqlar — ulgurji va dona-dona"
-      },
-      "longDescription": {
-        "ru": "Дизайнерские светильники из 3D-печати — оптом и поштучно.\n\nИзготавливаем стильные светильники любой формы и размера. Подходят для квартир, кафе, ресторанов, шоурумов, фотостудий и подарков. Принимаем заказы оптом со скидкой.\n\nПишите нам, чтобы выбрать модель или обсудить индивидуальный дизайн.",
-        "uz": "3D-pechatda tayyorlangan dizayner chiroqlar — ulgurji va dona-dona.\n\nIstalgan shakl va o'lchamdagi zamonaviy chiroqlarni tayyorlaymiz. Kvartiralar, kafe, restoran, shourum, foto studiya va sovg'a uchun mos. Ulgurji buyurtmalarga chegirma beriladi.\n\nModelni tanlash yoki shaxsiy dizaynni muhokama qilish uchun bizga yozing."
-      },
-      "price": {
-        "original": 250000,
-        "current": 150000,
-        "currency": { "ru": "сум", "uz": "so'm" }
-      },
-      "tags": ["светильник", "дизайнерский светильник", "лампа", "освещение", "интерьер", "оптом", "chiroq", "dizayner chiroq", "yoritish", "interyer", "ulgurji"],
-      "medias": [
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-1.webp",
-          "alt": {
-            "ru": "Дизайнерский светильник из 3D-печати в современном интерьере",
-            "uz": "3D-pechatdan dizayner chiroq zamonaviy interyerda"
-          },
-          "caption": {
-            "ru": "Дизайнерский светильник в современном интерьере",
-            "uz": "Zamonaviy interyerdagi dizayner chiroq"
-          }
-        },
-        {
-          "type": "video",
-          "src": "./gallery/designer-lamps/designer-lamps-3d-printing.mp4",
-          "poster": "./gallery/designer-lamps/designer-lamps-1.webp",
-          "caption": {
-            "ru": "Дизайнерские светильники — обзор моделей",
-            "uz": "Dizayner chiroqlar — modellar sharhi"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-sculptural-orange.webp",
-          "alt": {
-            "ru": "Скульптурный светильник с тёплым оранжевым свечением",
-            "uz": "Iliq to'q sariq nurli skulptural chiroq"
-          },
-          "caption": {
-            "ru": "Скульптурный светильник с тёплым свечением",
-            "uz": "Iliq nurli skulptural chiroq"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-textured-fabric-closeup.webp",
-          "alt": {
-            "ru": "Текстурный плафон дизайнерского светильника — крупный план",
-            "uz": "Dizayner chiroq plafoni teksturasi — yaqin plan"
-          },
-          "caption": {
-            "ru": "Текстура плафона — крупный план",
-            "uz": "Plafon teksturasi — yaqin plan"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-desk-workspace.webp",
-          "alt": {
-            "ru": "Настольный дизайнерский светильник для рабочего места",
-            "uz": "Ish joyi uchun stol dizayner chirog'i"
-          },
-          "caption": {
-            "ru": "Светильник для рабочего стола",
-            "uz": "Ish stoli uchun chiroq"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-swirling-shade.webp",
-          "alt": {
-            "ru": "Светильник со спиральным текстурным плафоном",
-            "uz": "Spiralsimon teksturali plafonli chiroq"
-          },
-          "caption": {
-            "ru": "Спиральный плафон",
-            "uz": "Spiralsimon plafon"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-bedroom-sculptural.webp",
-          "alt": {
-            "ru": "Скульптурный светильник в спальне — мягкое освещение",
-            "uz": "Yotoqxonadagi skulptural chiroq — yumshoq yoritish"
-          },
-          "caption": {
-            "ru": "Светильник для спальни",
-            "uz": "Yotoqxona uchun chiroq"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-twisted-ribbed.webp",
-          "alt": {
-            "ru": "Светильник с витым ребристым плафоном",
-            "uz": "Buralgan qovurg'ali plafonli chiroq"
-          },
-          "caption": {
-            "ru": "Витой ребристый плафон",
-            "uz": "Buralgan qovurg'ali plafon"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-minimalist-textured.webp",
-          "alt": {
-            "ru": "Минималистичный светильник с текстурным плафоном",
-            "uz": "Minimalistik teksturali plafonli chiroq"
-          },
-          "caption": {
-            "ru": "Минимализм и текстура",
-            "uz": "Minimalizm va tekstura"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-trio-minimalist.webp",
-          "alt": {
-            "ru": "Три минималистичных дизайнерских светильника в ряд",
-            "uz": "Uchta minimalistik dizayner chiroq qatori"
-          },
-          "caption": {
-            "ru": "Серия минималистичных светильников",
-            "uz": "Minimalistik chiroqlar seriyasi"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-modern-rustic.webp",
-          "alt": {
-            "ru": "Дизайнерский светильник в стиле модерн-рустик",
-            "uz": "Modern-rustik uslubidagi dizayner chiroq"
-          },
-          "caption": {
-            "ru": "Стиль модерн-рустик",
-            "uz": "Modern-rustik uslubi"
-          }
-        },
-        {
-          "type": "image",
-          "src": "./gallery/designer-lamps/designer-lamps-trio-contemporary.webp",
-          "alt": {
-            "ru": "Три современных светильника с витыми текстурными плафонами",
-            "uz": "Buralgan teksturali plafonli uchta zamonaviy chiroq"
-          },
-          "caption": {
-            "ru": "Серия современных светильников",
-            "uz": "Zamonaviy chiroqlar seriyasi"
           }
         }
       ]
@@ -298,35 +366,6 @@
           "caption": {
             "ru": "Корпус для микросхем — моделирование по запросу клиента",
             "uz": "Mikrosxemalar uchun korpus — mijoz so‘roviga ko‘ra modellashtirilgan"
-          }
-        }
-      ]
-    },
-    {
-      "id": "valentines-day",
-      "type": "video",
-      "badge": { "ru": "Видео", "uz": "Video" },
-      "thumb": "./gallery/valentines-day/valentines-day-poster.webp",
-      "title": {
-        "ru": "С Днём святого Валентина ❤️",
-        "uz": "Sevishganlar kuni muborak ❤️"
-      },
-      "description": {
-        "ru": "Поздравление с Днём влюблённых от студии 3DPie",
-        "uz": "Sevishganlar kuni bilan tabriklash — 3DPie studiyasidan"
-      },
-      "longDescription": {
-        "ru": "С Днём святого Валентина ❤️\nПусть рядом всегда будет тот, кто вдохновляет, поддерживает и делает каждый день особенным.\nЛюбите, цените и не забывайте радовать друг друга ✨",
-        "uz": "Sevishganlar kuni muborak ❤️\nYoningizda doimo ilhomlantiradigan, qo‘llab-quvvatlaydigan va har bir kunni alohida qiladigan inson bo‘lsin.\nSeving, qadrlang va bir-biringizni xursand qilishni unutmang ✨"
-      },
-      "tags": ["день святого валентина", "14 февраля", "праздник", "подарок", "sevishganlar kuni", "valentin kuni", "sovg'a", "3D печать"],
-      "medias": [
-        {
-          "type": "video",
-          "src": "./gallery/valentines-day/valentines-day-3d-printing.mp4",
-          "caption": {
-            "ru": "Поздравление с Днём святого Валентина от 3DPie",
-            "uz": "3DPie'dan Sevishganlar kuni bilan tabriklash"
           }
         }
       ]
