@@ -7,7 +7,7 @@
 
 const { SITE_URL, CONTACTS, T, STEPS, STEPS_TITLE, STEP_LABEL, businessNode } = require('./site');
 
-const ASSET_VERSION = '20261012c';
+const ASSET_VERSION = '20261012d';
 
 function esc(str) {
   return String(str == null ? '' : str)
@@ -389,8 +389,14 @@ ${scripts.join('\n')}${gallerySchema}
 `;
 }
 
-// Decorative "printing" panel: the 3DPie logo mark is built layer by layer (pure CSS animation,
-// paused off-screen by js/scripts.js, disabled for prefers-reduced-motion).
+// Decorative "printing" panel: the 3DPie logo mark is printed layer by layer like on an FDM printer
+// (pure CSS animation, paused off-screen by js/scripts.js, disabled for prefers-reduced-motion).
+// One static logo; covers in the bed colour hide what is not printed yet (see css "print panel").
+// viewBox is the tight box of the mark, shifted so a layer edge falls on the flat top of the pie (y=310);
+// 23.333 = 560 / 24 visible layers.
+const PV_SHAPES = '<path d="M325,310 L465,310 A140,140 0 1,0 325,450 Z"/><path class="arc" d="M325,100 A210,210 0 0,0 325,520"/><path class="arc" d="M24,310 A301,301 0 0,0 325,611"/>';
+const PV_LAYERS = '<defs><pattern id="pv-layers" patternUnits="userSpaceOnUse" y="76.667" width="466" height="23.333"><rect class="pv-fill" width="466" height="23.333"/><rect class="pv-ridge" y="3.5" width="466" height="4"/><rect class="pv-seam" width="466" height="3.5"/></pattern></defs>';
+
 function renderPrintViz(lang) {
   const t = lang === 'uz'
     ? { file: 'logo-3dpie.gcode', layer: 'qatlam', mat: 'PETG-CF' }
@@ -398,9 +404,16 @@ function renderPrintViz(lang) {
   return `<div class="printviz" aria-hidden="true">
                     <div class="printviz-bar"><span>${t.file}</span><span class="printviz-pct"></span></div>
                     <div class="printviz-bed">
-                        <svg class="printviz-model" viewBox="0 0 640 640"><path d="M325,310 L465,310 A140,140 0 1,0 325,450 Z"/><path class="arc" d="M325,100 A210,210 0 0,0 325,520"/><path class="arc" d="M24,310 A301,301 0 0,0 325,611"/></svg>
-                        <div class="printviz-cover"></div>
-                        <div class="printviz-nozzle"><span></span></div>
+                        <div class="printviz-stage">
+                            <svg viewBox="0 76.667 466 560">${PV_LAYERS}${PV_SHAPES}</svg>
+                            <div class="printviz-z">
+                                <i class="printviz-cover is-top"></i>
+                                <i class="printviz-cover is-a"></i>
+                                <i class="printviz-cover is-b"></i>
+                                <div class="printviz-rail"></div>
+                                <div class="printviz-head"><span></span></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="printviz-bar"><span>${t.layer} <b class="printviz-layer"></b>/240</span><span>${t.mat}</span></div>
                 </div>`;

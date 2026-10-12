@@ -615,11 +615,19 @@ ol {
   font-weight: 600;
 }
 
+/* Timing: 24 visible layers printed in 12 zigzag passes of 2 layers (→ then ←), one pass = --pv-pass.
+   Printing takes 75% of the loop (12 × .75s = 9s), then the head parks and the model fades out.
+   Keep --pv-loop = 16 × --pv-pass so the pass and the loop never drift apart. */
+.printviz {
+  --pv-loop: 12s;
+  --pv-pass: .75s;
+}
+
 .printviz-pct {
   color: var(--accent);
   font-weight: 600;
   counter-reset: pct var(--pct);
-  animation: pv-pct 9s linear infinite;
+  animation: pv-pct var(--pv-loop) linear infinite;
 }
 
 .printviz-pct::after {
@@ -628,114 +636,210 @@ ol {
 
 .printviz-layer {
   counter-reset: layer var(--layer);
-  animation: pv-layer 9s linear infinite;
+  animation: pv-layer var(--pv-loop) linear infinite;
 }
 
 .printviz-layer::after {
   content: counter(layer);
 }
 
+/* bed: plain plate + the grid drawn on top of everything, so covers in the plate colour are invisible */
 .printviz-bed {
   position: relative;
+  display: grid;
+  place-items: end center;
   height: 180px;
   margin: 10px 0;
+  padding-bottom: 6px;
   border-radius: 10px;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px) 0 0 / 100% 18px,
-    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px) 0 0 / 18px 100%,
-    var(--bg-2);
+  background: var(--bg-2);
 }
 
-.printviz-model {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 150px;
-  height: 150px;
-  transform: translate(-50%, -50%);
-  fill: var(--accent);
-  animation: pv-fade 9s linear infinite;
-}
-
-.printviz-model .arc {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 46;
-}
-
-/* FDM layer lines over the model */
-.printviz-bed::before {
+.printviz-bed::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(12, 14, 15, .45) 3px 4px);
   pointer-events: none;
-}
-
-/* hides the not-yet-printed part; shrinks from the top so the model grows bottom-up */
-.printviz-cover {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
   background:
     linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px) 0 0 / 100% 18px,
-    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px) 0 0 / 18px 100%,
-    var(--bg-2);
-  transform-origin: top;
-  animation: pv-cover 9s linear infinite;
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px) 0 0 / 18px 100%;
 }
 
-.printviz-nozzle {
+/* whole px: 24 layers × 6px, so Z steps never land between pixels */
+.printviz-stage {
+  position: relative;
+  width: 120px;
+  height: 144px;
+  animation: pv-fade var(--pv-loop) linear infinite;
+}
+
+.printviz-stage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: url(#pv-layers);
+}
+
+.printviz-stage .arc {
+  fill: none;
+  stroke: url(#pv-layers);
+  stroke-width: 46;
+}
+
+/* layer texture of the model: lime layer, light ridge, dark seam between layers */
+.pv-fill { fill: var(--accent); }
+.pv-ridge { fill: #fff; opacity: .2; }
+.pv-seam { fill: var(--bg); opacity: .5; }
+
+/* Z carriage, one layer tall, steps up 2 layers per pass. It carries:
+   top cover = everything above the current pass; is-a / is-b = the two layers of the pass,
+   sliding away right behind the nozzle (→ then ←); the gantry rail and the hotend.
+   The logo itself never moves — only plain boxes do, all as transform/translate/opacity. */
+.printviz-z {
   position: absolute;
-  inset: 0;
-  z-index: 3;
-  animation: pv-rise 9s linear infinite;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(100% / 24);
+  animation: pv-z var(--pv-loop) infinite;
 }
 
-.printviz-nozzle span {
+.printviz-cover {
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: 0;
+  height: 100%;
+  background: var(--bg-2);
+}
+
+.printviz-cover.is-top {
+  bottom: 200%;
+  height: 2600%;
+}
+
+.printviz-cover.is-a {
+  animation: pv-pass-a var(--pv-pass) ease-in-out infinite;
+}
+
+.printviz-cover.is-b {
+  bottom: 100%;
+  animation: pv-pass-b var(--pv-pass) ease-in-out infinite;
+}
+
+.printviz-rail,
+.printviz-head {
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+}
+
+.printviz-rail {
+  left: -80px;
+  right: -80px;
+  animation: pv-pass-rail var(--pv-pass) ease-in-out infinite;
+}
+
+.printviz-rail::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 13px);
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, .1);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .5);
+}
+
+/* same width as the covers, so the nozzle tip is exactly at the edge being uncovered */
+.printviz-head {
+  left: -4px;
+  right: -4px;
+  animation: pv-pass-head var(--pv-pass) ease-in-out infinite;
+}
+
+/* glow at the tip + heater block (::before) + nozzle cone (::after) */
+.printviz-head span {
+  position: absolute;
+  left: -15px;
+  bottom: 100%;
+  width: 30px;
+  height: 26px;
+  background: radial-gradient(14px 8px at 50% 100%, rgba(198, 244, 50, .55), transparent);
+}
+
+.printviz-head span::before,
+.printviz-head span::after {
+  content: '';
   position: absolute;
   left: 50%;
-  bottom: -1px;
-  width: 26px;
+}
+
+.printviz-head span::before {
+  bottom: 6px;
+  width: 20px;
   height: 14px;
-  margin-left: -13px;
-  border-radius: 3px 3px 0 0;
-  background: var(--text);
-  box-shadow: 0 2px 0 var(--accent), 0 0 18px rgba(198, 244, 50, .7);
-  animation: pv-sweep .55s ease-in-out infinite alternate;
+  margin-left: -10px;
+  border-radius: 3px;
+  background: linear-gradient(#e6e9e8, #9aa2a4);
 }
 
-@keyframes pv-cover {
-  0% { transform: scaleY(1); }
-  72%, 100% { transform: scaleY(0); }
+.printviz-head span::after {
+  bottom: 0;
+  width: 10px;
+  height: 7px;
+  margin-left: -5px;
+  background: linear-gradient(#f4f5f4, #c4caca);
+  clip-path: polygon(0 0, 100% 0, 65% 100%, 35% 100%);
 }
 
-@keyframes pv-rise {
-  0% { transform: translateY(0); opacity: 1; }
-  72% { transform: translateY(-100%); opacity: 1; }
-  78%, 100% { transform: translateY(-100%); opacity: 0; }
+/* 12 Z steps while printing, then the head lifts off the finished model and fades */
+@keyframes pv-z {
+  0% { translate: 0 0; opacity: 1; animation-timing-function: steps(12, end); }
+  75% { translate: 0 -2400%; opacity: 1; animation-timing-function: ease-in; }
+  83%, 100% { translate: 0 -3200%; opacity: 0; }
 }
 
-@keyframes pv-sweep {
-  from { transform: translateX(-70px); }
-  to { transform: translateX(70px); }
+@keyframes pv-pass-a {
+  0% { transform: none; }
+  50%, 100% { transform: translateX(100%); }
 }
 
+@keyframes pv-pass-b {
+  0%, 50% { transform: none; }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes pv-pass-head {
+  0% { transform: none; }
+  50% { transform: translateX(100%); }
+  50.1% { transform: translate(100%, -100%); }
+  100% { transform: translateY(-100%); }
+}
+
+@keyframes pv-pass-rail {
+  0%, 50% { transform: none; }
+  50.1%, 100% { transform: translateY(-100%); }
+}
+
+/* fades in over the restart, so a frame with the covers not yet back can't flash the model */
 @keyframes pv-fade {
-  0%, 90% { opacity: 1; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  2%, 92% { opacity: 1; }
+  98%, 100% { opacity: 0; }
 }
 
 @keyframes pv-pct {
   0% { --pct: 0; }
-  72%, 100% { --pct: 100; }
+  75%, 100% { --pct: 100; }
 }
 
 @keyframes pv-layer {
   0% { --layer: 0; }
-  72%, 100% { --layer: 240; }
+  75%, 100% { --layer: 240; }
 }
 
 /* paused while the hero is off-screen (class toggled by js/scripts.js) */
@@ -1802,18 +1906,9 @@ ol {
     height: 130px;
   }
 
-  .printviz-model {
-    width: 110px;
-    height: 110px;
-  }
-
-  .printviz-nozzle span {
-    animation-name: pv-sweep-sm;
-  }
-
-  @keyframes pv-sweep-sm {
-    from { transform: translateX(-50px); }
-    to { transform: translateX(50px); }
+  .printviz-stage {
+    width: 80px;
+    height: 96px;
   }
 
   .section {
@@ -1869,8 +1964,7 @@ ol {
     animation: none !important;
   }
 
-  .printviz-cover,
-  .printviz-nozzle {
+  .printviz-z {
     display: none;
   }
 

@@ -34,8 +34,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="/css/styles.css?v=20261012c">
-    <link rel="stylesheet" href="/css/gallery.css?v=20261012c">
+    <link rel="stylesheet" href="/css/styles.css?v=20261012d">
+    <link rel="stylesheet" href="/css/gallery.css?v=20261012d">
     <link rel="preload" as="image" href="/images/work-grille.webp" fetchpriority="high">
 
     <script>
@@ -278,9 +278,16 @@
                 <div class="printviz" aria-hidden="true">
                     <div class="printviz-bar"><span>logo-3dpie.gcode</span><span class="printviz-pct"></span></div>
                     <div class="printviz-bed">
-                        <svg class="printviz-model" viewBox="0 0 640 640"><path d="M325,310 L465,310 A140,140 0 1,0 325,450 Z"/><path class="arc" d="M325,100 A210,210 0 0,0 325,520"/><path class="arc" d="M24,310 A301,301 0 0,0 325,611"/></svg>
-                        <div class="printviz-cover"></div>
-                        <div class="printviz-nozzle"><span></span></div>
+                        <div class="printviz-stage">
+                            <svg viewBox="0 76.667 466 560"><defs><pattern id="pv-layers" patternUnits="userSpaceOnUse" y="76.667" width="466" height="23.333"><rect class="pv-fill" width="466" height="23.333"/><rect class="pv-ridge" y="3.5" width="466" height="4"/><rect class="pv-seam" width="466" height="3.5"/></pattern></defs><path d="M325,310 L465,310 A140,140 0 1,0 325,450 Z"/><path class="arc" d="M325,100 A210,210 0 0,0 325,520"/><path class="arc" d="M24,310 A301,301 0 0,0 325,611"/></svg>
+                            <div class="printviz-z">
+                                <i class="printviz-cover is-top"></i>
+                                <i class="printviz-cover is-a"></i>
+                                <i class="printviz-cover is-b"></i>
+                                <div class="printviz-rail"></div>
+                                <div class="printviz-head"><span></span></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="printviz-bar"><span>слой <b class="printviz-layer"></b>/240</span><span>PETG-CF</span></div>
                 </div>
@@ -685,8 +692,8 @@
         <a class="is-accent" href="https://t.me/pie3d" target="_blank" rel="noopener">Telegram</a>
     </div>
 
-    <script src="/js/scripts.js?v=20261012c" defer></script>
-    <script src="/js/gallery.js?v=20261012c" defer></script>
+    <script src="/js/scripts.js?v=20261012d" defer></script>
+    <script src="/js/gallery.js?v=20261012d" defer></script>
     <!-- GALLERY-SCHEMA:START -->
     <script type="application/ld+json">
     {
