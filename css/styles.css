@@ -296,10 +296,19 @@ ol {
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: 1px solid var(--line);
+}
+
+/* blur lives on a pseudo-element: backdrop-filter on the header itself would make it
+   the containing block for the fixed mobile menu and clip it to the header height */
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: rgba(12, 14, 15, .78);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border-bottom: 1px solid var(--line);
 }
 
 .header-row {
