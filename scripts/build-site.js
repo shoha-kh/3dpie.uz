@@ -97,6 +97,7 @@ ${s.html.trim().split('\n').map(l => '                ' + l.trim()).join('\n')}
             </div>
         </div>
     </section>`,
+    page.calc ? layout.renderCalc(page.lang) : '',
     sections,
     renderWorks(page, galleryItems),
     page.type === 'service' ? layout.renderSteps(page.lang) : '',

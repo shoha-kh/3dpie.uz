@@ -6,6 +6,21 @@ const UPDATED = '2026-10-12';
 
 const MAP = `<iframe title="%TITLE%" src="${CONTACTS.mapEmbed}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`;
 
+// Hero link to the STL calculator on the prices page (icon with a moving scan line, paused off-screen).
+const CALC_TEASER = {
+  ru: { href: '/ceny/#calc', title: 'Есть STL-файл? Посчитайте цену сами', text: 'Загрузите модель — вес и стоимость сразу, прямо на сайте' },
+  uz: { href: '/uz/narxlar/#calc', title: "STL fayl bormi? Narxni o'zingiz hisoblang", text: "Modelni yuklang — og'irligi va narxi darhol, shu saytda" }
+};
+
+function calcTeaser(lang) {
+  const c = CALC_TEASER[lang];
+  return `<a class="calc-teaser" href="${c.href}">
+                    <span class="calc-teaser-icon" aria-hidden="true"><i></i></span>
+                    <span class="calc-teaser-text"><b>${c.title}</b><span>${c.text}</span></span>
+                    <span class="calc-teaser-go" aria-hidden="true">→</span>
+                </a>`;
+}
+
 // Hero visual: a real work under a moving "3D-scan" line + the layer-by-layer print panel.
 function heroVisual(c, layout, lang) {
   return `<div class="hero-visual">
@@ -36,7 +51,7 @@ function factsList(items) {
 const ruFaq = [
   {
     q: 'Сколько стоит 3D-печать в Ташкенте?',
-    a: 'Минимальный заказ в 3DPie — 100 000 сум. Итоговая цена зависит от размера детали, пластика, сложности модели и срочности. Пришлите фото или файл в Telegram — консультация бесплатная, цену назовём до начала работы. Подробнее — <a href="/ceny/">цены на 3D-печать</a>.'
+    a: 'Цена считается по весу пластика: PLA, PETG и ABS — 1 000 сум за грамм, PETG-CF и TPU — 1 500 сум, Nylon PA6 — 5 000 сум. Минимальный заказ — 100 000 сум. Есть STL-файл — посчитайте примерную цену в <a href="/ceny/#calc">калькуляторе</a>. Точную цену назовём в Telegram до начала работы, консультация бесплатная.'
   },
   {
     q: 'Можно ли сделать деталь без чертежа и 3D-модели?',
@@ -101,6 +116,7 @@ function renderRu(ctx) {
                 <h1 class="hero-title">Напечатаем деталь, которую <em>больше нигде</em> не купить</h1>
                 <p class="lead">Пришлите фото, размеры или привезите образец — отсканируем, смоделируем и напечатаем копию из прочного пластика или резины. Для частных клиентов и бизнеса.</p>
                 ${layout.renderCtaButtons('ru')}
+                ${calcTeaser('ru')}
 ${layout.renderSpec([
     ['Заказ', 'от 100 000 сум'],
     ['Простая деталь', '1–2 дня'],
@@ -144,13 +160,17 @@ ${layout.renderSteps('ru', 'how')}
             <div>
                 <p class="kicker">Цены</p>
                 <p class="price-big"><small>от</small> 100&nbsp;000 <small>сум</small></p>
-                <p>Минимальный заказ. Цена детали зависит от размера, материала, сложности модели и срочности — называем её до начала работы. Консультация бесплатная.</p>
-                <a class="btn btn-paper" href="/ceny/">Как считается цена <span aria-hidden="true">→</span></a>
+                <p>Минимальный заказ. Платите за граммы пластика: PLA, PETG и ABS — 1&nbsp;000 сум за грамм. Есть STL-файл — загрузите его в калькулятор и сразу увидите примерную цену, а точную назовём в Telegram.</p>
+                <div class="price-actions">
+                    <a class="btn btn-paper" href="/ceny/#calc">Рассчитать по STL <span aria-hidden="true">→</span></a>
+                    <a class="price-link" href="/ceny/">Все цены и сроки</a>
+                </div>
             </div>
 ${layout.renderSpec([
+    ['PLA, PETG, ABS', '1 000 сум/г'],
+    ['PETG-CF, TPU', '1 500 сум/г'],
+    ['Nylon PA6', '5 000 сум/г'],
     ['Простая деталь', '1–2 дня'],
-    ['Скан + модель + печать', '3–7 дней'],
-    ['Серия', '200 деталей за 2 дня'],
     ['Серии и постоянные клиенты', 'скидки']
   ])}
         </div>
@@ -210,7 +230,7 @@ ${layout.renderFaq('ru', ruFaq)}
 const uzFaq = [
   {
     q: 'Toshkentda 3D chop etish qancha turadi?',
-    a: "3DPie'da minimal buyurtma — 100 000 so'm. Yakuniy narx detal o'lchami, plastik turi, model murakkabligi va shoshilinchlikka bog'liq. Rasm yoki faylni Telegramga yuboring — konsultatsiya bepul, narxni ish boshlanishidan oldin aytamiz. Batafsil — <a href=\"/uz/narxlar/\">3D chop etish narxlari</a>."
+    a: "Narx plastik og'irligi bo'yicha hisoblanadi: PLA, PETG va ABS — grammi 1 000 so'm, PETG-CF va TPU — 1 500 so'm, Nylon PA6 — 5 000 so'm. Minimal buyurtma — 100 000 so'm. STL fayl bo'lsa — taxminiy narxni <a href=\"/uz/narxlar/#calc\">kalkulyatorda</a> hisoblang. Aniq narxni ish boshlanishidan oldin Telegramda aytamiz, konsultatsiya bepul."
   },
   {
     q: 'Chizma va 3D modelsiz detal yasash mumkinmi?',
@@ -275,6 +295,7 @@ function renderUz(ctx) {
                 <h1 class="hero-title">Boshqa joyda <em>topilmaydigan</em> detalni chop etib beramiz</h1>
                 <p class="lead">Rasm, o'lcham yuboring yoki namunani olib keling — skanerlab, modellashtirib, mustahkam plastik yoki rezinadan nusxasini chop etamiz (3D pechat). Jismoniy shaxslar va biznes uchun.</p>
                 ${layout.renderCtaButtons('uz')}
+                ${calcTeaser('uz')}
 ${layout.renderSpec([
     ['Buyurtma', "100 000 so'mdan"],
     ['Oddiy detal', '1–2 kun'],
@@ -318,13 +339,17 @@ ${layout.renderSteps('uz', 'how')}
             <div>
                 <p class="kicker">Narxlar</p>
                 <p class="price-big">100&nbsp;000 <small>so'mdan</small></p>
-                <p>Minimal buyurtma. Detal narxi o'lcham, material, model murakkabligi va shoshilinchlikka bog'liq — ish boshlanishidan oldin aytamiz. Konsultatsiya bepul.</p>
-                <a class="btn btn-paper" href="/uz/narxlar/">Narx qanday hisoblanadi <span aria-hidden="true">→</span></a>
+                <p>Minimal buyurtma. Plastik grammlari uchun to'laysiz: PLA, PETG va ABS — grammi 1&nbsp;000 so'm. STL fayl bo'lsa — uni kalkulyatorga yuklang va taxminiy narxni darhol ko'ring, aniq narxni Telegramda aytamiz.</p>
+                <div class="price-actions">
+                    <a class="btn btn-paper" href="/uz/narxlar/#calc">STL bo'yicha hisoblash <span aria-hidden="true">→</span></a>
+                    <a class="price-link" href="/uz/narxlar/">Barcha narxlar va muddatlar</a>
+                </div>
             </div>
 ${layout.renderSpec([
+    ['PLA, PETG, ABS', "1 000 so'm/g"],
+    ['PETG-CF, TPU', "1 500 so'm/g"],
+    ['Nylon PA6', "5 000 so'm/g"],
     ['Oddiy detal', '1–2 kun'],
-    ['Skan + model + chop etish', '3–7 kun'],
-    ['Seriya', '2 kunda 200 detal'],
     ['Seriyalar va doimiy mijozlar', 'chegirmalar']
   ])}
         </div>

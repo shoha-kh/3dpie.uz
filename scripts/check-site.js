@@ -22,7 +22,8 @@ const BANNED = [
   [/30\s*(минут|daqiqa)/i, '"reply in 30 minutes" promise'],
   [/\b9:00\b|21:00|Пн–Сб|Du–Sha|openingHours/, 'working hours (must be hidden)'],
   [/светильн|chiroq|designer-lamps|svetilniki/i, 'designer lamps (not sold anymore)'],
-  [/#ff5a1f/i, 'old orange accent']
+  [/#ff5a1f/i, 'old orange accent'],
+  [/anycubic|kobra|qidi/i, 'printer brand/model (must not be named)']
 ];
 const BANNED_SCAN = ['.html', '.css', '.js', '.txt', '.xml', '.json'];
 const BANNED_SKIP = /^(\.git|\.github|node_modules|\.shots|\.tools|docs|scripts)([\\/]|$)|^taplink\.html$/;

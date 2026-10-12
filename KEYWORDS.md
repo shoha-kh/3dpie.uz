@@ -92,6 +92,8 @@
 | сколько стоит 3д печать | 3D pechat narxi | |
 | стоимость печати на 3д принтере | 3D print narxi | |
 | 3д печать недорого | arzon 3D chop etish | |
+| 3д печать цена за грамм | 3D chop etish gramm narxi | |
+| калькулятор 3д печати, рассчитать стоимость stl | 3D chop etish kalkulyatori | 3d printing cost calculator stl |
 
 ## Материалы — `/materialy/`, `/uz/materiallar/`
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Toshkentda 3D chop etish narxlari — buyurtma 100 000 so'mdan | 3DPie</title>
-    <meta name="description" content="Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: minimal buyurtma 100 000 so'm, detal narxi nimaga bog'liq, muddatlar 1–7 kun, seriyalarga chegirma. Rasm yuboring — konsultatsiya bepul.">
+    <meta name="description" content="Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: grammi 1 000 so'mdan, STL fayl bo'yicha narx kalkulyatori, minimal buyurtma 100 000 so'm, muddatlar 1–7 kun. Aniq narxni Telegramda aytamiz.">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://3dpie.uz/uz/narxlar/">
     <link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/ceny/">
@@ -14,7 +14,7 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="3DPie">
     <meta property="og:title" content="Toshkentda 3D chop etish narxlari — buyurtma 100 000 so'mdan | 3DPie">
-    <meta property="og:description" content="Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: minimal buyurtma 100 000 so'm, detal narxi nimaga bog'liq, muddatlar 1–7 kun, seriyalarga chegirma. Rasm yuboring — konsultatsiya bepul.">
+    <meta property="og:description" content="Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: grammi 1 000 so'mdan, STL fayl bo'yicha narx kalkulyatori, minimal buyurtma 100 000 so'm, muddatlar 1–7 kun. Aniq narxni Telegramda aytamiz.">
     <meta property="og:url" content="https://3dpie.uz/uz/narxlar/">
     <meta property="og:image" content="https://3dpie.uz/images/og-uz.jpg">
     <meta property="og:image:width" content="1200">
@@ -34,7 +34,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="/css/styles.css?v=20261012d">
+    <link rel="stylesheet" href="/css/styles.css?v=20261012f">
+    <link rel="stylesheet" href="/css/calc.css?v=20261012f">
 
     <script>
         (function(m,e,t,r,i,k,a){
@@ -162,7 +163,7 @@
           "@id": "https://3dpie.uz/uz/narxlar/#service",
           "name": "Buyurtma asosida 3D chop etish",
           "serviceType": "3D chop etish",
-          "description": "Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: minimal buyurtma 100 000 so'm, detal narxi nimaga bog'liq, muddatlar 1–7 kun, seriyalarga chegirma. Rasm yuboring — konsultatsiya bepul.",
+          "description": "Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: grammi 1 000 so'mdan, STL fayl bo'yicha narx kalkulyatori, minimal buyurtma 100 000 so'm, muddatlar 1–7 kun. Aniq narxni Telegramda aytamiz.",
           "url": "https://3dpie.uz/uz/narxlar/",
           "provider": {
             "@id": "https://3dpie.uz/#business"
@@ -188,10 +189,26 @@
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "Nega gramm narxi yo'q?",
+              "name": "Narx qanday hisoblanadi?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Gramm narxi chop etish vaqti, modellashtirish va murakkablikni hisobga olmaydi. Bir xil og'irlikdagi ikki detal 2 va 10 soat chop etilishi mumkin. Shuning uchun har bir detal narxini alohida hisoblaymiz — bu adolatliroq."
+                "text": "Plastik og'irligi bo'yicha: PLA, PETG va ABS — grammi 1 000 so'm, PETG-CF va TPU — 1 500 so'm, Nylon PA6 — 5 000 so'm. Shu sahifadagi kalkulyator STL fayl bo'yicha detal va osilgan qismlar ostidagi tayanchlar og'irligini taxmin qiladi. Aniq narxni faylni tekshirgandan keyin aytamiz: tayanchlar, detal joylashuvi va kerak bo'lsa modelni tuzatish hisobga olinadi."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Kalkulyatordagi fayl biror joyga yuboriladimi?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yo'q. Hisob to'g'ridan-to'g'ri brauzerda bajariladi: fayl serverga yuklanmaydi va saqlanmaydi. Chop etishga buyurtma berish uchun uni Telegramga yuboring @pie3d."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Detalning maksimal o'lchami qancha?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bir martada — 420 × 420 × 500 mm gacha, kompozit plastiklardan (PETG-CF) — 245 × 245 × 245 mm gacha. Detal kattaroq bo'lsa, yozing: modelni qismlarga qanday bo'lishni maslahat beramiz."
               }
             },
             {
@@ -254,7 +271,7 @@
                 </nav>
                 <p class="kicker">Narxlar va muddatlar</p>
                 <h1 class="h1">Toshkentda 3D chop etish qancha turadi</h1>
-                <p class="lead">3DPie'da minimal buyurtma — <strong>100 000 so'm</strong>. Detalning aniq narxini ish boshlanishidan oldin rasm yoki fayl bo'yicha aytamiz. Konsultatsiya bepul.</p>
+                <p class="lead">Narx plastik og'irligi bo'yicha hisoblanadi: PLA, PETG va ABS — <strong>grammi 1 000 so'm</strong>, minimal buyurtma — <strong>100 000 so'm</strong>. STL faylni <a href="#calc">kalkulyatorga</a> yuklang va taxminiy narxni biling, aniq narxni Telegramda aytamiz.</p>
                 <div class="cta-row">
                     <a class="btn btn-accent" href="https://t.me/pie3d" target="_blank" rel="noopener">Telegramga rasm yuborish <span aria-hidden="true">→</span></a>
                     <a class="btn btn-line" href="tel:+998901391094">+998 90 139 10 94</a>
@@ -262,13 +279,78 @@
             </div>
             <div class="page-hero-aside">
                 <dl class="spec">
+                    <div><dt>PLA, PETG, ABS</dt><dd>1 000 so'm/g</dd></div>
+                    <div><dt>PETG-CF, TPU</dt><dd>1 500 so'm/g</dd></div>
+                    <div><dt>Nylon PA6</dt><dd>5 000 so'm/g</dd></div>
                     <div><dt>Minimal buyurtma</dt><dd>100 000 so'm</dd></div>
                     <div><dt>Konsultatsiya</dt><dd>bepul</dd></div>
-                    <div><dt>Oddiy detal</dt><dd>1–2 kun</dd></div>
-                    <div><dt>Murakkab loyiha</dt><dd>3–7 kun</dd></div>
-                    <div><dt>Seriyalar va doimiy mijozlar</dt><dd>chegirmalar</dd></div>
+                    <div><dt>Muddatlar</dt><dd>1–7 kun</dd></div>
                 </dl>
             </div>
+        </div>
+    </section>
+
+    <section class="section section-calc" id="calc">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 class="h2"><em>STL</em> bo'yicha kalkulyator</h2>
+                <p class="section-note">Modelni yuklang: og'irligi va taxminiy narxini shu yerda, brauzerda hisoblaymiz. Fayl hech qayerga yuborilmaydi va saqlanmaydi.</p>
+            </div>
+            <div class="calc">
+                <div class="calc-stage">
+                    <label class="calc-drop">
+                        <input class="calc-file" type="file" accept=".stl">
+                        <span class="calc-drop-icon" aria-hidden="true"></span>
+                        <span class="calc-drop-text"><b>STL faylni shu yerga tashlang</b> yoki tanlash uchun bosing</span>
+                        <span class="calc-drop-hint">Binar yoki matnli STL, 150 MB gacha</span>
+                        <noscript><span class="calc-drop-hint">Kalkulyator uchun JavaScript kerak. Faylni Telegramga yuboring — qo'lda hisoblaymiz.</span></noscript>
+                    </label>
+                    <canvas class="calc-canvas" hidden></canvas>
+                    <div class="calc-bar" hidden>
+                        <span class="calc-name"></span>
+                        <span class="calc-legend">osilgan qismlar</span>
+                        <span class="calc-hint">Aylantirish uchun torting</span>
+                        <button class="calc-other" type="button">Boshqa fayl</button>
+                    </div>
+                </div>
+                <div class="calc-panel">
+                    <div class="calc-field">
+                        <label for="calc-mat">Plastik</label>
+                        <select id="calc-mat" class="calc-mat"><option value="pla">PLA — 1 000 so'm/g</option><option value="petg">PETG — 1 000 so'm/g</option><option value="abs">ABS — 1 000 so'm/g</option><option value="petg-cf">PETG-CF — 1 500 so'm/g</option><option value="tpu">TPU — 1 500 so'm/g</option><option value="nylon">Nylon PA6 — 5 000 so'm/g</option></select>
+                    </div>
+                    <fieldset class="calc-field">
+                        <legend>To'ldirish</legend>
+                        <div class="calc-seg">
+                            <label><input type="radio" name="calc-infill" value="15"><span>Yengil<b>15%</b></span></label>
+                            <label><input type="radio" name="calc-infill" value="20" checked><span>Oddiy<b>20%</b></span></label>
+                            <label><input type="radio" name="calc-infill" value="40"><span>Mustahkam<b>40%</b></span></label>
+                            <label><input type="radio" name="calc-infill" value="100"><span>To'liq<b>100%</b></span></label>
+                        </div>
+                    </fieldset>
+                    <div class="calc-two">
+                        <div class="calc-field">
+                            <label for="calc-qty">Miqdori, dona</label>
+                            <input id="calc-qty" class="calc-qty" type="number" min="1" max="10000" step="1" value="1" inputmode="numeric">
+                        </div>
+                        <div class="calc-field">
+                            <label for="calc-unit">O'lchov birligi</label>
+                            <select id="calc-unit" class="calc-unit"><option value="mm">mm</option><option value="cm">sm</option><option value="in">dyuym</option><option value="m">metr</option></select>
+                        </div>
+                    </div>
+                    <dl class="calc-out"><div><dt>O'lchamlari</dt><dd data-out="size">—</dd></div><div><dt>Model hajmi</dt><dd data-out="volume">—</dd></div><div><dt>1 dona og'irligi</dt><dd data-out="weight">—</dd></div><div><dt>shundan tayanchlar</dt><dd data-out="supports">—</dd></div><div><dt>1 dona narxi</dt><dd data-out="piece">—</dd></div></dl>
+                    <div class="calc-total">
+                        <span>Taxminiy narx</span>
+                        <output data-out="total" aria-live="polite">STL yuklang</output>
+                    </div>
+                    <p class="calc-msg" role="status"></p>
+                    <div class="calc-actions">
+                        <a class="btn btn-accent" href="https://t.me/pie3d" target="_blank" rel="noopener">Aniq narx Telegramda <span aria-hidden="true">→</span></a>
+                        <button class="btn calc-copy" type="button" disabled>Hisobni nusxalash</button>
+                    </div>
+                    <p class="calc-disclaimer">Hisob taxminiy. Tayanchlar 45° dan tik osilgan qismlar ostiga, detal fayldagidek joylashganda hisoblanadi — biz uni foydaliroq aylantirishimiz mumkin. Keyingi ishlov va modelni tuzatish hisobga olinmagan. Aniq narx va muddat uchun faylni Telegramga yuboring.</p>
+                </div>
+            </div>
+            <script type="application/json" class="calc-data">{"calc":{"minOrder":100000,"bed":[420,420,500],"bedComposite":[245,245,245],"shellMm":0.85,"overhangDeg":45,"supportFill":0.15,"materials":[{"id":"pla","name":"PLA","price":1000,"density":1.24},{"id":"petg","name":"PETG","price":1000,"density":1.27},{"id":"abs","name":"ABS","price":1000,"density":1.04},{"id":"petg-cf","name":"PETG-CF","price":1500,"density":1.3,"composite":true},{"id":"tpu","name":"TPU","price":1500,"density":1.21},{"id":"nylon","name":"Nylon PA6","price":5000,"density":1.13}],"infill":[15,20,40,100],"infillDefault":20,"units":[["mm",1],["cm",10],["in",25.4],["m",1000]]},"t":{"title":"\u003cem>STL\u003c/em> bo'yicha kalkulyator","note":"Modelni yuklang: og'irligi va taxminiy narxini shu yerda, brauzerda hisoblaymiz. Fayl hech qayerga yuborilmaydi va saqlanmaydi.","drop":"\u003cb>STL faylni shu yerga tashlang\u003c/b> yoki tanlash uchun bosing","dropHint":"Binar yoki matnli STL, 150 MB gacha","noscript":"Kalkulyator uchun JavaScript kerak. Faylni Telegramga yuboring — qo'lda hisoblaymiz.","other":"Boshqa fayl","rotate":"Aylantirish uchun torting","legend":"osilgan qismlar","material":"Plastik","infill":"To'ldirish","infillNames":{"15":"Yengil","20":"Oddiy","40":"Mustahkam","100":"To'liq"},"qty":"Miqdori, dona","unit":"O'lchov birligi","unitNames":{"mm":"mm","cm":"sm","in":"dyuym","m":"metr"},"size":"O'lchamlari","volume":"Model hajmi","weight":"1 dona og'irligi","supports":"shundan tayanchlar","perGram":"Gramm narxi","perPiece":"1 dona narxi","total":"Taxminiy narx","empty":"STL yuklang","sum":"so'm","g":"g","cm3":"sm³","mm":"mm","pcs":"dona","tg":"Aniq narx Telegramda","copy":"Hisobni nusxalash","copied":"Nusxalandi — chatga qo'ying va faylni biriktiring","disclaimer":"Hisob taxminiy. Tayanchlar 45° dan tik osilgan qismlar ostiga, detal fayldagidek joylashganda hisoblanadi — biz uni foydaliroq aylantirishimiz mumkin. Keyingi ishlov va modelni tuzatish hisobga olinmagan. Aniq narx va muddat uchun faylni Telegramga yuboring.","msg":{"reading":"Fayl o'qilmoqda…","bad":"Faylni o'qib bo'lmadi. STL kerak; STEP va boshqa formatlarni Telegramga yuboring — qo'lda hisoblaymiz.","big":"Fayl 150 MB dan katta — uni Telegramga yuboring, qo'lda hisoblaymiz.","open":"Model yopiq emas (to'rda teshiklar bor) — og'irlik noaniq hisoblanishi mumkin.","tiny":"Detal juda kichik. O'lchamlar noto'g'ri bo'lsa — fayldagi o'lchov birligini tekshiring.","fit":"Detal ish maydonidan katta ({bed} mm). Modelni qismlarga bo'lish mumkin — bizga yozing, maslahat beramiz.","fitComposite":"Kompozit plastiklarni {bed} mm gacha chop etamiz. Boshqa plastikni tanlang yoki bizga yozing.","min":"Minimal buyurtma — {min} so'm, shuning uchun jami bu summadan kam emas.","noGl":"Bu brauzerda oldindan ko'rish mavjud emas, lekin hisob ishlaydi."},"copyText":"STL bo'yicha 3D chop etish: {file}, {mat}, to'ldirish {infill}%, {qty} dona. O'lchamlari {size} mm, ≈ {weight} g/dona (tayanchlar ≈ {sup} g). Saytdagi hisob: ≈ {total} so'm."},"telegram":"https://t.me/pie3d"}</script>
         </div>
     </section>
 
@@ -280,8 +362,8 @@
                 <table class="table">
                 <thead><tr><th scope="col">Omil</th><th scope="col">Qanday ta'sir qiladi</th></tr></thead>
                 <tbody>
-                <tr><th scope="row">O'lcham va og'irlik</th><td>Plastik va chop etish soatlari qancha ko'p bo'lsa, shuncha qimmat. Mayda klipsa va tiqinlar — eng arzon buyurtmalar.</td></tr>
-                <tr><th scope="row">Plastik</th><td>PLA va PETG arzonroq, muhandislik plastiklari (Nylon, TPU) qimmatroq.</td></tr>
+                <tr><th scope="row">Detal og'irligi</th><td>Plastik grammlari uchun to'laysiz: detal qancha katta va to'ldirish qancha zich bo'lsa, u shuncha og'ir va qimmat. Mayda klipsa va tiqinlar — eng arzon buyurtmalar.</td></tr>
+                <tr><th scope="row">Plastik</th><td>PLA, PETG va ABS — grammi 1 000 so'm, PETG-CF va TPU — 1 500 so'm, Nylon PA6 — 5 000 so'm.</td></tr>
                 <tr><th scope="row">3D model</th><td>Tayyor STL yoki STEP faylingiz bo'lsa — faqat chop etish uchun to'laysiz. Modelni namuna bo'yicha yaratish kerak bo'lsa — modellashtirish qo'shiladi.</td></tr>
                 <tr><th scope="row">Miqdor</th><td>Seriyada dona narxi arzonroq: model tayyor, printerlar samaraliroq yuklanadi.</td></tr>
                 <tr><th scope="row">Shoshilinchlik</th><td>Navbatdan tashqari shoshilinch buyurtma qimmatroq bo'lishi mumkin.</td></tr>
@@ -297,8 +379,8 @@
             <h2 class="h2">Detalingiz narxini qanday bilish mumkin</h2>
             <div class="prose">
                 <ol>
-                <li>Detalni chizg'ich yonida yuqoridan va yon tomondan suratga oling. STL yoki STEP fayl bo'lsa — uni yuboring.</li>
-                <li>Telegramga yozing <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a> yoki qo'ng'iroq qiling <a href="tel:+998901391094">+998 90 139 10 94</a>: detal nima uchun, nechta kerak, qachongacha.</li>
+                <li>STL fayl bo'lsa — uni <a href="#calc">kalkulyatorga</a> yuklang va taxminiy narxni ko'ring. Fayl bo'lmasa — detalni chizg'ich yonida yuqoridan va yon tomondan suratga oling.</li>
+                <li>Fayl yoki rasmni Telegramga yuboring <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a> yoki qo'ng'iroq qiling <a href="tel:+998901391094">+998 90 139 10 94</a>: detal nima uchun, nechta kerak, qachongacha.</li>
                 <li>Narx va muddat bilan javob beramiz. Konsultatsiya bepul — istalgan g'oya haqida so'rashingiz mumkin.</li>
                 </ol>
                 <p>Narxni ish boshlanishidan oldin, yashirin to'lovlarsiz aytamiz. Yuridik shaxslar uchun — shartnoma va hujjatlar.</p>
@@ -339,8 +421,16 @@
             <h2 class="h2">Savol-javoblar</h2>
             <div class="faq-list">
                 <details class="faq-item" open>
-                    <summary>Nega gramm narxi yo'q?</summary>
-                    <div class="faq-a">Gramm narxi chop etish vaqti, modellashtirish va murakkablikni hisobga olmaydi. Bir xil og'irlikdagi ikki detal 2 va 10 soat chop etilishi mumkin. Shuning uchun har bir detal narxini alohida hisoblaymiz — bu adolatliroq.</div>
+                    <summary>Narx qanday hisoblanadi?</summary>
+                    <div class="faq-a">Plastik og'irligi bo'yicha: PLA, PETG va ABS — grammi 1 000 so'm, PETG-CF va TPU — 1 500 so'm, Nylon PA6 — 5 000 so'm. Shu sahifadagi kalkulyator STL fayl bo'yicha detal va osilgan qismlar ostidagi tayanchlar og'irligini taxmin qiladi. Aniq narxni faylni tekshirgandan keyin aytamiz: tayanchlar, detal joylashuvi va kerak bo'lsa modelni tuzatish hisobga olinadi.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Kalkulyatordagi fayl biror joyga yuboriladimi?</summary>
+                    <div class="faq-a">Yo'q. Hisob to'g'ridan-to'g'ri brauzerda bajariladi: fayl serverga yuklanmaydi va saqlanmaydi. Chop etishga buyurtma berish uchun uni Telegramga yuboring <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a>.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Detalning maksimal o'lchami qancha?</summary>
+                    <div class="faq-a">Bir martada — 420 × 420 × 500 mm gacha, kompozit plastiklardan (PETG-CF) — 245 × 245 × 245 mm gacha. Detal kattaroq bo'lsa, yozing: modelni qismlarga qanday bo'lishni maslahat beramiz.</div>
                 </details>
                 <details class="faq-item">
                     <summary>Bitta kichik detalni chop etish qancha turadi?</summary>
@@ -431,6 +521,7 @@
         <a class="is-accent" href="https://t.me/pie3d" target="_blank" rel="noopener">Telegram</a>
     </div>
 
-    <script src="/js/scripts.js?v=20261012d" defer></script>
+    <script src="/js/scripts.js?v=20261012f" defer></script>
+    <script src="/js/calc.js?v=20261012f" defer></script>
 </body>
 </html>

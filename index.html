@@ -34,8 +34,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="/css/styles.css?v=20261012d">
-    <link rel="stylesheet" href="/css/gallery.css?v=20261012d">
+    <link rel="stylesheet" href="/css/styles.css?v=20261012f">
+    <link rel="stylesheet" href="/css/gallery.css?v=20261012f">
     <link rel="preload" as="image" href="/images/work-grille.webp" fetchpriority="high">
 
     <script>
@@ -164,7 +164,7 @@
               "name": "Сколько стоит 3D-печать в Ташкенте?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Минимальный заказ в 3DPie — 100 000 сум. Итоговая цена зависит от размера детали, пластика, сложности модели и срочности. Пришлите фото или файл в Telegram — консультация бесплатная, цену назовём до начала работы. Подробнее — цены на 3D-печать."
+                "text": "Цена считается по весу пластика: PLA, PETG и ABS — 1 000 сум за грамм, PETG-CF и TPU — 1 500 сум, Nylon PA6 — 5 000 сум. Минимальный заказ — 100 000 сум. Есть STL-файл — посчитайте примерную цену в калькуляторе. Точную цену назовём в Telegram до начала работы, консультация бесплатная."
               }
             },
             {
@@ -261,6 +261,11 @@
                     <a class="btn btn-accent" href="https://t.me/pie3d" target="_blank" rel="noopener">Отправить фото в Telegram <span aria-hidden="true">→</span></a>
                     <a class="btn btn-line" href="tel:+998901391094">+998 90 139 10 94</a>
                 </div>
+                <a class="calc-teaser" href="/ceny/#calc">
+                    <span class="calc-teaser-icon" aria-hidden="true"><i></i></span>
+                    <span class="calc-teaser-text"><b>Есть STL-файл? Посчитайте цену сами</b><span>Загрузите модель — вес и стоимость сразу, прямо на сайте</span></span>
+                    <span class="calc-teaser-go" aria-hidden="true">→</span>
+                </a>
                 <dl class="spec hero-spec">
                     <div><dt>Заказ</dt><dd>от 100 000 сум</dd></div>
                     <div><dt>Простая деталь</dt><dd>1–2 дня</dd></div>
@@ -533,13 +538,17 @@
             <div>
                 <p class="kicker">Цены</p>
                 <p class="price-big"><small>от</small> 100&nbsp;000 <small>сум</small></p>
-                <p>Минимальный заказ. Цена детали зависит от размера, материала, сложности модели и срочности — называем её до начала работы. Консультация бесплатная.</p>
-                <a class="btn btn-paper" href="/ceny/">Как считается цена <span aria-hidden="true">→</span></a>
+                <p>Минимальный заказ. Платите за граммы пластика: PLA, PETG и ABS — 1&nbsp;000 сум за грамм. Есть STL-файл — загрузите его в калькулятор и сразу увидите примерную цену, а точную назовём в Telegram.</p>
+                <div class="price-actions">
+                    <a class="btn btn-paper" href="/ceny/#calc">Рассчитать по STL <span aria-hidden="true">→</span></a>
+                    <a class="price-link" href="/ceny/">Все цены и сроки</a>
+                </div>
             </div>
                 <dl class="spec">
+                    <div><dt>PLA, PETG, ABS</dt><dd>1 000 сум/г</dd></div>
+                    <div><dt>PETG-CF, TPU</dt><dd>1 500 сум/г</dd></div>
+                    <div><dt>Nylon PA6</dt><dd>5 000 сум/г</dd></div>
                     <div><dt>Простая деталь</dt><dd>1–2 дня</dd></div>
-                    <div><dt>Скан + модель + печать</dt><dd>3–7 дней</dd></div>
-                    <div><dt>Серия</dt><dd>200 деталей за 2 дня</dd></div>
                     <div><dt>Серии и постоянные клиенты</dt><dd>скидки</dd></div>
                 </dl>
         </div>
@@ -588,7 +597,7 @@
             <div class="faq-list">
                 <details class="faq-item">
                     <summary>Сколько стоит 3D-печать в Ташкенте?</summary>
-                    <div class="faq-a">Минимальный заказ в 3DPie — 100 000 сум. Итоговая цена зависит от размера детали, пластика, сложности модели и срочности. Пришлите фото или файл в Telegram — консультация бесплатная, цену назовём до начала работы. Подробнее — <a href="/ceny/">цены на 3D-печать</a>.</div>
+                    <div class="faq-a">Цена считается по весу пластика: PLA, PETG и ABS — 1 000 сум за грамм, PETG-CF и TPU — 1 500 сум, Nylon PA6 — 5 000 сум. Минимальный заказ — 100 000 сум. Есть STL-файл — посчитайте примерную цену в <a href="/ceny/#calc">калькуляторе</a>. Точную цену назовём в Telegram до начала работы, консультация бесплатная.</div>
                 </details>
                 <details class="faq-item">
                     <summary>Можно ли сделать деталь без чертежа и 3D-модели?</summary>
@@ -692,8 +701,8 @@
         <a class="is-accent" href="https://t.me/pie3d" target="_blank" rel="noopener">Telegram</a>
     </div>
 
-    <script src="/js/scripts.js?v=20261012d" defer></script>
-    <script src="/js/gallery.js?v=20261012d" defer></script>
+    <script src="/js/scripts.js?v=20261012f" defer></script>
+    <script src="/js/gallery.js?v=20261012f" defer></script>
     <!-- GALLERY-SCHEMA:START -->
     <script type="application/ld+json">
     {

@@ -65,8 +65,8 @@
         }).observe(hero);
     }
 
-    // Conversion goals: phone and Telegram clicks.
-    // In Yandex.Metrika create JavaScript-event goals with ids "click_phone" and "click_telegram".
+    // Conversion goals: phone, Telegram and STL-calculator link clicks.
+    // In Yandex.Metrika create JavaScript-event goals with ids "click_phone", "click_telegram", "click_calc".
     document.addEventListener('click', function (e) {
         var link = e.target.closest('a[href]');
         if (!link) return;
@@ -74,6 +74,7 @@
         var goal = null;
         if (href.indexOf('tel:') === 0) goal = 'click_phone';
         else if (href.indexOf('t.me/') !== -1) goal = 'click_telegram';
+        else if (href.indexOf('#calc') !== -1) goal = 'click_calc';
         if (!goal) return;
         try { if (typeof ym === 'function') ym(105486503, 'reachGoal', goal); } catch (err) {}
         try { if (typeof gtag === 'function') gtag('event', goal, { link_url: href, page_path: location.pathname }); } catch (err) {}

@@ -5,9 +5,9 @@
  * (spec list, order steps, FAQ, CTA band, related links, JSON-LD).
  */
 
-const { SITE_URL, CONTACTS, T, STEPS, STEPS_TITLE, STEP_LABEL, businessNode } = require('./site');
+const { SITE_URL, CONTACTS, T, STEPS, STEPS_TITLE, STEP_LABEL, CALC, CALC_T, businessNode } = require('./site');
 
-const ASSET_VERSION = '20261012d';
+const ASSET_VERSION = '20261012f';
 
 function esc(str) {
   return String(str == null ? '' : str)
@@ -61,6 +61,8 @@ function renderHead(page, alternates) {
     ? `\n    <link rel="preload" as="image" href="${page.preloadImage}" fetchpriority="high">` : '';
   const galleryCss = page.hasGallery
     ? `\n    <link rel="stylesheet" href="/css/gallery.css?v=${ASSET_VERSION}">` : '';
+  const calcCss = page.calc
+    ? `\n    <link rel="stylesheet" href="/css/calc.css?v=${ASSET_VERSION}">` : '';
 
   return `<head>
     <meta charset="UTF-8">
@@ -92,7 +94,7 @@ ${altLinks}${xDefault}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="/css/styles.css?v=${ASSET_VERSION}">${galleryCss}${preload}
+    <link rel="stylesheet" href="/css/styles.css?v=${ASSET_VERSION}">${galleryCss}${calcCss}${preload}
 ${ANALYTICS}
     <script type="application/ld+json">
 ${indentJson(buildSchema(page, alternates), 4)}
@@ -367,6 +369,7 @@ function renderDocument(page, registry, mainHtml) {
   const t = T[page.lang];
   const scripts = [`    <script src="/js/scripts.js?v=${ASSET_VERSION}" defer></script>`];
   if (page.hasGallery) scripts.push(`    <script src="/js/gallery.js?v=${ASSET_VERSION}" defer></script>`);
+  if (page.calc) scripts.push(`    <script src="/js/calc.js?v=${ASSET_VERSION}" defer></script>`);
   const gallerySchema = page.type === 'home'
     ? `\n    <!-- GALLERY-SCHEMA:START -->\n    <!-- GALLERY-SCHEMA:END -->` : '';
 
@@ -387,6 +390,84 @@ ${scripts.join('\n')}${gallerySchema}
 </body>
 </html>
 `;
+}
+
+// STL price calculator (prices page). Everything is computed in the browser by js/calc.js;
+// prices, build volumes and strings come from CALC / CALC_T in src/site.js via an inline JSON block.
+function money(n) {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+}
+
+function renderCalc(lang) {
+  const c = CALC_T[lang];
+  const mats = CALC.materials.map(m =>
+    `<option value="${m.id}">${esc(m.name)} — ${money(m.price)} ${esc(c.sum)}/${esc(c.g)}</option>`).join('');
+  const infill = CALC.infill.map(v => `
+                            <label><input type="radio" name="calc-infill" value="${v}"${v === CALC.infillDefault ? ' checked' : ''}><span>${esc(c.infillNames[v])}<b>${v}%</b></span></label>`).join('');
+  const units = CALC.units.map(([id]) => `<option value="${id}">${esc(c.unitNames[id])}</option>`).join('');
+  const out = [['size', c.size], ['volume', c.volume], ['weight', c.weight], ['supports', c.supports], ['piece', c.perPiece]]
+    .map(([k, label]) => `<div><dt>${esc(label)}</dt><dd data-out="${k}">—</dd></div>`).join('');
+  const data = JSON.stringify({ calc: CALC, t: c, telegram: CONTACTS.telegram }).replace(/</g, '\\u003c');
+
+  return `    <section class="section section-calc" id="calc">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 class="h2">${c.title}</h2>
+                <p class="section-note">${esc(c.note)}</p>
+            </div>
+            <div class="calc">
+                <div class="calc-stage">
+                    <label class="calc-drop">
+                        <input class="calc-file" type="file" accept=".stl">
+                        <span class="calc-drop-icon" aria-hidden="true"></span>
+                        <span class="calc-drop-text">${c.drop}</span>
+                        <span class="calc-drop-hint">${esc(c.dropHint)}</span>
+                        <noscript><span class="calc-drop-hint">${esc(c.noscript)}</span></noscript>
+                    </label>
+                    <canvas class="calc-canvas" hidden></canvas>
+                    <div class="calc-bar" hidden>
+                        <span class="calc-name"></span>
+                        <span class="calc-legend">${esc(c.legend)}</span>
+                        <span class="calc-hint">${esc(c.rotate)}</span>
+                        <button class="calc-other" type="button">${esc(c.other)}</button>
+                    </div>
+                </div>
+                <div class="calc-panel">
+                    <div class="calc-field">
+                        <label for="calc-mat">${esc(c.material)}</label>
+                        <select id="calc-mat" class="calc-mat">${mats}</select>
+                    </div>
+                    <fieldset class="calc-field">
+                        <legend>${esc(c.infill)}</legend>
+                        <div class="calc-seg">${infill}
+                        </div>
+                    </fieldset>
+                    <div class="calc-two">
+                        <div class="calc-field">
+                            <label for="calc-qty">${esc(c.qty)}</label>
+                            <input id="calc-qty" class="calc-qty" type="number" min="1" max="10000" step="1" value="1" inputmode="numeric">
+                        </div>
+                        <div class="calc-field">
+                            <label for="calc-unit">${esc(c.unit)}</label>
+                            <select id="calc-unit" class="calc-unit">${units}</select>
+                        </div>
+                    </div>
+                    <dl class="calc-out">${out}</dl>
+                    <div class="calc-total">
+                        <span>${esc(c.total)}</span>
+                        <output data-out="total" aria-live="polite">${esc(c.empty)}</output>
+                    </div>
+                    <p class="calc-msg" role="status"></p>
+                    <div class="calc-actions">
+                        <a class="btn btn-accent" href="${CONTACTS.telegram}" target="_blank" rel="noopener">${esc(c.tg)} <span aria-hidden="true">→</span></a>
+                        <button class="btn calc-copy" type="button" disabled>${esc(c.copy)}</button>
+                    </div>
+                    <p class="calc-disclaimer">${esc(c.disclaimer)}</p>
+                </div>
+            </div>
+            <script type="application/json" class="calc-data">${data}</script>
+        </div>
+    </section>`;
 }
 
 // Decorative "printing" panel: the 3DPie logo mark is printed layer by layer like on an FDM printer
@@ -420,5 +501,5 @@ function renderPrintViz(lang) {
 }
 
 module.exports = {
-  esc, renderPrintViz, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
+  esc, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
 };

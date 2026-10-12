@@ -1,0 +1,443 @@
+/* STL price calculator (prices page only). Tokens come from styles.css :root. */
+
+.section-calc {
+  padding-top: 24px;
+}
+
+.calc [hidden] {
+  display: none !important;
+}
+
+.calc {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* ---------- stage: drop zone, then the 3D preview ---------- */
+
+.calc-stage {
+  position: relative;
+  display: flex;
+  min-height: 520px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(closest-side, rgba(198, 244, 50, .06), transparent 75%),
+    var(--bg-2);
+  overflow: hidden;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+
+.calc-stage.is-over {
+  border-color: var(--accent);
+  background-color: var(--panel);
+}
+
+.calc-drop {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 14px;
+  padding: 32px 24px;
+  text-align: center;
+  border: 1px dashed var(--line-2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .2s ease;
+}
+
+.calc-drop:hover,
+.calc-drop:focus-within,
+.calc-stage.is-over .calc-drop {
+  border-color: var(--accent);
+}
+
+.calc-drop:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.calc-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.calc-drop-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 6px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: var(--accent-dim);
+  transition: transform .2s var(--ease);
+}
+
+.calc-drop-icon::before {
+  content: 'STL';
+  font: 500 14px/1 var(--display);
+  color: var(--accent);
+}
+
+.calc-drop:hover .calc-drop-icon {
+  transform: translateY(-3px);
+}
+
+.calc-drop-text {
+  color: var(--text-2);
+  max-width: 22em;
+}
+
+.calc-drop-text b {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.calc-drop-hint {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.calc-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.calc-canvas:active {
+  cursor: grabbing;
+}
+
+.calc-bar {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 14px;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(12, 14, 15, .82);
+  pointer-events: none;
+}
+
+.calc-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.calc-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.calc-legend::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: #dbe0e0;
+}
+
+.calc-hint {
+  font-size: 13px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.calc-other {
+  flex: none;
+  min-height: 34px;
+  padding: 0 12px;
+  font: 600 13px/1 var(--sans);
+  color: var(--text);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--panel);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: border-color .2s ease;
+}
+
+.calc-other:hover {
+  border-color: var(--accent);
+}
+
+/* ---------- panel: options and result ---------- */
+
+.calc-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.calc-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  border: 0;
+}
+
+.calc-field > label,
+.calc-field legend {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.calc-field legend {
+  margin-bottom: 8px;
+}
+
+.calc-mat,
+.calc-unit,
+.calc-qty {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  font: 500 16px/1 var(--sans);
+  color: var(--text);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background-color: var(--bg-2);
+  transition: border-color .2s ease;
+}
+
+.calc-mat,
+.calc-unit {
+  appearance: none;
+  padding-right: 38px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--accent) 50%),
+    linear-gradient(135deg, var(--accent) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.calc-mat option,
+.calc-unit option {
+  background: var(--panel);
+}
+
+.calc-mat:hover,
+.calc-unit:hover,
+.calc-qty:hover,
+.calc-mat:focus,
+.calc-unit:focus,
+.calc-qty:focus {
+  border-color: var(--accent);
+}
+
+.calc-qty {
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 12px;
+}
+
+.calc-seg {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.calc-seg input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.calc-seg span {
+  display: grid;
+  gap: 4px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-2);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--bg-2);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+
+.calc-seg b {
+  font: 500 15px/1 var(--display);
+  color: var(--text);
+}
+
+.calc-seg span:hover {
+  border-color: var(--text-3);
+}
+
+.calc-seg input:checked + span {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.calc-seg input:checked + span b {
+  color: var(--accent);
+}
+
+.calc-seg input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.calc-out {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.calc-out > div {
+  padding: 12px 14px;
+}
+
+.calc-out > div:nth-child(even) {
+  border-left: 1px solid var(--line);
+}
+
+.calc-out > div:nth-child(n + 3) {
+  border-top: 1px solid var(--line);
+}
+
+.calc-out > div:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.calc-out dt {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.calc-out dd {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-total {
+  display: grid;
+  gap: 6px;
+}
+
+.calc-total span {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.calc-total output {
+  font: 500 clamp(26px, 2.6vw, 36px)/1.1 var(--display);
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-msg {
+  display: grid;
+  gap: 8px;
+}
+
+.calc-msg:empty {
+  display: none;
+}
+
+.calc-msg span {
+  padding-left: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+  border-left: 2px solid var(--accent);
+}
+
+.calc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.calc-actions .btn {
+  flex: 1 1 auto;
+}
+
+.calc-copy:disabled {
+  opacity: .45;
+  cursor: default;
+  transform: none;
+}
+
+.calc-disclaimer {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+
+@media (max-width: 960px) {
+  .calc {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .calc-stage {
+    min-height: 340px;
+  }
+}
+
+@media (max-width: 600px) {
+  .calc-stage {
+    min-height: 300px;
+  }
+
+  .calc-panel {
+    padding: 18px;
+  }
+
+  .calc-seg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calc-hint {
+    display: none;
+  }
+}
