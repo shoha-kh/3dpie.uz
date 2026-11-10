@@ -131,6 +131,15 @@
   padding: 14px 8px 10px;
 }
 
+.work-meta h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-meta h3 a:hover {
+  color: var(--accent, #c6f432);
+}
+
 .work-meta h3 {
   font-family: var(--display, sans-serif);
   font-size: 15px;
@@ -309,7 +318,7 @@
 
 .work-modal__counter {
   font-size: 13px;
-  color: var(--text-3, #6f787b);
+  color: var(--text-3, #80898c);
   white-space: nowrap;
 }
 

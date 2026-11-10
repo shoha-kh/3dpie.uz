@@ -63,6 +63,11 @@ function assetUrl(rel) {
   return '/' + String(rel).replace(/^\.?\//, '');
 }
 
+// Every work has a page of its own (built by build-site.js from the same data).
+function workPath(id, lang) {
+  return lang === 'uz' ? `/uz/ishlar/${id}/` : `/raboty/${id}/`;
+}
+
 function formatNumber(n) {
   // Use narrow no-break space (U+202F) as thousands separator
   return Number(n).toLocaleString('ru-RU').replace(/\s/g, '\u202F');
@@ -150,7 +155,7 @@ function renderCard(item, lang) {
   return `                <article${idAttr} class="work-card" data-type="${escapeAttr(type)}" aria-label="${ariaLabel}">
 ${thumbHtml}
                     <div class="work-meta">
-                        <h3>${escapeHtml(title)}</h3>
+                        <h3>${item.id ? `<a href="${workPath(item.id, lang)}">${escapeHtml(title)}</a>` : escapeHtml(title)}</h3>
                         <p>${escapeHtml(description)}</p>
                     </div>${priceBlockHtml}${longDescHtml}
 ${mediasHtml}
@@ -173,7 +178,7 @@ function absoluteUrl(rel) {
 function buildProductSchema(item, lang) {
   const title = pickLang(item.title, lang);
   const description = pickLang(item.description, lang);
-  const pageUrl = `${SITE_URL}${lang === 'uz' ? '/uz.html' : '/'}#work-${item.id}`;
+  const pageUrl = SITE_URL + workPath(item.id, lang);
   // Try to find an image — first explicit thumb, then any image media, then any video poster
   const medias = item.medias || [];
   const firstImage = medias.find(m => m.type === 'image');
@@ -301,6 +306,6 @@ function main() {
   console.log(`[build-gallery] Done. ${updated} file(s) updated.`);
 }
 
-module.exports = { main, renderCard, pickLang, escapeHtml, assetUrl, formatNumber };
+module.exports = { main, renderCard, pickLang, escapeHtml, assetUrl, formatNumber, workPath };
 
 if (require.main === module) main();

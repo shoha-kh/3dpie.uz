@@ -15,7 +15,8 @@ module.exports = [
     breadcrumb: 'Цены на 3D-печать',
     navTitle: 'Цены на 3D-печать',
     title: `Цены на 3D-печать в Ташкенте — заказ от ${P.min} сум | 3DPie`,
-    description: `Сколько стоит 3D-печать в Ташкенте и Чирчике: от ${P.ru.basePerGram}, калькулятор цены по STL-файлу, минимальный заказ ${P.min} сум, сроки 1–7 дней. Точную цену назовём в Telegram.`,
+    description: `Цены на 3D-печать в Ташкенте: от ${P.ru.basePerGram}, минимальный заказ ${P.min} сум, калькулятор по файлу модели, сроки 1–7 дней.`,
+    tg: 'Здравствуйте! Хочу узнать цену 3D-печати.',
     kicker: 'Цены и сроки',
     h1: 'Сколько стоит 3D-печать в Ташкенте',
     lead: `Цена считается по весу пластика: ${P.ru.baseNames} — <strong>${P.ru.basePerGram}</strong>, минимальный заказ — <strong>${P.min} сум</strong>. Загрузите STL в <a href="#calc">калькулятор</a> и узнайте примерную цену, а точную назовём в Telegram.`,
@@ -44,10 +45,21 @@ module.exports = [
 </div>`
       },
       {
+        title: 'Что входит в цену',
+        html: `
+<ul>
+<li><strong>Консультация</strong> — бесплатно: подскажем, можно ли напечатать деталь и из какого пластика.</li>
+<li><strong>Цена до начала работы</strong> — называем заранее, без скрытых доплат.</li>
+<li><strong>Подбор пластика под задачу</strong> — по тому, где будет стоять деталь, какую нагрузку и температуру выдержит.</li>
+<li><strong>Проверка каждой детали</strong> перед выдачей. Брак переделываем бесплатно.</li>
+</ul>
+<p>Отдельно считаются 3D-моделирование и 3D-сканирование, если готовой модели нет, и доставка.</p>`
+      },
+      {
         title: 'Как узнать цену своей детали',
         html: `
 <ol>
-<li>Есть файл STL — загрузите его в <a href="#calc">калькулятор</a> и посмотрите примерную цену. Нет файла — сфотографируйте деталь рядом с линейкой, сверху и сбоку.</li>
+<li>Есть файл STL, OBJ или 3MF — загрузите его в <a href="#calc">калькулятор</a> и посмотрите примерную цену. Нет файла — сфотографируйте деталь рядом с линейкой, сверху и сбоку.</li>
 <li>Пришлите файл или фото в Telegram <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a> или позвоните <a href="tel:+998901391094">+998 90 139 10 94</a>: для чего деталь, сколько штук, к какому сроку.</li>
 <li>Ответим с ценой и сроком. Консультация бесплатная — спрашивать можно о любой идее.</li>
 </ol>
@@ -61,7 +73,7 @@ module.exports = [
       { q: 'Сколько стоит напечатать одну маленькую деталь?', a: `Минимальный заказ — ${P.min} сум. Мелкие детали выгоднее заказывать партией: например, 200 креплений для кабеля мы напечатали за 2 дня.` },
       { q: 'Есть ли скидки?', a: 'Да: на серии одинаковых деталей и для постоянных клиентов.' }
     ],
-    related: ['modeling', 'scanning', 'auto', 'gears'],
+    related: ['modeling', 'scanning', 'series', 'auto', 'gears'],
     service: { name: '3D-печать на заказ', serviceType: '3D-печать', minPrice: P.minOrder },
     sitemapImages: []
   },
@@ -75,7 +87,8 @@ module.exports = [
     breadcrumb: '3D chop etish narxlari',
     navTitle: '3D chop etish narxlari',
     title: `Toshkentda 3D chop etish narxlari — buyurtma ${P.min} so'mdan | 3DPie`,
-    description: `Toshkent va Chirchiqda 3D chop etish (3D pechat) narxi: ${P.uz.basePerGram}dan, STL fayl bo'yicha narx kalkulyatori, minimal buyurtma ${P.min} so'm, muddatlar 1–7 kun. Aniq narxni Telegramda aytamiz.`,
+    description: `Toshkentda 3D chop etish (3D pechat) narxi: ${P.uz.basePerGram}dan, minimal buyurtma ${P.min} so'm, model fayli bo'yicha kalkulyator, 1–7 kun.`,
+    tg: 'Assalomu alaykum! 3D chop etish narxini bilmoqchiman.',
     kicker: 'Narxlar va muddatlar',
     h1: 'Toshkentda 3D chop etish qancha turadi',
     lead: `Narx plastik og'irligi bo'yicha hisoblanadi: ${P.uz.baseNames} — <strong>${P.uz.basePerGram}</strong>, minimal buyurtma — <strong>${P.min} so'm</strong>. STL faylni <a href=\"#calc\">kalkulyatorga</a> yuklang va taxminiy narxni biling, aniq narxni Telegramda aytamiz.`,
@@ -104,10 +117,21 @@ module.exports = [
 </div>`
       },
       {
+        title: 'Narxga nimalar kiradi',
+        html: `
+<ul>
+<li><strong>Konsultatsiya</strong> — bepul: detalni chop etish mumkinmi va qaysi plastikdan, maslahat beramiz.</li>
+<li><strong>Narx ish boshlanishidan oldin</strong> — oldindan aytamiz, yashirin to'lovlarsiz.</li>
+<li><strong>Vazifaga mos plastik tanlash</strong> — detal qayerda turishi, qanday yuklama va haroratga chidashi kerakligiga qarab.</li>
+<li><strong>Har bir detalni tekshirish</strong> — topshirishdan oldin. Nuqsonli detalni bepul qayta tayyorlaymiz.</li>
+</ul>
+<p>Tayyor model bo'lmasa, 3D modellashtirish va 3D skanerlash, shuningdek yetkazib berish alohida hisoblanadi.</p>`
+      },
+      {
         title: 'Detalingiz narxini qanday bilish mumkin',
         html: `
 <ol>
-<li>STL fayl bo'lsa — uni <a href="#calc">kalkulyatorga</a> yuklang va taxminiy narxni ko'ring. Fayl bo'lmasa — detalni chizg'ich yonida yuqoridan va yon tomondan suratga oling.</li>
+<li>STL, OBJ yoki 3MF fayl bo'lsa — uni <a href="#calc">kalkulyatorga</a> yuklang va taxminiy narxni ko'ring. Fayl bo'lmasa — detalni chizg'ich yonida yuqoridan va yon tomondan suratga oling.</li>
 <li>Fayl yoki rasmni Telegramga yuboring <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a> yoki qo'ng'iroq qiling <a href="tel:+998901391094">+998 90 139 10 94</a>: detal nima uchun, nechta kerak, qachongacha.</li>
 <li>Narx va muddat bilan javob beramiz. Konsultatsiya bepul — istalgan g'oya haqida so'rashingiz mumkin.</li>
 </ol>
@@ -121,7 +145,7 @@ module.exports = [
       { q: 'Bitta kichik detalni chop etish qancha turadi?', a: `Minimal buyurtma — ${P.min} so'm. Mayda detallarni partiya bilan buyurtma qilish foydaliroq: masalan, 200 ta kabel mahkamlagichini 2 kunda chop etdik.` },
       { q: 'Chegirmalar bormi?', a: "Ha: bir xil detallar seriyasiga va doimiy mijozlar uchun." }
     ],
-    related: ['modeling', 'scanning', 'auto', 'gears'],
+    related: ['modeling', 'scanning', 'series', 'auto', 'gears'],
     service: { name: 'Buyurtma asosida 3D chop etish', serviceType: '3D chop etish', minPrice: P.minOrder },
     sitemapImages: []
   }

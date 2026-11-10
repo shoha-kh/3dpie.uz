@@ -75,13 +75,28 @@
 | сделать копию сложной детали | murakkab detal nusxasi | |
 | отсканировать деталь | detalni skanerlash | |
 
-## Резиновые детали и серии — главная, `/materialy/`
+## Резиновые детали — `/rezinovye-detali/`, `/uz/rezina-detallar/`
 
 | Русский | Узбекский | English |
 |---|---|---|
 | резиновые детали на заказ | rezina detallar buyurtma | tpu 3d printing |
 | печать из tpu | TPU dan chop etish | |
+| уплотнитель на заказ, втулка из резины | zichlagich, rezina vtulka | |
+
+## Серийная печать — `/seriynaya-pechat/`, `/uz/seriyali-chop-etish/`
+
+| Русский | Узбекский | English |
+|---|---|---|
 | серийная 3д печать | seriyali 3D chop etish | small batch 3d printing |
+| мелкосерийное производство пластиковых деталей | kichik seriyali ishlab chiqarish | |
+| партия деталей на заказ | detallar partiyasi buyurtma | |
+
+## Корпуса — `/korpusa/`, `/uz/korpuslar/`
+
+| Русский | Узбекский | English |
+|---|---|---|
+| корпус для электроники на заказ | elektronika uchun korpus | custom enclosure 3d print |
+| корпус для платы, корпус прибора | plata korpusi, asbob korpusi | |
 | petg-cf печать | PETG-CF | petg-cf |
 
 ## Цены — `/ceny/`, `/uz/narxlar/`

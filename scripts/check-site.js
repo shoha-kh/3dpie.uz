@@ -45,6 +45,10 @@ for (const u of urls) {
   if (h1 !== 1) problems.push(`${u}: ${h1} <h1> tags`);
   const title = (h.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
   if (title.length > 80) problems.push(`${u}: title too long (${title.length})`);
+  // search engines show about 160 characters of the description: what does not fit is never seen
+  const desc = ((h.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+  if (!desc) problems.push(`${u}: no meta description`);
+  else if (desc.length > 160) problems.push(`${u}: description too long (${desc.length} > 160)`);
   for (const m of h.matchAll(/(?:href|src|poster|data-poster)="(\/[^"#?]*)/g)) {
     const p = m[1];
     if (!fs.existsSync(path.join(ROOT, p.endsWith('/') ? p + 'index.html' : p))) problems.push(`${u}: missing ${p}`);
@@ -104,6 +108,7 @@ for (const u of urls) {
     }
   }
   for (const u of urls) {
+    if (/^\/(raboty|uz\/ishlar)\//.test(u)) continue; // work pages come from the gallery; llms.txt describes them as a group
     if (!llms.includes(`(${SITE_URL}${u})`)) problems.push(`llms.txt: page ${u} is not listed`);
   }
 })();

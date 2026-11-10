@@ -24,7 +24,7 @@
   --line-2: #343a3d;
   --text: #eceeed;
   --text-2: #a9b0b2;
-  --text-3: #6f787b;
+  --text-3: #80898c;
   --accent: #c6f432;
   --accent-ink: #0c0e0f;
   --accent-dim: rgba(198, 244, 50, .12);
@@ -631,6 +631,36 @@ ol {
 }
 
 .scan-card figcaption::before,
+/* page of a single work: the video or the first photo */
+.work-figure video,
+.work-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(78vh, 720px);
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+  background: #000;
+}
+
+.work-figure img {
+  aspect-ratio: auto;
+}
+
+.work-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.work-photos img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
 .fig figcaption::before {
   content: '';
   width: 6px;
@@ -2076,6 +2106,55 @@ ol {
   .nav-toggle {
     gap: 8px;
     padding: 0 10px;
+  }
+}
+
+/* On the narrowest screens the slash between the languages goes, so the header row still fits. */
+@media (max-width: 359px) {
+  .lang > span {
+    display: none;
+  }
+}
+
+/* Touch layouts: links and switches that were under 40px tall get a comfortable tap area. */
+@media (max-width: 960px) {
+  .brand {
+    min-height: 44px;
+  }
+
+  .lang a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: clamp(34px, 11vw, 40px); /* 40px from 364px up, a bit narrower on 320px screens */
+    min-height: 40px;
+  }
+
+  .footer-links li+li {
+    margin-top: 0;
+  }
+
+  .footer-links a,
+  .footer-bottom a {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  .link-arrow,
+  .price-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .crumbs {
+    align-items: center;
+  }
+
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 }
 

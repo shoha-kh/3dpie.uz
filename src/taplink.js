@@ -106,7 +106,7 @@ function render() {
     <script>try{if(localStorage.getItem('tl-lang')==='uz'||(!localStorage.getItem('tl-lang')&&/^uz/i.test(navigator.language)))document.documentElement.lang='uz'}catch(e){}</script>
     <style>
       *{margin:0;padding:0;box-sizing:border-box}
-      :root{--bg:#0c0e0f;--panel:#161a1b;--line:#252a2c;--line-2:#343a3d;--text:#eceeed;--text-2:#a9b0b2;--text-3:#6f787b;--accent:#c6f432;--ease:cubic-bezier(.2,.7,.2,1)}
+      :root{--bg:#0c0e0f;--panel:#161a1b;--line:#252a2c;--line-2:#343a3d;--text:#eceeed;--text-2:#a9b0b2;--text-3:#80898c;--accent:#c6f432;--ease:cubic-bezier(.2,.7,.2,1)}
       html[lang=ru] [data-l=uz],html[lang=uz] [data-l=ru]{display:none!important}
       body{font-family:'Onest',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:28px 16px 40px;
         background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.2px);background-size:24px 24px;-webkit-font-smoothing:antialiased}

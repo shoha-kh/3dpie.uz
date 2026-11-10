@@ -84,9 +84,9 @@ const ruServices = [
   { href: '/3d-skanirovanie/', t: '3D-сканирование и реверс-инжиниринг', d: 'Снимаем сложную форму сканером, восстанавливаем и усиливаем сломанные детали.' },
   { href: '/avtozapchasti/', t: 'Автозапчасти и детали салона', d: 'Клипсы, заглушки, дефлекторы, решётки, накладки под твитеры, рамки, декоративные элементы.' },
   { href: '/shesterni/', t: 'Шестерни и детали для техники', d: 'Шестерни для мясорубок и блендеров, втулки, ролики, ручки — когда оригинал не найти.' },
-  { href: '/materialy/', t: 'Резиновые детали из TPU', d: 'Гибкие, износостойкие уплотнители, втулки и накладки — служат дольше силикона.' },
-  { href: '/#work-cable-clips-batch', t: 'Серийные партии', d: 'Одинаковые детали десятками и сотнями: 200 креплений для кабеля — за 2 дня.' },
-  { href: '/#gallery', t: 'Корпуса и изделия на заказ', d: 'Корпуса для электроники, короба из PETG-CF, декор для аквариума — по вашей идее.' }
+  { href: '/rezinovye-detali/', t: 'Резиновые детали из TPU', d: 'Гибкие, износостойкие уплотнители, втулки и накладки — служат дольше силикона.' },
+  { href: '/seriynaya-pechat/', t: 'Серийные партии', d: 'Одинаковые детали десятками и сотнями: 200 креплений для кабеля — за 2 дня.' },
+  { href: '/korpusa/', t: 'Корпуса и изделия на заказ', d: 'Корпуса для электроники, короба из PETG-CF, декор для аквариума — по вашей идее.' }
 ];
 
 const ruMaterials = [
@@ -212,6 +212,7 @@ ${layout.renderFaq('ru', ruFaq)}
                     <div><dt>Телефон</dt><dd><a href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a></dd></div>
                     <div><dt>Telegram</dt><dd><a href="${CONTACTS.telegram}" target="_blank" rel="noopener">${CONTACTS.telegramHandle}</a></dd></div>
                     <div><dt>Instagram</dt><dd><a href="${CONTACTS.instagram}" target="_blank" rel="noopener">${CONTACTS.instagramHandle}</a></dd></div>
+                    <div><dt>${T.ru.mapsLabel}</dt><dd><a href="${CONTACTS.yandexMap}" target="_blank" rel="noopener">Яндекс Карты</a> · <a href="${CONTACTS.mapLink}" target="_blank" rel="noopener">Google Maps</a></dd></div>
                     <div><dt>Доставка</dt><dd>Курьер по Ташкенту и Ташкентской области. В регионы — BTS или Яндекс Доставка (платно)</dd></div>
                 </dl>
                 ${layout.renderCtaButtons('ru')}
@@ -261,9 +262,9 @@ const uzServices = [
   { href: '/uz/3d-skanerlash/', t: '3D skanerlash va teskari muhandislik', d: "Murakkab shaklni skaner bilan olamiz, singan detallarni tiklaymiz va mustahkamlaymiz." },
   { href: '/uz/avtoehtiyot-qismlar/', t: 'Avtoehtiyot qismlar va salon detallari', d: "Klipsalar, tiqinlar, deflektorlar, panjaralar, tvitter nakladkalari, ramkalar, dekorativ elementlar." },
   { href: '/uz/tishli-gildiraklar/', t: "Texnika uchun tishli g'ildiraklar va detallar", d: "Go'sht qiymalagich va blender shesternyalari, vtulkalar, roliklar, dastaklar." },
-  { href: '/uz/materiallar/', t: 'TPU dan rezina detallar', d: "Egiluvchan, yeyilishga chidamli zichlagichlar, vtulkalar va nakladkalar — silikondan uzoqroq xizmat qiladi." },
-  { href: '/uz.html#work-cable-clips-batch', t: 'Seriyali partiyalar', d: "Bir xil detallar o'nlab va yuzlab: 200 ta kabel mahkamlagichi — 2 kunda." },
-  { href: '/uz.html#gallery', t: 'Korpuslar va buyurtma asosida buyumlar', d: "Elektronika korpuslari, PETG-CF qutilar, akvarium bezaklari — sizning g'oyangiz bo'yicha." }
+  { href: '/uz/rezina-detallar/', t: 'TPU dan rezina detallar', d: "Egiluvchan, yeyilishga chidamli zichlagichlar, vtulkalar va nakladkalar — silikondan uzoqroq xizmat qiladi." },
+  { href: '/uz/seriyali-chop-etish/', t: 'Seriyali partiyalar', d: "Bir xil detallar o'nlab va yuzlab: 200 ta kabel mahkamlagichi — 2 kunda." },
+  { href: '/uz/korpuslar/', t: 'Korpuslar va buyurtma asosida buyumlar', d: "Elektronika korpuslari, PETG-CF qutilar, akvarium bezaklari — sizning g'oyangiz bo'yicha." }
 ];
 
 const uzMaterials = [
@@ -389,6 +390,7 @@ ${layout.renderFaq('uz', uzFaq)}
                     <div><dt>Telefon</dt><dd><a href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a></dd></div>
                     <div><dt>Telegram</dt><dd><a href="${CONTACTS.telegram}" target="_blank" rel="noopener">${CONTACTS.telegramHandle}</a></dd></div>
                     <div><dt>Instagram</dt><dd><a href="${CONTACTS.instagram}" target="_blank" rel="noopener">${CONTACTS.instagramHandle}</a></dd></div>
+                    <div><dt>${T.uz.mapsLabel}</dt><dd><a href="${CONTACTS.yandexMap}" target="_blank" rel="noopener">Yandex Xaritalar</a> · <a href="${CONTACTS.mapLink}" target="_blank" rel="noopener">Google Maps</a></dd></div>
                     <div><dt>Yetkazib berish</dt><dd>Toshkent va Toshkent viloyati bo'ylab kuryer. Viloyatlarga — BTS yoki Yandex (pullik)</dd></div>
                 </dl>
                 ${layout.renderCtaButtons('uz')}
@@ -410,7 +412,8 @@ module.exports = [
     nav: 'home',
     title: '3D-печать в Ташкенте и Чирчике — детали на заказ, 3D-сканирование | 3DPie',
     ogTitle: '3DPie — 3D-печать на заказ в Ташкенте и Чирчике',
-    description: `3D-печать, 3D-сканирование и моделирование на заказ в Ташкенте и Чирчике: автозапчасти, шестерни, корпуса, резиновые детали по фото или образцу. Заказ от ${P.min} сум, простая деталь за 1–2 дня. ☎ +998 90 139 10 94`,
+    description: `3D-печать на заказ в Ташкенте и Чирчике: детали по фото или образцу, 3D-сканирование, моделирование. От ${P.min} сум, 1–2 дня. ☎ +998 90 139 10 94`,
+    tg: 'Здравствуйте! Хочу заказать 3D-печать детали.',
     preloadImage: '/images/work-grille.webp',
     hasGallery: true,
     faq: ruFaq,
@@ -426,7 +429,8 @@ module.exports = [
     nav: 'home',
     title: "3D chop etish Toshkent va Chirchiqda — buyurtma asosida detallar | 3DPie",
     ogTitle: '3DPie — Toshkent va Chirchiqda 3D chop etish',
-    description: `Toshkent va Chirchiqda buyurtma asosida 3D chop etish (3D pechat), 3D skanerlash va modellashtirish: avtoehtiyot qismlar, tishli g'ildiraklar, korpuslar, rezina detallar. Buyurtma ${P.min} so'mdan, oddiy detal 1–2 kunda. ☎ +998 90 139 10 94`,
+    description: `Toshkent va Chirchiqda buyurtma asosida 3D chop etish (3D pechat): rasm yoki namuna bo'yicha detallar. ${P.min} so'mdan, 1–2 kun. ☎ +998 90 139 10 94`,
+    tg: 'Assalomu alaykum! 3D chop etishga buyurtma bermoqchiman.',
     preloadImage: '/images/work-grille.webp',
     hasGallery: true,
     faq: uzFaq,

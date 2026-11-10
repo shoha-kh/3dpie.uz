@@ -14,7 +14,8 @@ module.exports = [
     breadcrumb: 'Какой пластик выбрать',
     navTitle: 'Какой пластик выбрать',
     title: 'PLA, PETG, ABS, TPU или Nylon: какой пластик выбрать для 3D-печати | 3DPie',
-    description: 'Сравнение пластиков для 3D-печати: PLA, PETG, ABS, TPU, Nylon — прочность, термостойкость, гибкость и для каких деталей подходит каждый. Подсказки для автозапчастей, шестерён и деталей для улицы.',
+    description: 'PLA, PETG, ABS, TPU или Nylon: сравнение пластиков для 3D-печати — прочность, термостойкость, гибкость и для каких деталей подходит каждый.',
+    tg: 'Здравствуйте! Подскажите, какой пластик выбрать для детали.',
     kicker: 'Статья · материалы',
     h1: 'Какой пластик выбрать для 3D-печати детали',
     lead: 'Коротко: <strong>PLA</strong> — для декора и корпусов в помещении, <strong>PETG</strong> — для прочных деталей и улицы, <strong>ABS</strong> — для салона авто и нагрева, <strong>TPU</strong> — если деталь должна гнуться, <strong>Nylon</strong> — для шестерён и трения. Ниже — подробнее.',
@@ -54,7 +55,7 @@ module.exports = [
         title: 'PETG',
         html: `
 <p>Универсальный инженерный пластик: прочнее и ударостойче PLA, не боится влаги и солнца, держит около 70&nbsp;°C. Хороший выбор для креплений, кронштейнов, деталей для улицы, ванной и кухни.</p>
-<p><strong>PETG-CF</strong> — PETG с углеволокном: заметно жёстче и с красивой матовой фактурой. Из него, например, мы сделали <a href="/#work-biokamin-box">декоративный короб для биокамина</a>.</p>`
+<p><strong>PETG-CF</strong> — PETG с углеволокном: заметно жёстче и с красивой матовой фактурой. Из него, например, мы сделали <a href="/raboty/biokamin-box/">декоративный короб для биокамина</a>.</p>`
       },
       {
         title: 'ABS',
@@ -64,7 +65,7 @@ module.exports = [
       {
         title: 'TPU',
         html: `
-<p>Гибкий пластик, похожий на резину. Детали из TPU гнутся, пружинят и не трескаются, износостойкие и часто служат дольше силиконовых. Подходит для уплотнителей, демпферов, ножек, накладок, защитных чехлов. Пример — гибкие детали в <a href="/#work-flexible-rubber-parts">наших работах</a>.</p>`
+<p>Гибкий пластик, похожий на резину. Детали из TPU гнутся, пружинят и не трескаются, износостойкие и часто служат дольше силиконовых. Подходит для уплотнителей, демпферов, ножек, накладок, защитных чехлов. Пример — гибкие детали в <a href="/raboty/flexible-rubber-parts/">наших работах</a>.</p>`
       },
       {
         title: 'Nylon',
@@ -78,7 +79,7 @@ module.exports = [
       { q: 'Можно ли напечатать деталь, похожую на резину?', a: 'Да, из TPU. Он гибкий, как резина, и при этом износостойкий.' },
       { q: 'Безопасен ли пластик для контакта с едой?', a: 'Напечатанные детали имеют пористую поверхность, поэтому для постоянного контакта с едой мы их не рекомендуем. Для деталей кухонной техники, которые не касаются продуктов напрямую (шестерни, ручки, крышки), это не проблема.' }
     ],
-    related: ['auto', 'gears', 'scanning', 'prices'],
+    related: ['auto', 'gears', 'rubber', 'enclosures', 'prices'],
     sitemapImages: []
   },
   {
@@ -92,7 +93,8 @@ module.exports = [
     breadcrumb: 'Qaysi plastikni tanlash kerak',
     navTitle: 'Qaysi plastikni tanlash kerak',
     title: 'PLA, PETG, ABS, TPU yoki Nylon: qaysi plastikni tanlash kerak | 3DPie',
-    description: "3D chop etish plastiklarini taqqoslash: PLA, PETG, ABS, TPU, Nylon — mustahkamlik, issiqqa chidamlilik, egiluvchanlik va har biri qaysi detallar uchun mos. Avtoehtiyot qismlar, tishli g'ildiraklar va ko'cha detallari uchun maslahatlar.",
+    description: 'PLA, PETG, ABS, TPU yoki Nylon: 3D chop etish plastiklarini taqqoslash — mustahkamlik, issiqqa chidamlilik, egiluvchanlik va qaysi detalga mos.',
+    tg: 'Assalomu alaykum! Detal uchun qaysi plastik mos kelishini maslahat bering.',
     kicker: 'Maqola · materiallar',
     h1: '3D chop etish uchun qaysi plastikni tanlash kerak',
     lead: "Qisqasi: <strong>PLA</strong> — xonadagi dekor va korpuslar uchun, <strong>PETG</strong> — mustahkam detallar va ko'cha uchun, <strong>ABS</strong> — avtomobil saloni va qizish uchun, <strong>TPU</strong> — detal egilishi kerak bo'lsa, <strong>Nylon</strong> — tishli g'ildiraklar va ishqalanish uchun. Quyida batafsil.",
@@ -132,7 +134,7 @@ module.exports = [
         title: 'PETG',
         html: `
 <p>Universal muhandislik plastigi: PLA dan mustahkamroq va zarbaga chidamliroq, namlik va quyoshdan qo'rqmaydi, taxminan 70&nbsp;°C ga chidaydi. Mahkamlagichlar, kronshteynlar, ko'cha, hammom va oshxona detallari uchun yaxshi tanlov.</p>
-<p><strong>PETG-CF</strong> — uglerod tolali PETG: ancha qattiqroq va chiroyli mat yuzaga ega. Masalan, undan <a href="/uz.html#work-biokamin-box">biokamin uchun dekorativ quti</a> yasadik.</p>`
+<p><strong>PETG-CF</strong> — uglerod tolali PETG: ancha qattiqroq va chiroyli mat yuzaga ega. Masalan, undan <a href="/uz/ishlar/biokamin-box/">biokamin uchun dekorativ quti</a> yasadik.</p>`
       },
       {
         title: 'ABS',
@@ -142,7 +144,7 @@ module.exports = [
       {
         title: 'TPU',
         html: `
-<p>Rezinaga o'xshash egiluvchan plastik. TPU detallar egiladi, prujinadek qaytadi va yorilmaydi, yeyilishga chidamli va ko'pincha silikondan uzoqroq xizmat qiladi. Zichlagichlar, dempferlar, oyoqchalar, nakladkalar, himoya g'iloflari uchun mos. Misol — <a href="/uz.html#work-flexible-rubber-parts">ishlarimizdagi</a> egiluvchan detallar.</p>`
+<p>Rezinaga o'xshash egiluvchan plastik. TPU detallar egiladi, prujinadek qaytadi va yorilmaydi, yeyilishga chidamli va ko'pincha silikondan uzoqroq xizmat qiladi. Zichlagichlar, dempferlar, oyoqchalar, nakladkalar, himoya g'iloflari uchun mos. Misol — <a href="/uz/ishlar/flexible-rubber-parts/">ishlarimizdagi</a> egiluvchan detallar.</p>`
       },
       {
         title: 'Nylon',
@@ -156,7 +158,7 @@ module.exports = [
       { q: 'Rezinaga o\'xshash detal chop etish mumkinmi?', a: "Ha, TPU dan. U rezinadek egiluvchan va shu bilan birga yeyilishga chidamli." },
       { q: 'Plastik oziq-ovqat bilan aloqa uchun xavfsizmi?', a: "Chop etilgan detallar g'ovak sirtga ega, shuning uchun oziq-ovqat bilan doimiy aloqa uchun tavsiya etmaymiz. Mahsulotlarga bevosita tegmaydigan oshxona texnikasi detallari (shesternyalar, dastaklar, qopqoqlar) uchun bu muammo emas." }
     ],
-    related: ['auto', 'gears', 'scanning', 'prices'],
+    related: ['auto', 'gears', 'rubber', 'enclosures', 'prices'],
     sitemapImages: []
   }
 ];

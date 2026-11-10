@@ -13,7 +13,8 @@ HTML-страницы **генерируются** — не правьте `inde
 | Шапка, подвал, `<head>`, разметка Schema.org | `src/layout.js` |
 | Тексты главной | `src/pages/home.js` |
 | Страницы услуг и статьи | `src/pages/*.js` (RU и UZ в одном файле) |
-| Работы в галерее | `data/gallery.json` |
+| Работы в галерее и их страницы (`/raboty/…`) | `data/gallery.json` |
+| Политика конфиденциальности | `src/pages/privacy.js` |
 | Стили | `css/styles.css`, `css/gallery.css` |
 | Справка для ИИ-ассистентов | `llms.txt` (правится вручную; `npm run check` сверяет цены, контакты и список страниц с `src/site.js`) |
 
@@ -22,6 +23,7 @@ HTML-страницы **генерируются** — не правьте `inde
 ```sh
 npm run build                      # все страницы, галерея, sitemap.xml
 npm run check                      # ссылки, разметка, запрещённые фразы (старая цена, часы и т.п.)
+npm test                           # тест калькулятора в браузере (нужен Playwright; без него пропускается)
 npm run shots -- / /ceny/          # скриншоты в .shots/ (десктоп + телефон 375px)
 npm run og                         # картинки для соцсетей images/og-ru.jpg, og-uz.jpg
 npm run video -- raw.mp4 my-id --sheet               # раскадровка: нет ли принтера в кадре

@@ -46,7 +46,9 @@ const dir = path.join(ROOT, 'gallery', id);
 fs.mkdirSync(dir, { recursive: true });
 const mp4 = path.join(dir, `${id}.mp4`);
 const poster = path.join(dir, `${id}-poster.webp`);
-const enc = ['-c:v', 'libx264', '-preset', 'slow', '-crf', '27', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart'];
+// CRF 30 at 720p and 30 fps is about 40% lighter than CRF 27 with no visible loss on phone footage;
+// the sound is speech and workshop noise, so mono 64k is enough.
+const enc = ['-r', '30', '-c:v', 'libx264', '-preset', 'slow', '-crf', '30', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '64k', '-ac', '1', '-movflags', '+faststart'];
 
 const cut = opt('cut');
 if (cut) {

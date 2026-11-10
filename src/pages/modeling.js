@@ -16,7 +16,8 @@ module.exports = [
     breadcrumb: '3D-моделирование',
     navTitle: '3D-моделирование по образцу',
     title: '3D-моделирование на заказ в Ташкенте — модель по фото и образцу | 3DPie',
-    description: '3D-моделирование на заказ в Ташкенте и Чирчике: построим 3D-модель детали по фото с линейкой, обломку или эскизу и напечатаем её. 3D-сканирование сложных форм, файлы STL и STEP. Консультация бесплатная.',
+    description: '3D-моделирование на заказ в Ташкенте: модель детали по фото с линейкой, обломку или эскизу, файлы STL и STEP, печать. Консультация бесплатная.',
+    tg: 'Здравствуйте! Нужна 3D-модель детали.',
     kicker: 'Услуга · 3D-моделирование',
     h1: '3D-моделирование деталей по фото, образцу и эскизу',
     lead: 'Нет чертежа — не проблема. Снимем размеры с образца или обломка, построим точную 3D-модель и напечатаем деталь. Модель можно забрать файлом STL или STEP.',
@@ -56,7 +57,7 @@ module.exports = [
       { q: 'Можно ли получить только файл, без печати?', a: 'Да. Отдадим модель в STL (для печати) или STEP (для доработки в CAD). Печать можно заказать у нас позже.' },
       { q: 'Насколько точной получится копия?', a: 'Посадочные размеры снимаем с образца штангенциркулем. Для деталей, которые должны встать на место, сначала можем напечатать пробный образец и проверить посадку.' }
     ],
-    related: ['scanning', 'auto', 'gears', 'prices'],
+    related: ['scanning', 'enclosures', 'auto', 'gears', 'prices'],
     service: { name: '3D-моделирование деталей на заказ', serviceType: '3D-моделирование', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/microchip-cases/microchip-cases-poster.webp']
@@ -71,7 +72,8 @@ module.exports = [
     breadcrumb: '3D modellashtirish',
     navTitle: "Namuna bo'yicha 3D modellashtirish",
     title: "3D modellashtirish Toshkentda — rasm va namuna bo'yicha | 3DPie",
-    description: "Toshkent va Chirchiqda buyurtma asosida 3D modellashtirish: chizg'ichli rasm, siniq bo'lak yoki eskiz bo'yicha detalning 3D modelini yaratamiz va chop etamiz. Murakkab shakllarni 3D skanerlash, STL va STEP fayllar. Konsultatsiya bepul.",
+    description: "Toshkentda 3D modellashtirish: chizg'ichli rasm, siniq bo'lak yoki eskiz bo'yicha detal modeli, STL va STEP fayllar, chop etish. Konsultatsiya bepul.",
+    tg: 'Assalomu alaykum! Detalning 3D modeli kerak.',
     kicker: 'Xizmat · 3D modellashtirish',
     h1: "Rasm, namuna va eskiz bo'yicha detallarni 3D modellashtirish",
     lead: "Chizma yo'qmi — muammo emas. Namuna yoki siniq bo'lakdan o'lchamlarni olamiz, aniq 3D model yaratamiz va detalni chop etamiz. Modelni STL yoki STEP fayl sifatida olishingiz mumkin.",
@@ -111,7 +113,7 @@ module.exports = [
       { q: 'Faqat faylni olish mumkinmi, chop etmasdan?', a: "Ha. Modelni STL (chop etish uchun) yoki STEP (CAD'da tahrirlash uchun) formatida beramiz. Chop etishni keyinroq bizdan buyurtma qilishingiz mumkin." },
       { q: 'Nusxa qanchalik aniq chiqadi?', a: "O'rnatish o'lchamlarini namunadan shtangensirkul bilan olamiz. Joyiga tushishi kerak bo'lgan detallar uchun avval sinov namunasini chop etib, mosligini tekshirishimiz mumkin." }
     ],
-    related: ['scanning', 'auto', 'gears', 'prices'],
+    related: ['scanning', 'enclosures', 'auto', 'gears', 'prices'],
     service: { name: 'Buyurtma asosida detallarni 3D modellashtirish', serviceType: '3D modellashtirish', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/microchip-cases/microchip-cases-poster.webp']

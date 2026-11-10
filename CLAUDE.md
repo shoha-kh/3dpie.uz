@@ -19,21 +19,25 @@ GitHub Pages, plain HTML/CSS/JS, Node ≥ 18, **no npm dependencies**. Reply to 
 | NAP, prices, delivery, UI strings, steps, LocalBusiness schema | `src/site.js` |
 | `<head>`, header, footer, JSON-LD, shared blocks (steps/FAQ/CTA/print panel) | `src/layout.js` |
 | Home RU+UZ | `src/pages/home.js` |
-| Service/article pages (RU+UZ pair per file, linked by `id`) | `src/pages/{modeling,scanning,auto,gears,prices,materials}.js` |
+| Service/article pages (RU+UZ pair per file, linked by `id`) | `src/pages/{modeling,scanning,auto,gears,rubber,series,enclosures,prices,materials}.js` |
+| Privacy policy (describes what the site really loads — update it with any new third-party script or form) | `src/pages/privacy.js` |
+| Work pages `/raboty/<id>/`, `/uz/ishlar/<id>/` | generated from `data/gallery.json` by `workPages()` in `scripts/build-site.js` |
 | Gallery cards + video/photo lists | `data/gallery.json` (CRLF, big — grep by `"id"`) |
 | Styles | `css/styles.css` (tokens in `:root`), `css/gallery.css` (cards + modal) |
 | Instagram link-in-bio page `taplink.html` (RU/UZ, noindex) | `src/taplink.js` |
 | AI summary | `llms.txt` (hand-written; `npm run check` compares its prices, contacts and page list with `src/site.js`) |
 | Keywords per page | `KEYWORDS.md` |
 
-Output: `index.html`, `uz.html`, `<slug>/index.html`, `uz/<slug>/index.html`, `404.html`, `taplink.html` (both noindex), `sitemap.xml` — all generated, all committed.
-Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywords in the first ~60.
+Output: `index.html`, `uz.html`, `<slug>/index.html`, `uz/<slug>/index.html`, `raboty/<id>/`, `uz/ishlar/<id>/`, `uz/index.html` (redirect to `/uz.html`),
+`404.html`, `taplink.html` (both noindex), `sitemap.xml` — all generated, all committed.
+Site sits behind Cloudflare; titles ≤ 80 chars, descriptions ≤ 160 (check fails above), keep keywords in the first ~60.
+Every page may set `tg` — the greeting typed into the Telegram chat when its buttons are pressed.
 
 ## Prices and address — one source
 - Prices per gram, min order and build volumes live only in `CALC` (`src/site.js`). Page texts take them from `PRICES`:
   `${P.min}` ("100 000"), `${P.ru.tiers}` / `${P.uz.tiers}` (full price sentence), `...P.ru.spec` (spec rows), `${P.bed}`.
   Never type these numbers into `src/pages/*.js` by hand. Address: `T[lang].address` (home page reads it too).
-- STL calculator (`js/calc.js`, markup in `renderCalc()`, styles `css/calc.css`): several models per estimate, each on its
+- Price calculator for STL / OBJ / 3MF (`js/calc.js`, markup in `renderCalc()`, styles `css/calc.css`): several models per estimate, each on its
   own plate (`maxPlates`); print settings are common for all plates and a plate may override any of them (slicer-style);
   quantity, file units and position belong to the plate. The total is the sum of the plates. Everything tunable is in `CALC` —
   advanced-mode options (`layers`, `walls`, `overhangs`) and the print-time model (`CALC.time`, per-material `speed`). The time figures are
@@ -42,7 +46,8 @@ Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywo
 
 ## Commands
 - `npm run build` — all pages + gallery + sitemap
-- `npm run check` — links, anchors, JSON-LD, one h1, banned phrases. Run after every build.
+- `npm run check` — links, anchors, JSON-LD, one h1, title/description length, banned phrases, llms.txt. Run after every build.
+- `npm test` — browser test of the calculator (needs Playwright; skipped where it is missing). Run after touching `js/calc.js`, `css/calc.css` or `renderCalc()`.
 - `npm run shots -- / /ceny/ --h=1000` — PNGs in `.shots/` (desktop 1440 + real 375 mobile). Use small `--h` to save tokens.
 - `npm run og` — social images `images/og-{ru,uz}.jpg` (texts in `scripts/og-image.js`)
 - `npm run video -- raw.mp4 my-id --sheet` → contact sheet; `--cut=0-38,54-75 --poster=12` → `gallery/my-id/`
@@ -63,6 +68,7 @@ Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywo
 - Instagram: fetch caption per reel with WebFetch `https://www.instagram.com/3dpie.uz/reel/<code>/`;
   download with yt-dlp: `python -m pip install --target .tools/pylib yt-dlp`, then
   `PYTHONPATH=.tools/pylib python -m yt_dlp -o ".tools/ig/%(id)s.%(ext)s" <url>` (`.tools/` is gitignored).
-- Deploy: push to `main` → `.github/workflows/deploy.yml` (rsync public files only, then IndexNow). Commit only when asked.
+- Deploy: push to `main` → `.github/workflows/deploy.yml` (build + check, rsync public files only, then IndexNow). Commit only when asked.
+  A failed `npm run check` stops the deploy.
   GitHub's built-in Jekyll build also runs on every push (Pages source is still "Deploy from a branch"); `_config.yml`
   keeps sources and notes out of it — a new private file/folder goes into **both** `_config.yml` and the rsync excludes.
