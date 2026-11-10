@@ -2,8 +2,9 @@
     'use strict';
 
     // STL price calculator (prices page). Files are read in the browser and never uploaded.
-    // One estimate holds several models, each on its own plate with its own settings; the order total
-    // is the sum of the plates. Only the active plate is shown in the 3D preview.
+    // One estimate holds several models, each on its own plate; the order total is the sum of the plates.
+    // Print settings are common for all plates, and a plate may override any of them (as in a slicer).
+    // Only the active plate is shown in the 3D preview.
     // Weight = solid shell (walls + top/bottom skin) + infill share of the inside, times plastic density.
     // Print time = those volumes divided by how fast the nozzle lays plastic, plus layer changes and warm-up.
     // Prices, build volumes, speeds and strings come from CALC / CALC_T in src/site.js (inline JSON block).
@@ -32,7 +33,11 @@
     var platesEl = $('.calc-plates');
     var platesList = $('.calc-plates-list');
     var addBtn = $('.calc-plate-add');
-    var curEl = $('.calc-cur');
+    var scopeBtns = root.querySelectorAll('[data-scope]');
+    var scopePlateEl = $('.calc-scope-plate');
+    var scopeHint = $('.calc-scope-hint');
+    var ownBtns = root.querySelectorAll('[data-own]');
+    var resetBtn = $('.calc-reset');
     var matSel = $('.calc-mat');
     var qtyIn = $('.calc-qty');
     var unitSel = $('.calc-unit');
@@ -55,12 +60,14 @@
     root.querySelectorAll('[data-out]').forEach(function (el) { out[el.getAttribute('data-out')] = el; });
 
     // A plate: { name, orig (vertices as in the file), sign, volume, area, closed, R (rotation on the bed),
-    //            min, max, size, support (mm³ under overhangs), set (its settings), est (last estimate),
-    //            thumb (small canvas with its picture), notice }
+    //            min, max, size, support (mm³ under overhangs, measured for the threshold `limit`),
+    //            qty, unit (of the file), own (print settings changed for this plate only),
+    //            est (last estimate), thumb (small canvas with its picture), notice }
     var items = [];
     var active = null;      // the plate in the preview and in the settings form
     var work = null;        // rotated copy of the active mesh: what the preview draws and picks faces on
-    var set = defaults();   // settings in the form: the active plate's, or what the first model will get
+    var common = defaults(); // print settings of every plate, unless the plate has its own value
+    var scope = 'common';   // what the form edits: 'common', or 'plate' = the active plate's own values
     var viewer = null;
     var order = null;       // totals over all plates
     var copyText = '';
@@ -69,9 +76,20 @@
 
     function defaults() {
         return {
-            mat: C.materialDefault, qty: 1, unit: C.units[0][0], infill: C.infillDefault,
+            mat: C.materialDefault, infill: C.infillDefault,
             layer: C.layerDefault, walls: C.walls.def, overhang: C.overhangDeg, supports: true
         };
+    }
+
+    // The settings a plate is printed with: its own values where it has them, the common ones elsewhere.
+    function settingsOf(item) {
+        var s = {};
+        Object.keys(common).forEach(function (k) { s[k] = k in item.own ? item.own[k] : common[k]; });
+        return s;
+    }
+
+    function hasOwn(item) {
+        return Object.keys(item.own).length > 0;
     }
 
     function overLimit(s) {
@@ -301,8 +319,8 @@
 
     // One plate with its own settings: numbers for one piece and for the whole plate.
     function estimate(item) {
-        var s = item.set;
-        var k = unitScale(s.unit);
+        var s = settingsOf(item);
+        var k = unitScale(item.unit);
         var mat = material(s.mat);
         var size = item.size.map(function (v) { return v * k; });
         var vol = item.volume * k * k * k / 1000;          // cm³
@@ -323,9 +341,10 @@
             (shell / rate(T.speed.wall) + inner / rate(T.speed.infill) + supVol / rate(T.speed.support)) * 1000 * T.travel;
 
         return {
-            mat: mat, qty: s.qty, size: size, vol: vol, grams: grams, sup: sup, piece: piece, sum: piece * s.qty,
+            set: s, mat: mat, qty: item.qty, size: size, vol: vol, grams: grams, sup: sup, piece: piece,
+            sum: piece * item.qty,
             seconds: T.startSec + print,                 // one piece printed alone
-            plateSeconds: T.startSec + print * s.qty,    // the whole plate: one warm-up, then every copy
+            plateSeconds: T.startSec + print * item.qty, // the whole plate: one warm-up, then every copy
             warn: !fits(size, C.bed) ? 'fit' : mat.composite && !fits(size, C.bedComposite) ? 'fitComposite' : ''
         };
     }
@@ -352,7 +371,7 @@
     function summaryText(short) {
         var lines = [fill(t.copyHead, { site: DATA.site })];
         items.forEach(function (item, i) {
-            var e = item.est, s = item.set;
+            var e = item.est, s = e.set;
             lines.push(fill(short ? t.copyItemShort : t.copyItem, {
                 n: i + 1, file: item.name, mat: e.mat.name, infill: s.infill, layer: comma(s.layer), walls: s.walls,
                 qty: e.qty, size: dims(e.size), weight: dec(e.grams), time: duration(e.seconds), sum: int(e.sum),
@@ -399,6 +418,7 @@
             if (!item.sumEl) return;
             item.sumEl.textContent = item.est.qty + NBSP + t.pcs + ' · ' + approx + int(item.est.sum) + NBSP + t.sum;
             item.box.classList.toggle('is-warn', !!item.est.warn);
+            item.ownEl.hidden = !hasOwn(item);
         });
 
         // the order
@@ -497,10 +517,11 @@
             item.min = b.min;
             item.max = b.max;
             item.size = b.size;
-            item.support = supportSpace(work, item, overLimit(item.set)); // before the preview re-centres work in place
+            item.limit = overLimit(settingsOf(item));
+            item.support = supportSpace(work, item, item.limit); // before the preview re-centres work in place
         }
         if (viewer) {
-            viewer.setOver(overLimit(item.set));
+            viewer.setOver(overLimit(settingsOf(item)));
             viewer.setMesh(work, item, keepView);
             shoot(item);
         }
@@ -510,7 +531,8 @@
     function remeasure(item) {
         var buf = new Float32Array(item.orig.length);
         rotateInto(item.orig, item.R, buf);
-        item.support = supportSpace(buf, item, overLimit(item.set));
+        item.limit = overLimit(settingsOf(item));
+        item.support = supportSpace(buf, item, item.limit);
     }
 
     function applyOrientation(R, keepView) {
@@ -566,7 +588,7 @@
         var current = active;
         var list = candidates(current);
         var tmp = new Float32Array(current.orig.length);
-        var limit = overLimit(current.set);
+        var limit = overLimit(settingsOf(current));
         var best = null;
         var i = 0;
         setBusy(true);
@@ -665,7 +687,11 @@
             if (item === active) pick.setAttribute('aria-current', 'true');
             if (viewer) pick.appendChild(item.thumb);
             var text = el('span', 'calc-plate-text');
-            text.appendChild(el('span', 'calc-plate-n', t.plate + ' ' + (i + 1)));
+            var label = el('span', 'calc-plate-n', t.plate + ' ' + (i + 1));
+            item.ownEl = el('span', 'calc-plate-own', t.ownTag); // shown while the plate has its own settings
+            item.ownEl.title = t.scopePlateSub;
+            label.appendChild(item.ownEl);
+            text.appendChild(label);
             text.appendChild(el('span', 'calc-plate-name', item.name));
             item.sumEl = el('span', 'calc-plate-sum');
             text.appendChild(item.sumEl);
@@ -688,14 +714,12 @@
 
     function setActive(item, fresh) {
         active = item;
-        if (item) set = item.set;
         setPicking(false);
         setBusy(false);
         drop.hidden = !!item;
         bar.hidden = !item;
         canvas.hidden = zoomBar.hidden = !(item && viewer);
         nameEl.textContent = item ? item.name : '';
-        curEl.textContent = item ? t.plate + ' ' + (items.indexOf(item) + 1) : '';
         syncForm();
         renderPlates();
         if (item) {
@@ -720,14 +744,8 @@
     function addItem(name, pos, m, slot) {
         var item = slot;
         if (!item) {
-            // the first model takes the settings already chosen in the form, the next ones copy the current plate
-            var own = set;
-            if (items.length) {
-                own = {};
-                Object.keys(set).forEach(function (k) { own[k] = set[k]; });
-                own.qty = 1;
-            }
-            item = { set: own, thumb: el('canvas', 'calc-plate-thumb') };
+            // a new plate follows the common settings until something is changed for it
+            item = { own: {}, qty: 1, unit: C.units[0][0], thumb: el('canvas', 'calc-plate-thumb') };
             item.thumb.width = 480;
             item.thumb.height = 360;
             items.push(item);
@@ -826,103 +844,153 @@
         });
     });
 
-    // ---------- settings of the active plate ----------
+    // ---------- print settings: common for all plates, with per-plate overrides ----------
+    // `common` holds every print parameter. A plate keeps only what was changed for it (item.own) and reads
+    // the rest from `common`, like per-object overrides in a slicer. Quantity and file units always belong
+    // to the plate (they sit under its preview).
+
+    // parameter of a form field → the setting keys behind it
+    var PARAMS = { mat: ['mat'], infill: ['infill'], layer: ['layer'], walls: ['walls'], support: ['supports', 'overhang'] };
+    var ADVANCED = ['layer', 'walls', 'support'];
+
+    function editsPlate() {
+        return scope === 'plate' && !!active;
+    }
 
     function syncForm() {
-        matSel.value = set.mat;
-        unitSel.value = set.unit;
-        qtyIn.value = set.qty;
-        rangeIn.value = set.infill;
-        rangeOut.textContent = set.infill + '%';
-        presetRadios.forEach(function (r) { r.checked = +r.value === set.infill; });
-        layerRadios.forEach(function (r) { r.checked = +r.value === set.layer; });
-        wallsIn.value = set.walls;
-        supSel.value = set.supports ? String(set.overhang) : 'off';
-        legend.hidden = !set.supports;
-    }
+        if (!active) scope = 'common';
+        var onPlate = editsPlate();
+        var real = active ? settingsOf(active) : common; // what the open plate is printed with
+        var s = onPlate ? real : common;                 // what the form shows
 
-    function setInfill(v) {
-        set.infill = Math.max(0, Math.min(100, Math.round(v)));
-        rangeIn.value = set.infill;
-        rangeOut.textContent = set.infill + '%';
-        presetRadios.forEach(function (r) { r.checked = +r.value === set.infill; });
-        update();
-    }
-
-    // Supports changed: the space under overhangs depends on the threshold, so measure again.
-    function supportsChanged() {
-        legend.hidden = !set.supports;
-        if (active) {
-            active.notice = '';
-            applyOrientation(active.R, true);
-        } else update();
-    }
-
-    // Back to the simple-mode values. Returns true when the support settings changed.
-    function resetSet(s, keepInfill) {
-        var changed = !s.supports || s.overhang !== C.overhangDeg;
-        s.layer = C.layerDefault;
-        s.walls = C.walls.def;
-        s.overhang = C.overhangDeg;
-        s.supports = true;
-        // a value between the presets has no button in the simple mode, so it goes back to the default
-        if (!keepInfill || C.infill.indexOf(s.infill) === -1) s.infill = C.infillDefault;
-        return changed;
-    }
-
-    matSel.addEventListener('input', function () {
-        set.mat = matSel.value;
-        update();
-    });
-    unitSel.addEventListener('input', function () {
-        set.unit = unitSel.value;
-        update();
-    });
-    qtyIn.addEventListener('input', function () {
-        var q = Math.round(+qtyIn.value);
-        set.qty = q >= 1 ? Math.min(q, 10000) : 1;
-        update();
-    });
-    qtyIn.addEventListener('change', function () { qtyIn.value = set.qty; });
-    presetRadios.forEach(function (r) {
-        r.addEventListener('change', function () { setInfill(+r.value); });
-    });
-    rangeIn.addEventListener('input', function () { setInfill(+rangeIn.value); });
-    layerRadios.forEach(function (r) {
-        r.addEventListener('change', function () {
-            set.layer = +r.value;
-            update();
+        scopeBtns.forEach(function (b) {
+            var kind = b.getAttribute('data-scope');
+            b.setAttribute('aria-pressed', kind === scope ? 'true' : 'false');
+            if (kind === 'plate') b.disabled = !active;
         });
+        scopePlateEl.textContent = t.plate + (active ? ' ' + (items.indexOf(active) + 1) : '');
+        scopeHint.textContent = onPlate ? t.hintPlate : t.hintCommon + (active && hasOwn(active) ? ' ' + t.hintCommonOwn : '');
+
+        matSel.value = s.mat;
+        rangeIn.value = s.infill;
+        rangeOut.textContent = s.infill + '%';
+        presetRadios.forEach(function (r) { r.checked = +r.value === s.infill; });
+        layerRadios.forEach(function (r) { r.checked = +r.value === s.layer; });
+        if (document.activeElement !== wallsIn) wallsIn.value = s.walls; // do not fight the typing
+        supSel.value = s.supports ? String(s.overhang) : 'off';
+        legend.hidden = !real.supports;
+
+        qtyIn.disabled = unitSel.disabled = !active;
+        if (document.activeElement !== qtyIn) qtyIn.value = active ? active.qty : 1;
+        unitSel.value = active ? active.unit : C.units[0][0];
+
+        // a parameter changed for this plate is marked and gets a button back to the common value
+        ownBtns.forEach(function (btn) {
+            var own = onPlate && PARAMS[btn.getAttribute('data-own')].some(function (k) { return k in active.own; });
+            btn.hidden = !own;
+            btn.closest('.calc-field').classList.toggle('is-own', own);
+        });
+        var d = defaults();
+        resetBtn.textContent = onPlate ? t.resetPlate : t.reset;
+        resetBtn.hidden = onPlate ? !hasOwn(active) : Object.keys(d).every(function (k) { return common[k] === d[k]; });
+    }
+
+    // The support threshold may have changed on any plate: those are measured again, then all is recounted.
+    function refresh() {
+        items.forEach(function (item) {
+            if (item.limit === overLimit(settingsOf(item))) return;
+            if (item === active) {
+                item.notice = '';
+                place(item, true, true);
+            } else remeasure(item);
+        });
+        update();
+    }
+
+    // An edit in the form goes to the common settings or to the open plate's own ones.
+    function setParam(values) {
+        var target = editsPlate() ? active.own : common;
+        Object.keys(values).forEach(function (k) { target[k] = values[k]; });
+        syncForm();
+        refresh();
+    }
+
+    scopeBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+            scope = b.getAttribute('data-scope');
+            syncForm();
+        });
+    });
+    ownBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            if (!active) return;
+            PARAMS[btn.getAttribute('data-own')].forEach(function (k) { delete active.own[k]; });
+            syncForm();
+            refresh();
+        });
+    });
+
+    matSel.addEventListener('input', function () { setParam({ mat: matSel.value }); });
+    presetRadios.forEach(function (r) {
+        r.addEventListener('change', function () { setParam({ infill: +r.value }); });
+    });
+    rangeIn.addEventListener('input', function () {
+        setParam({ infill: Math.max(0, Math.min(100, Math.round(+rangeIn.value))) });
+    });
+    layerRadios.forEach(function (r) {
+        r.addEventListener('change', function () { setParam({ layer: +r.value }); });
     });
     wallsIn.addEventListener('input', function () {
         var n = Math.round(+wallsIn.value);
-        set.walls = n >= C.walls.min ? Math.min(n, C.walls.max) : C.walls.def;
+        setParam({ walls: n >= C.walls.min ? Math.min(n, C.walls.max) : C.walls.def });
+    });
+    wallsIn.addEventListener('change', syncForm);
+    supSel.addEventListener('change', function () {
+        var on = supSel.value !== 'off';
+        var shown = editsPlate() ? settingsOf(active) : common;
+        setParam({ supports: on, overhang: on ? +supSel.value : shown.overhang });
+    });
+
+    // quantity and file units: always the open plate's
+    qtyIn.addEventListener('input', function () {
+        if (!active) return;
+        var q = Math.round(+qtyIn.value);
+        active.qty = q >= 1 ? Math.min(q, 10000) : 1;
         update();
     });
-    wallsIn.addEventListener('change', function () { wallsIn.value = set.walls; });
-    supSel.addEventListener('change', function () {
-        set.supports = supSel.value !== 'off';
-        if (set.supports) set.overhang = +supSel.value;
-        supportsChanged();
+    qtyIn.addEventListener('change', syncForm);
+    unitSel.addEventListener('input', function () {
+        if (!active) return;
+        active.unit = unitSel.value;
+        update();
     });
-    $('.calc-reset').addEventListener('click', function () {
-        var changed = resetSet(set, false);
+
+    resetBtn.addEventListener('click', function () {
+        if (editsPlate()) active.own = {};
+        else common = defaults();
         syncForm();
-        if (changed) supportsChanged();
-        else update();
+        refresh();
     });
     advToggle.addEventListener('change', function () {
         advBox.hidden = !advToggle.checked;
         if (advToggle.checked) return;
-        // Hidden settings must not keep changing the price: leaving the advanced mode restores
-        // the defaults on every plate.
-        var changed = resetSet(set, true);
+        // Hidden settings must not keep changing the price: leaving the advanced mode puts its parameters
+        // back to the defaults, in the common settings and on every plate.
+        var d = defaults();
+        var offPreset = function (v) { return C.infill.indexOf(v) === -1; };
+        ADVANCED.forEach(function (p) {
+            PARAMS[p].forEach(function (k) {
+                common[k] = d[k];
+                items.forEach(function (item) { delete item.own[k]; });
+            });
+        });
+        // an infill between the presets has no button in the simple mode
+        if (offPreset(common.infill)) common.infill = d.infill;
         items.forEach(function (item) {
-            if (item.set !== set && resetSet(item.set, true)) remeasure(item);
+            if ('infill' in item.own && offPreset(item.own.infill)) delete item.own.infill;
         });
         syncForm();
-        if (changed) supportsChanged();
-        else update();
+        refresh();
     });
 
     // ---------- result: send, save, copy ----------
@@ -1048,7 +1116,7 @@
 
         // plates
         items.forEach(function (item, i) {
-            var e = item.est, s = item.set;
+            var e = item.est, s = e.set;
             var tw = 304, th = 228, x = P;
             rule(y);
             if (item.shot) {
@@ -1225,7 +1293,7 @@
         var uCol = gl.getUniformLocation(prog, 'col');
         var uLit = gl.getUniformLocation(prog, 'lit');
         var uOver = gl.getUniformLocation(prog, 'over');
-        gl.uniform1f(uOver, overLimit(set));
+        gl.uniform1f(uOver, overLimit(common));
         var posBuf = gl.createBuffer();
         var nrmBuf = gl.createBuffer();
         var gridBuf = gl.createBuffer();

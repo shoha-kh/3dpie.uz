@@ -29,7 +29,7 @@
 }
 
 .calc-field > label,
-.calc-field legend,
+.calc-field-head label,
 .calc-label,
 .calc-total > span {
   font-size: 13px;
@@ -282,7 +282,7 @@
 .calc-stage {
   position: relative;
   display: flex;
-  height: clamp(320px, 52vh, 480px);
+  height: clamp(320px, 46vh, 480px);
   border-bottom: 1px solid var(--line);
   background:
     radial-gradient(closest-side, rgba(198, 244, 50, .06), transparent 75%),
@@ -538,6 +538,32 @@
   cursor: default;
 }
 
+/* quantity and file units: they belong to the model on this plate, not to the print settings */
+.calc-piece {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.calc-piece .calc-field {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.calc-piece .calc-qty,
+.calc-piece .calc-unit {
+  min-height: 42px;
+}
+
+.calc-qty:disabled,
+.calc-unit:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
 /* numbers of the open model */
 .calc-out {
   display: grid;
@@ -588,19 +614,112 @@
   letter-spacing: -0.02em;
 }
 
-.calc-cur {
-  padding: 5px 10px;
-  font: 600 11px/1 var(--sans);
-  letter-spacing: .08em;
-  text-transform: uppercase;
+/* whose settings the form edits: common for all plates, or the open plate's own */
+.calc-scope {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--bg-2);
+}
+
+.calc-scope button {
+  display: grid;
+  gap: 3px;
+  padding: 9px 8px;
+  font: inherit;
+  text-align: center;
+  color: var(--text-2);
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: none;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+
+.calc-scope b {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.calc-scope small {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.calc-scope button:hover:not(:disabled) {
+  border-color: var(--line-2);
+}
+
+.calc-scope [aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.calc-scope [aria-pressed="true"] b {
+  color: var(--accent);
+}
+
+.calc-scope button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.calc-scope button:focus-visible,
+.calc-own:focus-visible,
+.calc-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.calc-scope-hint {
+  margin-top: -6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+
+.calc-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 24px;
+}
+
+/* a parameter the open plate overrides */
+.calc-field.is-own .calc-field-head label,
+.calc-field.is-own .calc-field-head .calc-label {
+  color: var(--accent);
+}
+
+.calc-own {
+  flex: none;
+  padding: 5px 9px;
+  font: 600 12px/1 var(--sans);
   color: var(--accent);
   border: 1px solid var(--accent);
   border-radius: 999px;
   background: var(--accent-dim);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
 }
 
-.calc-cur:empty {
-  display: none;
+.calc-own:hover {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+
+.calc-plate-own {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
 }
 
 .calc-field {
@@ -608,10 +727,6 @@
   gap: 8px;
   min-width: 0;
   border: 0;
-}
-
-.calc-field legend {
-  margin-bottom: 8px;
 }
 
 .calc-mat,
@@ -666,13 +781,6 @@
 .calc-qty,
 .calc-walls {
   font-variant-numeric: tabular-nums;
-}
-
-.calc-two {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: end;
-  gap: 12px;
 }
 
 .calc-seg {
@@ -964,8 +1072,18 @@
   }
 
   .calc-tools,
+  .calc-piece,
   .calc-msg {
     padding: 12px 14px;
+  }
+
+  .calc-piece {
+    gap: 12px;
+  }
+
+  .calc-piece .calc-field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
   }
 
   .calc-out {
