@@ -23,11 +23,20 @@ GitHub Pages, plain HTML/CSS/JS, Node ≥ 18, **no npm dependencies**. Reply to 
 | Gallery cards + video/photo lists | `data/gallery.json` (CRLF, big — grep by `"id"`) |
 | Styles | `css/styles.css` (tokens in `:root`), `css/gallery.css` (cards + modal) |
 | Instagram link-in-bio page `taplink.html` (RU/UZ, noindex) | `src/taplink.js` |
-| AI summary | `llms.txt` (hand-written, sync with `src/site.js`) |
+| AI summary | `llms.txt` (hand-written; `npm run check` compares its prices, contacts and page list with `src/site.js`) |
 | Keywords per page | `KEYWORDS.md` |
 
 Output: `index.html`, `uz.html`, `<slug>/index.html`, `uz/<slug>/index.html`, `404.html`, `taplink.html` (both noindex), `sitemap.xml` — all generated, all committed.
 Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywords in the first ~60.
+
+## Prices and address — one source
+- Prices per gram, min order and build volumes live only in `CALC` (`src/site.js`). Page texts take them from `PRICES`:
+  `${P.min}` ("100 000"), `${P.ru.tiers}` / `${P.uz.tiers}` (full price sentence), `...P.ru.spec` (spec rows), `${P.bed}`.
+  Never type these numbers into `src/pages/*.js` by hand. Address: `T[lang].address` (home page reads it too).
+- STL calculator (`js/calc.js`, markup in `renderCalc()`): everything tunable is in `CALC` — advanced-mode options
+  (`layers`, `walls`, `overhangs`) and the print-time model (`CALC.time`, per-material `speed`). The time figures are
+  typical FDM values, not measured on the studio's machines; the site must always call the time approximate.
+- CSS/JS cache-busting is automatic: `?v=` is a hash of the file (`asset()` in `src/layout.js`) — nothing to bump.
 
 ## Commands
 - `npm run build` — all pages + gallery + sitemap
@@ -44,7 +53,8 @@ Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywo
 - Whole `data/gallery.json` / `css/styles.css` — grep for the id / selector.
 
 ## Gotchas
-- Windows + Git Bash. `data/gallery.json` and some files are CRLF: string patches with `\n` won't match — use Edit tool.
+- Owner's machine is Windows + Git Bash; cloud sessions are Linux (screenshots work there too, Chrome is found automatically).
+  `data/gallery.json` and some files are CRLF: string patches with `\n` won't match — use Edit tool.
 - Bash heredocs with mixed quotes break — write temp scripts with the Write tool into `.shots/`.
 - Headless Chrome can't render < ~500px windows; `scripts/shots.js` uses a 375px iframe.
 - Gallery JSON paths are `./gallery/...`; `build-gallery.js` turns them into root-relative URLs.

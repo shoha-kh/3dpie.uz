@@ -2063,6 +2063,22 @@ ol {
   }
 }
 
+/* Smallest phones (320px): the logo, language switch and menu button did not fit in one row. */
+@media (max-width: 359px) {
+  .header-row {
+    gap: 10px;
+  }
+
+  .header-tools {
+    gap: 8px;
+  }
+
+  .nav-toggle {
+    gap: 8px;
+    padding: 0 10px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

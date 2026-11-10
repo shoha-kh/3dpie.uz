@@ -9,20 +9,20 @@
 const fs = require('fs');
 const path = require('path');
 const { ROOT, SHOTS_DIR, serve, screenshot, ffmpeg } = require('./lib/tools');
-const { CONTACTS } = require('../src/site');
+const { CONTACTS, PRICES } = require('../src/site');
 
 const TEXT = {
   ru: {
     kicker: '3D-печать на заказ · Ташкент и Чирчик',
     title: 'Напечатаем деталь, которую <em>больше нигде</em> не купить',
-    sub: 'Заказ от 100 000 сум · 3D-сканирование',
+    sub: `Заказ от ${PRICES.min} сум · 3D-сканирование`,
     img1: '/images/work-grille.webp', cap1: 'Решётка для авто',
     img2: '/gallery/ev-charger-adapter/ev-charger-adapter-poster.webp', cap2: 'Переходник для электромобиля'
   },
   uz: {
     kicker: '3D chop etish · Toshkent va Chirchiq',
     title: 'Boshqa joyda <em>topilmaydigan</em> detalni chop etamiz',
-    sub: "Buyurtma 100 000 so'mdan · 3D skanerlash",
+    sub: `Buyurtma ${PRICES.min} so'mdan · 3D skanerlash`,
     img1: '/images/work-grille.webp', cap1: 'Avtomobil panjarasi',
     img2: '/gallery/ev-charger-adapter/ev-charger-adapter-poster.webp', cap2: 'Elektromobil adapteri'
   }

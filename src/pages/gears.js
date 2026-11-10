@@ -1,5 +1,7 @@
 'use strict';
 
+const { PRICES: P } = require('../site');
+
 const UPDATED = '2026-10-12';
 const WORKS = ['broken-part-restore', 'flexible-rubber-parts', 'socket-box-caps'];
 
@@ -14,7 +16,7 @@ module.exports = [
     breadcrumb: 'Шестерни и детали для техники',
     navTitle: 'Шестерни и детали для техники',
     title: 'Шестерни на заказ в Ташкенте — печать по образцу | 3DPie',
-    description: 'Изготовим шестерню по образцу на 3D-принтере в Ташкенте и Чирчике: для мясорубки, блендера, миксера, привода ворот, станка. Ручки, втулки, ролики, крепления для бытовой техники. От 100 000 сум.',
+    description: `Изготовим шестерню по образцу на 3D-принтере в Ташкенте и Чирчике: для мясорубки, блендера, миксера, привода ворот, станка. Ручки, втулки, ролики, крепления для бытовой техники. От ${P.min} сум.`,
     kicker: 'Услуга · шестерни и запчасти',
     h1: 'Шестерни и пластиковые детали для бытовой техники и механизмов',
     lead: 'Шестерёнка в мясорубке или блендере сломалась, а сервис говорит «такой нет»? Принесите старую — даже со стёртыми зубьями. Снимем параметры, смоделируем и напечатаем новую из прочного пластика.',
@@ -23,7 +25,7 @@ module.exports = [
       ['Что делаем', 'шестерни, втулки, ролики, ручки, крепления'],
       ['Пластики', 'Nylon, PETG, ABS, TPU'],
       ['Нужно от вас', 'старая деталь или фото с линейкой'],
-      ['Цена', 'от 100 000 сум']
+      ['Цена', `от ${P.min} сум`]
     ],
     sections: [
       {
@@ -47,10 +49,10 @@ module.exports = [
     faq: [
       { q: 'Можно ли сделать шестерню, если зубья стёрлись?', a: 'Да. По уцелевшей части считаем количество зубьев, модуль и диаметр, а также посадку на вал. Если сломано сильно, поможет фото ответной шестерни.' },
       { q: 'Сколько служит напечатанная шестерня?', a: 'Зависит от нагрузки и пластика. Шестерня из нейлона в бытовой технике работает долго; для тяжёлых промышленных нагрузок подскажем, стоит ли печатать или лучше искать металл.' },
-      { q: 'Сколько стоит шестерня на заказ?', a: 'От 100 000 сум. Цена зависит от размера, сложности и того, нужно ли моделировать с нуля. Пришлите фото в Telegram — назовём цену до начала работы.' }
+      { q: 'Сколько стоит шестерня на заказ?', a: `От ${P.min} сум. Цена зависит от размера, сложности и того, нужно ли моделировать с нуля. Пришлите фото в Telegram — назовём цену до начала работы.` }
     ],
     related: ['modeling', 'scanning', 'auto', 'materials'],
-    service: { name: 'Изготовление шестерён и деталей для техники на 3D-принтере', serviceType: '3D-печать шестерён', minPrice: 100000 },
+    service: { name: 'Изготовление шестерён и деталей для техники на 3D-принтере', serviceType: '3D-печать шестерён', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp']
   },
@@ -64,7 +66,7 @@ module.exports = [
     breadcrumb: "Tishli g'ildiraklar va texnika detallari",
     navTitle: "Tishli g'ildiraklar va texnika detallari",
     title: "Tishli g'ildirak (shesternya) buyurtma asosida Toshkentda | 3DPie",
-    description: "Toshkent va Chirchiqda namuna bo'yicha 3D printerda tishli g'ildirak (shesternya) tayyorlaymiz: go'sht qiymalagich, blender, mikser, darvoza yuritmasi, stanok uchun. Maishiy texnika uchun dastak, vtulka, rolik, mahkamlagichlar. 100 000 so'mdan.",
+    description: `Toshkent va Chirchiqda namuna bo'yicha 3D printerda tishli g'ildirak (shesternya) tayyorlaymiz: go'sht qiymalagich, blender, mikser, darvoza yuritmasi, stanok uchun. Maishiy texnika uchun dastak, vtulka, rolik, mahkamlagichlar. ${P.min} so'mdan.`,
     kicker: "Xizmat · tishli g'ildiraklar va ehtiyot qismlar",
     h1: "Maishiy texnika va mexanizmlar uchun tishli g'ildiraklar va plastik detallar",
     lead: "Go'sht qiymalagich yoki blenderdagi shesternya sindi, servisda esa «bunisi yo'q» deyishyaptimi? Eskisini olib keling — tishlari yeyilgan bo'lsa ham. Parametrlarini olamiz, modellashtiramiz va mustahkam plastikdan yangisini chop etamiz.",
@@ -73,7 +75,7 @@ module.exports = [
       ['Nima qilamiz', "tishli g'ildiraklar, vtulkalar, roliklar, dastaklar, mahkamlagichlar"],
       ['Plastiklar', 'Nylon, PETG, ABS, TPU'],
       ['Sizdan kerak', "eski detal yoki chizg'ichli rasm"],
-      ['Narx', "100 000 so'mdan"]
+      ['Narx', `${P.min} so'mdan`]
     ],
     sections: [
       {
@@ -97,10 +99,10 @@ module.exports = [
     faq: [
       { q: "Tishlari yeyilgan bo'lsa ham shesternya yasash mumkinmi?", a: "Ha. Butun qolgan qismi bo'yicha tishlar soni, modul va diametrni, shuningdek valga o'rnatilishini hisoblaymiz. Qattiq singan bo'lsa, juft shesternya rasmi yordam beradi." },
       { q: 'Chop etilgan shesternya qancha xizmat qiladi?', a: "Yuklama va plastikka bog'liq. Maishiy texnikada neylon shesternya uzoq ishlaydi; og'ir sanoat yuklamalari uchun chop etish kerakmi yoki metall izlash yaxshiroqmi — maslahat beramiz." },
-      { q: 'Buyurtma asosida shesternya qancha turadi?', a: "100 000 so'mdan. Narx o'lcham, murakkablik va noldan modellashtirish kerak-kerakmasligiga bog'liq. Rasmni Telegramga yuboring — ish boshlanishidan oldin narxini aytamiz." }
+      { q: 'Buyurtma asosida shesternya qancha turadi?', a: `${P.min} so'mdan. Narx o'lcham, murakkablik va noldan modellashtirish kerak-kerakmasligiga bog'liq. Rasmni Telegramga yuboring — ish boshlanishidan oldin narxini aytamiz.` }
     ],
     related: ['modeling', 'scanning', 'auto', 'materials'],
-    service: { name: "3D printerda tishli g'ildiraklar va texnika detallarini tayyorlash", serviceType: "Tishli g'ildiraklarni 3D chop etish", minPrice: 100000 },
+    service: { name: "3D printerda tishli g'ildiraklar va texnika detallarini tayyorlash", serviceType: "Tishli g'ildiraklarni 3D chop etish", minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp']
   }

@@ -1,5 +1,7 @@
 'use strict';
 
+const { PRICES: P } = require('../site');
+
 const UPDATED = '2026-10-12';
 const WORKS = ['car-air-deflector', 'tweeter-mounts', 'ac-frame', 'lada-vesta-exhaust'];
 
@@ -14,7 +16,7 @@ module.exports = [
     breadcrumb: 'Автозапчасти на 3D-принтере',
     navTitle: 'Автозапчасти и детали салона',
     title: 'Автозапчасти на 3D-принтере в Ташкенте — по образцу и фото | 3DPie',
-    description: 'Печатаем пластиковые автозапчасти по образцу в Ташкенте и Чирчике: клипсы, заглушки, дефлекторы, решётки, накладки под твитеры, детали салона для Chevrolet, Lada, иномарок. От 100 000 сум, 1–2 дня.',
+    description: `Печатаем пластиковые автозапчасти по образцу в Ташкенте и Чирчике: клипсы, заглушки, дефлекторы, решётки, накладки под твитеры, детали салона для Chevrolet, Lada, иномарок. От ${P.min} сум, 1–2 дня.`,
     kicker: 'Услуга · автозапчасти',
     h1: 'Пластиковые автозапчасти на 3D-принтере — по образцу и фото',
     lead: 'Сломалась клипса, потерялась заглушка, треснул дефлектор, а оригинал не найти или он стоит как половина машины? Сделаем копию по образцу или фото — из пластика, который выдержит жару в салоне.',
@@ -23,7 +25,7 @@ module.exports = [
       ['Для каких авто', 'любые — Chevrolet, Lada, иномарки'],
       ['Пластики', 'ABS, PETG, TPU, Nylon'],
       ['Срок', 'от 1–2 дней'],
-      ['Цена', 'от 100 000 сум']
+      ['Цена', `от ${P.min} сум`]
     ],
     sections: [
       {
@@ -47,10 +49,10 @@ module.exports = [
     faq: [
       { q: 'Можно ли напечатать деталь для старой машины, на которую нет запчастей?', a: 'Да, это частая задача. Нужен образец, обломок или хорошие фото с линейкой — по ним строим 3D-модель и печатаем копию. Модель сохраняем, поэтому повторная деталь делается быстрее.' },
       { q: 'Выдержит ли деталь жару в салоне летом?', a: 'Для деталей салона используем ABS и PETG — они держат нагрев на солнце. PLA для авто не рекомендуем.' },
-      { q: 'Сколько стоит напечатать автозапчасть?', a: 'Минимальный заказ — 100 000 сум. Точную цену назовём по фото в Telegram, консультация бесплатная. Партия одинаковых клипс обходится дешевле в пересчёте на штуку.' }
+      { q: 'Сколько стоит напечатать автозапчасть?', a: `Минимальный заказ — ${P.min} сум. Точную цену назовём по фото в Telegram, консультация бесплатная. Партия одинаковых клипс обходится дешевле в пересчёте на штуку.` }
     ],
     related: ['modeling', 'scanning', 'gears', 'materials'],
-    service: { name: 'Изготовление автозапчастей на 3D-принтере', serviceType: '3D-печать автозапчастей', minPrice: 100000 },
+    service: { name: 'Изготовление автозапчастей на 3D-принтере', serviceType: '3D-печать автозапчастей', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/images/work-tweeter.webp', '/gallery/car-air-deflector/car-air-deflector-poster.webp']
   },
@@ -64,7 +66,7 @@ module.exports = [
     breadcrumb: '3D printerda avtoehtiyot qismlar',
     navTitle: 'Avtoehtiyot qismlar va salon detallari',
     title: "3D printerda avtoehtiyot qismlar Toshkentda — namuna bo'yicha | 3DPie",
-    description: "Toshkent va Chirchiqda namuna bo'yicha plastik avtoehtiyot qismlarni chop etamiz: klipsalar, tiqinlar, deflektorlar, panjaralar, tvitter nakladkalari, Chevrolet, Lada va xorijiy avtomobillar salon detallari. 100 000 so'mdan, 1–2 kun.",
+    description: `Toshkent va Chirchiqda namuna bo'yicha plastik avtoehtiyot qismlarni chop etamiz: klipsalar, tiqinlar, deflektorlar, panjaralar, tvitter nakladkalari, Chevrolet, Lada va xorijiy avtomobillar salon detallari. ${P.min} so'mdan, 1–2 kun.`,
     kicker: 'Xizmat · avtoehtiyot qismlar',
     h1: "3D printerda plastik avtoehtiyot qismlar — namuna va rasm bo'yicha",
     lead: "Klipsa sindimi, tiqin yo'qoldimi, deflektor yorildimi, originali esa topilmaydi yoki juda qimmatmi? Namuna yoki rasm bo'yicha nusxasini salondagi issiqqa chidaydigan plastikdan tayyorlaymiz.",
@@ -73,7 +75,7 @@ module.exports = [
       ['Qaysi avtomobillar uchun', 'istalgan — Chevrolet, Lada, xorijiy avtomobillar'],
       ['Plastiklar', 'ABS, PETG, TPU, Nylon'],
       ['Muddat', '1–2 kundan'],
-      ['Narx', "100 000 so'mdan"]
+      ['Narx', `${P.min} so'mdan`]
     ],
     sections: [
       {
@@ -97,10 +99,10 @@ module.exports = [
     faq: [
       { q: "Ehtiyot qismi yo'q eski mashina uchun detal chop etish mumkinmi?", a: "Ha, bu tez-tez uchraydigan vazifa. Namuna, siniq bo'lak yoki chizg'ichli yaxshi rasmlar kerak — ular bo'yicha 3D model yaratib, nusxasini chop etamiz. Modelni saqlab qo'yamiz, shuning uchun takroriy detal tezroq tayyorlanadi." },
       { q: 'Detal yozda salondagi issiqqa chidaydimi?', a: "Salon detallari uchun ABS va PETG ishlatamiz — ular quyoshdagi qizishga chidaydi. Avtomobil uchun PLA tavsiya etmaymiz." },
-      { q: 'Avtoehtiyot qismni chop etish qancha turadi?', a: "Minimal buyurtma — 100 000 so'm. Aniq narxni Telegramdagi rasm bo'yicha aytamiz, konsultatsiya bepul. Bir xil klipsalar partiyasi dona hisobida arzonroq tushadi." }
+      { q: 'Avtoehtiyot qismni chop etish qancha turadi?', a: `Minimal buyurtma — ${P.min} so'm. Aniq narxni Telegramdagi rasm bo'yicha aytamiz, konsultatsiya bepul. Bir xil klipsalar partiyasi dona hisobida arzonroq tushadi.` }
     ],
     related: ['modeling', 'scanning', 'gears', 'materials'],
-    service: { name: '3D printerda avtoehtiyot qismlar tayyorlash', serviceType: 'Avtoehtiyot qismlarni 3D chop etish', minPrice: 100000 },
+    service: { name: '3D printerda avtoehtiyot qismlar tayyorlash', serviceType: 'Avtoehtiyot qismlarni 3D chop etish', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/images/work-tweeter.webp', '/gallery/car-air-deflector/car-air-deflector-poster.webp']
   }

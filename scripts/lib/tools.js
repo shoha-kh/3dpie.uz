@@ -26,6 +26,7 @@ function chromePath() {
     'C:/Program Files/Google/Chrome/Application/chrome.exe',
     'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
     '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser',
+    '/opt/pw-browsers/chromium', // Claude Code cloud sessions
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   ].filter(Boolean);
   const found = candidates.find(p => fs.existsSync(p));
@@ -67,12 +68,21 @@ function screenshot(url, out, width, height) {
   const { spawn } = require('child_process');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   return new Promise((resolve, reject) => {
+    // Chrome refuses to start as root with its sandbox on (Linux containers, cloud sessions).
+    const asRoot = typeof process.getuid === 'function' && process.getuid() === 0;
+    // A stale file from an earlier run must not pass for a fresh screenshot.
+    fs.rmSync(out, { force: true });
     const p = spawn(chromePath(), [
       '--headless=new', '--disable-gpu', '--hide-scrollbars', '--allow-file-access-from-files',
+      ...(asRoot ? ['--no-sandbox'] : []),
       '--virtual-time-budget=9000', `--window-size=${width},${height}`, `--screenshot=${out}`, url
-    ], { stdio: 'ignore' });
+    ], { stdio: ['ignore', 'ignore', 'pipe'] });
+    let err = '';
+    p.stderr.on('data', d => { err = (err + d).slice(-2000); });
     p.on('error', reject);
-    p.on('exit', () => (fs.existsSync(out) ? resolve(out) : reject(new Error('no screenshot: ' + url))));
+    p.on('exit', () => (fs.existsSync(out)
+      ? resolve(out)
+      : reject(new Error(`no screenshot: ${url}${err.trim() ? '\n' + err.trim() : ''}`))));
   });
 }
 

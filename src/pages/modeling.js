@@ -1,5 +1,7 @@
 'use strict';
 
+const { PRICES: P } = require('../site');
+
 const UPDATED = '2026-10-12';
 const WORKS = ['broken-part-restore', 'ev-charger-adapter', 'microchip-cases'];
 
@@ -50,12 +52,12 @@ module.exports = [
     ],
     works: WORKS,
     faq: [
-      { q: 'Сколько стоит 3D-моделирование?', a: 'Зависит от сложности детали: простую втулку или заглушку смоделировать быстро, корпус с креплениями — дольше. Пришлите фото в Telegram — назовём цену моделирования и печати до начала работы. Минимальный заказ — 100 000 сум.' },
+      { q: 'Сколько стоит 3D-моделирование?', a: `Зависит от сложности детали: простую втулку или заглушку смоделировать быстро, корпус с креплениями — дольше. Пришлите фото в Telegram — назовём цену моделирования и печати до начала работы. Минимальный заказ — ${P.min} сум.` },
       { q: 'Можно ли получить только файл, без печати?', a: 'Да. Отдадим модель в STL (для печати) или STEP (для доработки в CAD). Печать можно заказать у нас позже.' },
       { q: 'Насколько точной получится копия?', a: 'Посадочные размеры снимаем с образца штангенциркулем. Для деталей, которые должны встать на место, сначала можем напечатать пробный образец и проверить посадку.' }
     ],
     related: ['scanning', 'auto', 'gears', 'prices'],
-    service: { name: '3D-моделирование деталей на заказ', serviceType: '3D-моделирование', minPrice: 100000 },
+    service: { name: '3D-моделирование деталей на заказ', serviceType: '3D-моделирование', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/microchip-cases/microchip-cases-poster.webp']
   },
@@ -105,12 +107,12 @@ module.exports = [
     ],
     works: WORKS,
     faq: [
-      { q: '3D modellashtirish qancha turadi?', a: "Detal murakkabligiga bog'liq: oddiy vtulka yoki tiqinni tez modellashtiramiz, mahkamlagichli korpus ko'proq vaqt oladi. Rasmni Telegramga yuboring — modellashtirish va chop etish narxini ish boshlanishidan oldin aytamiz. Minimal buyurtma — 100 000 so'm." },
+      { q: '3D modellashtirish qancha turadi?', a: `Detal murakkabligiga bog'liq: oddiy vtulka yoki tiqinni tez modellashtiramiz, mahkamlagichli korpus ko'proq vaqt oladi. Rasmni Telegramga yuboring — modellashtirish va chop etish narxini ish boshlanishidan oldin aytamiz. Minimal buyurtma — ${P.min} so'm.` },
       { q: 'Faqat faylni olish mumkinmi, chop etmasdan?', a: "Ha. Modelni STL (chop etish uchun) yoki STEP (CAD'da tahrirlash uchun) formatida beramiz. Chop etishni keyinroq bizdan buyurtma qilishingiz mumkin." },
       { q: 'Nusxa qanchalik aniq chiqadi?', a: "O'rnatish o'lchamlarini namunadan shtangensirkul bilan olamiz. Joyiga tushishi kerak bo'lgan detallar uchun avval sinov namunasini chop etib, mosligini tekshirishimiz mumkin." }
     ],
     related: ['scanning', 'auto', 'gears', 'prices'],
-    service: { name: 'Buyurtma asosida detallarni 3D modellashtirish', serviceType: '3D modellashtirish', minPrice: 100000 },
+    service: { name: 'Buyurtma asosida detallarni 3D modellashtirish', serviceType: '3D modellashtirish', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/microchip-cases/microchip-cases-poster.webp']
   }

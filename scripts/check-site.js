@@ -69,6 +69,45 @@ for (const u of urls) {
   }
 })(ROOT);
 
+// llms.txt is written by hand: make sure it still agrees with src/site.js and lists every page.
+(function checkLlms() {
+  const { SITE_URL, CONTACTS, T, PRICES, money } = require('../src/site');
+  const llms = fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').replace(/ /g, ' ');
+  const facts = [
+    [CONTACTS.phoneHuman, 'phone'],
+    [CONTACTS.telegram, 'Telegram link'],
+    [CONTACTS.instagram, 'Instagram link'],
+    [T.ru.address.street, 'street address'],
+    [T.ru.address.landmarkName, 'landmark'],
+    [CONTACTS.postalCode, 'postal code'],
+    [`Минимальный заказ ${PRICES.min} сум`, 'minimum order'],
+    [`${PRICES.bed} мм`, 'max part size'],
+    [`${PRICES.bedComposite} мм`, 'max composite part size']
+  ];
+  for (const [text, what] of facts) {
+    if (!llms.includes(text)) problems.push(`llms.txt: ${what} differs from src/site.js — expected "${text}"`);
+  }
+  // "PLA и PETG 1 000 сум за грамм; ABS, PETG-CF и TPU 1 500 сум за грамм; …" — every material must sit
+  // in the part of the price line that carries its own price.
+  const parts = llms.split(/[;\n]/).map(part => ({
+    part,
+    price: (part.match(/(?<!\w)(\d{1,3}(?: \d{3})+|\d+) сум за грамм/) || [])[1]
+  })).filter(p => p.price);
+  for (const tier of PRICES.tiers) {
+    for (const name of tier.names) {
+      const own = new RegExp(`(?<![\\w-])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`);
+      const hit = parts.find(p => own.test(p.part));
+      if (!hit) problems.push(`llms.txt: no price per gram for ${name} (src/site.js: ${money(tier.price)} сум за грамм)`);
+      else if (hit.price !== money(tier.price)) {
+        problems.push(`llms.txt: ${name} is ${hit.price} сум за грамм, src/site.js says ${money(tier.price)}`);
+      }
+    }
+  }
+  for (const u of urls) {
+    if (!llms.includes(`(${SITE_URL}${u})`)) problems.push(`llms.txt: page ${u} is not listed`);
+  }
+})();
+
 console.log(`[check] ${urls.length} pages`);
 if (problems.length) {
   console.log(problems.map(p => '  ✗ ' + p).join('\n'));

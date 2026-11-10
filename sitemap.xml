@@ -5,7 +5,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     <url>
         <loc>https://3dpie.uz/</loc>
-        <lastmod>2026-10-12</lastmod>
+        <lastmod>2026-11-10</lastmod>
         <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/"/>
         <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz.html"/>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/"/>
@@ -15,7 +15,7 @@
     </url>
     <url>
         <loc>https://3dpie.uz/uz.html</loc>
-        <lastmod>2026-10-12</lastmod>
+        <lastmod>2026-11-10</lastmod>
         <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/"/>
         <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz.html"/>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/"/>
@@ -89,14 +89,14 @@
     </url>
     <url>
         <loc>https://3dpie.uz/ceny/</loc>
-        <lastmod>2026-10-12</lastmod>
+        <lastmod>2026-11-10</lastmod>
         <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/ceny/"/>
         <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/narxlar/"/>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/ceny/"/>
     </url>
     <url>
         <loc>https://3dpie.uz/uz/narxlar/</loc>
-        <lastmod>2026-10-12</lastmod>
+        <lastmod>2026-11-10</lastmod>
         <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/ceny/"/>
         <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/narxlar/"/>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/ceny/"/>

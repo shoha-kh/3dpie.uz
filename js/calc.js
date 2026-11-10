@@ -3,7 +3,8 @@
 
     // STL price calculator (prices page). The file is read in the browser and never uploaded.
     // Weight = solid shell (walls + top/bottom skin) + infill share of the inside, times plastic density.
-    // Prices, build volumes and strings come from CALC / CALC_T in src/site.js (inline JSON block).
+    // Print time = those volumes divided by how fast the nozzle lays plastic, plus layer changes and warm-up.
+    // Prices, build volumes, speeds and strings come from CALC / CALC_T in src/site.js (inline JSON block).
 
     var root = document.querySelector('.calc');
     var dataEl = document.querySelector('.calc-data');
@@ -27,13 +28,33 @@
     var unitSel = $('.calc-unit');
     var msgEl = $('.calc-msg');
     var copyBtn = $('.calc-copy');
+    var saveBtn = $('.calc-save');
+    var sendLink = $('.calc-send');
+    var sendLabel = $('.calc-send-label');
+    var statusEl = $('.calc-status');
+    var legend = $('.calc-legend');
+    var advToggle = $('.calc-adv-toggle');
+    var advBox = $('.calc-adv');
+    var rangeIn = $('.calc-infill-range');
+    var rangeOut = $('.calc-infill-val');
+    var wallsIn = $('.calc-walls');
+    var supSel = $('.calc-support');
+    var presetRadios = root.querySelectorAll('input[name="calc-infill"]');
+    var layerRadios = root.querySelectorAll('input[name="calc-layer"]');
     var out = {};
     root.querySelectorAll('[data-out]').forEach(function (el) { out[el.getAttribute('data-out')] = el; });
 
     var model = null; // { name, volume mm³, area mm², size [x, y, z] mm, closed }
     var viewer = null;
     var copyText = '';
+    var last = null; // the latest estimate, for the saved picture
     var tracked = false;
+    // Print settings. The simple mode keeps the defaults and changes only the infill preset.
+    var S = { infill: C.infillDefault, layer: C.layerDefault, walls: C.walls.def, overhang: C.overhangDeg, supports: true };
+
+    function overLimit() {
+        return S.supports ? -Math.sin(S.overhang * Math.PI / 180) : -2; // normal z below this = overhang
+    }
     var notice = ''; // one-off note shown above the warnings (e.g. after auto-orientation)
 
     // ---------- formatting ----------
@@ -52,6 +73,23 @@
 
     function dims(arr) {
         return arr.map(dec).join(' × ');
+    }
+
+    function comma(n) {
+        return String(n).replace('.', ',');
+    }
+
+    // Rounded on purpose (5–10 minute steps, whole hours for long prints): it is an estimate.
+    function duration(sec) {
+        var m = Math.max(5, Math.round(sec / 300) * 5);
+        if (m < 60) return m + NBSP + t.min;
+        if (m >= 600) return Math.round(m / 60) + NBSP + t.h;
+        m = Math.round(m / 10) * 10;
+        return Math.floor(m / 60) + NBSP + t.h + (m % 60 ? NBSP + m % 60 + NBSP + t.min : '');
+    }
+
+    function plain(str) {
+        return str.replace(/\u00a0/g, ' ');
     }
 
     // ---------- STL parsing ----------
@@ -139,7 +177,7 @@
         var cell = Math.max(m.size[0], m.size[1], 0.01) / (grid || GRID);
         var nx = Math.ceil(m.size[0] / cell) + 1, ny = Math.ceil(m.size[1] / cell) + 1;
         var x0 = m.min[0], y0 = m.min[1], bed = m.min[2];
-        var limit = -Math.sin(C.overhangDeg * Math.PI / 180); // normal z below this = overhang
+        var limit = overLimit();
         var starts = new Uint32Array(nx * ny + 1);
         var zs = null, flags = null, fillAt = null;
 
@@ -219,10 +257,6 @@
         return C.materials[0];
     }
 
-    function infill() {
-        var el = root.querySelector('input[name="calc-infill"]:checked');
-        return (el ? +el.value : C.infillDefault) / 100;
-    }
 
     function qty() {
         var q = Math.round(+qtyIn.value);
@@ -244,48 +278,85 @@
         });
     }
 
-    function update() {
-        if (!model) {
-            ['size', 'volume', 'weight', 'supports', 'piece'].forEach(function (k) { out[k].textContent = '—'; });
-            out.total.textContent = t.empty;
-            copyBtn.disabled = true;
-            return;
-        }
+    // Everything the result block, the summary text and the saved picture need, for the current settings.
+    function estimate() {
         var s = unitScale();
         var mat = material();
         var q = qty();
-        var fillPct = infill();
         var size = model.size.map(function (v) { return v * s; });
         var vol = model.volume * s * s * s / 1000;          // cm³
-        var shell = Math.min(vol, model.area * s * s / 100 * C.shellMm / 10);
-        var sup = model.support * s * s * s / 1000 * C.supportFill * mat.density;
-        var grams = (shell + (vol - shell) * fillPct) * mat.density + sup;
+        var wallMm = C.shellMm * S.walls / C.walls.def;
+        var shell = Math.min(vol, model.area * s * s / 100 * wallMm / 10);
+        var inner = (vol - shell) * S.infill / 100;
+        var supVol = S.supports ? model.support * s * s * s / 1000 * C.supportFill : 0;
+        var sup = supVol * mat.density;
+        var grams = (shell + inner) * mat.density + sup;
         var piece = Math.max(100, Math.round(grams * mat.price / 100) * 100);
         var raw = Math.round(piece * q / 1000) * 1000;
-        var total = Math.max(raw, C.minOrder);
 
-        out.size.textContent = dims(size) + NBSP + t.mm;
-        out.volume.textContent = dec(vol) + NBSP + t.cm3;
-        out.weight.textContent = '≈' + NBSP + dec(grams) + NBSP + t.g;
-        out.supports.textContent = sup > 0.05 ? '≈' + NBSP + dec(sup) + NBSP + t.g : '—';
-        out.piece.textContent = '≈' + NBSP + int(piece) + NBSP + t.sum;
-        out.total.textContent = '≈' + NBSP + int(total) + NBSP + t.sum;
+        // Time for one piece: each kind of line has its own speed, capped by how much plastic the nozzle melts.
+        var T = C.time;
+        var rate = function (speed) {
+            return Math.min(speed * T.lineWidth * S.layer, T.maxFlow) * (mat.speed || 1); // mm³ per second
+        };
+        var seconds = T.startSec + size[2] / S.layer * T.layerSec +
+            (shell / rate(T.speed.wall) + inner / rate(T.speed.infill) + supVol / rate(T.speed.support)) * 1000 * T.travel;
+
+        return {
+            mat: mat, qty: q, size: size, vol: vol, grams: grams, sup: sup, seconds: seconds,
+            piece: piece, raw: raw, total: Math.max(raw, C.minOrder)
+        };
+    }
+
+    function supportName() {
+        return S.supports ? fill(t.supportAt, { deg: S.overhang }) : t.supportOff;
+    }
+
+    function setStatus(text) {
+        statusEl.textContent = text || '';
+    }
+
+    function update() {
+        setStatus('');
+        if (!model) {
+            ['size', 'volume', 'weight', 'supports', 'time', 'piece'].forEach(function (k) { out[k].textContent = '—'; });
+            out.total.textContent = t.empty;
+            last = null;
+            copyText = '';
+            copyBtn.disabled = saveBtn.disabled = true;
+            sendLink.href = cfg.telegram;
+            sendLabel.textContent = t.tg;
+            return;
+        }
+        var e = last = estimate();
+        var approx = '≈' + NBSP;
+
+        out.size.textContent = dims(e.size) + NBSP + t.mm;
+        out.volume.textContent = dec(e.vol) + NBSP + t.cm3;
+        out.weight.textContent = approx + dec(e.grams) + NBSP + t.g;
+        out.supports.textContent = e.sup > 0.05 ? approx + dec(e.sup) + NBSP + t.g : '—';
+        out.time.textContent = approx + duration(e.seconds);
+        out.piece.textContent = approx + int(e.piece) + NBSP + t.sum;
+        out.total.textContent = approx + int(e.total) + NBSP + t.sum;
 
         var msgs = notice ? [notice] : [];
         if (!model.closed) msgs.push(t.msg.open);
-        if (Math.max(size[0], size[1], size[2]) < 2) msgs.push(t.msg.tiny);
-        if (!fits(size, C.bed)) msgs.push(fill(t.msg.fit, { bed: dims(C.bed) }));
-        else if (mat.composite && !fits(size, C.bedComposite)) msgs.push(fill(t.msg.fitComposite, { bed: dims(C.bedComposite) }));
-        if (raw < C.minOrder) msgs.push(fill(t.msg.min, { min: int(C.minOrder) }));
+        if (Math.max(e.size[0], e.size[1], e.size[2]) < 2) msgs.push(t.msg.tiny);
+        if (!fits(e.size, C.bed)) msgs.push(fill(t.msg.fit, { bed: dims(C.bed) }));
+        else if (e.mat.composite && !fits(e.size, C.bedComposite)) msgs.push(fill(t.msg.fitComposite, { bed: dims(C.bedComposite) }));
+        if (e.raw < C.minOrder) msgs.push(fill(t.msg.min, { min: int(C.minOrder) }));
         if (!viewer) msgs.push(t.msg.noGl);
         setMsg(msgs);
 
-        copyText = fill(t.copyText, {
-            file: model.name, mat: mat.name, infill: Math.round(fillPct * 100), qty: q,
-            size: dims(size), weight: dec(grams), sup: dec(sup), total: int(total)
-        }).replace(/\u00a0/g, ' ');
-        copyBtn.disabled = false;
-        copyBtn.textContent = t.copy;
+        copyText = plain(fill(t.copyText, {
+            file: model.name, mat: e.mat.name, infill: S.infill, layer: comma(S.layer), walls: S.walls, qty: e.qty,
+            size: dims(e.size), weight: dec(e.grams), time: duration(e.seconds), total: int(e.total),
+            sup: e.sup > 0.05 ? fill(t.copySup, { sup: dec(e.sup) }) : t.copyNoSup
+        }));
+        copyBtn.disabled = saveBtn.disabled = false;
+        // t.me/<name>?text=… opens the chat with the message already typed in
+        sendLink.href = cfg.telegram + '?text=' + encodeURIComponent(copyText);
+        sendLabel.textContent = t.send;
     }
 
     // ---------- orientation on the bed ----------
@@ -526,12 +597,255 @@
     });
 
     [matSel, unitSel, qtyIn].forEach(function (el) { el.addEventListener('input', update); });
-    root.querySelectorAll('input[name="calc-infill"]').forEach(function (el) { el.addEventListener('change', update); });
+
+    // ---------- print settings: infill presets + the advanced block ----------
+
+    function setInfill(v) {
+        S.infill = Math.max(0, Math.min(100, Math.round(v)));
+        rangeIn.value = S.infill;
+        rangeOut.textContent = S.infill + '%';
+        presetRadios.forEach(function (el) { el.checked = +el.value === S.infill; });
+    }
+
+    // Supports changed: the space under overhangs depends on the threshold, so measure again.
+    function supportsChanged() {
+        legend.hidden = !S.supports;
+        if (viewer) viewer.setOver(overLimit());
+        if (model) {
+            notice = '';
+            applyOrientation(model.R, true);
+        } else update();
+    }
+
+    function resetSettings(keepInfill) {
+        var hadSupports = S.supports, hadOver = S.overhang;
+        S.layer = C.layerDefault;
+        S.walls = C.walls.def;
+        S.overhang = C.overhangDeg;
+        S.supports = true;
+        layerRadios.forEach(function (el) { el.checked = +el.value === S.layer; });
+        wallsIn.value = S.walls;
+        supSel.value = String(S.overhang);
+        // a value between the presets has no button in the simple mode, so it goes back to the default
+        setInfill(keepInfill && C.infill.indexOf(S.infill) !== -1 ? S.infill : C.infillDefault);
+        if (hadSupports !== S.supports || hadOver !== S.overhang) supportsChanged();
+        else update();
+    }
+
+    presetRadios.forEach(function (el) {
+        el.addEventListener('change', function () {
+            setInfill(+el.value);
+            update();
+        });
+    });
+    rangeIn.addEventListener('input', function () {
+        setInfill(+rangeIn.value);
+        update();
+    });
+    layerRadios.forEach(function (el) {
+        el.addEventListener('change', function () {
+            S.layer = +el.value;
+            update();
+        });
+    });
+    wallsIn.addEventListener('input', function () {
+        var n = Math.round(+wallsIn.value);
+        S.walls = n >= C.walls.min ? Math.min(n, C.walls.max) : C.walls.def;
+        update();
+    });
+    wallsIn.addEventListener('change', function () { wallsIn.value = S.walls; });
+    supSel.addEventListener('change', function () {
+        S.supports = supSel.value !== 'off';
+        if (S.supports) S.overhang = +supSel.value;
+        supportsChanged();
+    });
+    advToggle.addEventListener('change', function () {
+        advBox.hidden = !advToggle.checked;
+        // Hidden settings must not keep changing the price: leaving the advanced mode restores the defaults.
+        if (!advToggle.checked) resetSettings(true);
+    });
+    $('.calc-reset').addEventListener('click', function () { resetSettings(false); });
+    advToggle.checked = false; // browsers restore form state on reload, the block starts closed
+    resetSettings(false);
+
+    // ---------- result: send, save, copy ----------
+
+    function goal(name) {
+        try { if (typeof ym === 'function') ym(105486503, 'reachGoal', name); } catch (err) {}
+        try { if (typeof gtag === 'function') gtag('event', name, { page_path: location.pathname }); } catch (err) {}
+    }
+
+    function copyFallback(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (err) {}
+        ta.remove();
+        return ok;
+    }
 
     copyBtn.addEventListener('click', function () {
-        if (!copyText || !navigator.clipboard) return;
-        navigator.clipboard.writeText(copyText).then(function () { copyBtn.textContent = t.copied; }, function () {});
+        if (!copyText) return;
+        var done = function () {
+            setStatus(t.copied);
+            goal('calc_copy');
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyText).then(done, function () { if (copyFallback(copyText)) done(); });
+        } else if (copyFallback(copyText)) done();
     });
+
+    sendLink.addEventListener('click', function () {
+        if (!copyText) return;
+        setStatus(t.sent);
+        goal('calc_send');
+    });
+
+    saveBtn.addEventListener('click', function () {
+        if (!last) return;
+        var fail = function () { setStatus(t.saveFail); };
+        try {
+            drawCard(last).toBlob(function (blob) {
+                if (!blob) return fail();
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = '3dpie-' + (model.name.replace(/\.stl$/i, '').replace(/[^\w\u0400-\u04ff-]+/g, '-').slice(0, 40) || 'stl') + '.png';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+                setStatus(t.saved);
+                goal('calc_save');
+            }, 'image/png');
+        } catch (err) { fail(); }
+    });
+
+    // The saved picture: preview of the part, the settings, the numbers and how to reach the studio.
+    // Colours and fonts repeat the site tokens (css/styles.css :root).
+    function drawCard(e) {
+        var W = 1080, P = 64, ROW = 60;
+        var DISPLAY = '"Unbounded", "Onest", sans-serif', SANS = '"Onest", -apple-system, "Segoe UI", sans-serif';
+        var shot = viewer ? viewer.snapshot() : null;
+        var shotH = shot ? 500 : 0;
+        var rows = [
+            [t.card.file, model.name],
+            [t.material, e.mat.name + ' — ' + int(e.mat.price) + ' ' + t.sum + '/' + t.g],
+            [t.infill, S.infill + '%'],
+            [t.layer, comma(S.layer) + ' ' + t.mm],
+            [t.walls, String(S.walls)],
+            [t.support, supportName()],
+            [t.qty, String(e.qty)],
+            [t.size, dims(e.size) + ' ' + t.mm],
+            [t.volume, dec(e.vol) + ' ' + t.cm3],
+            [t.weight, '≈ ' + dec(e.grams) + ' ' + t.g + (e.sup > 0.05 ? ' (' + fill(t.copySup, { sup: dec(e.sup) }) + ')' : '')],
+            [t.time, '≈ ' + duration(e.seconds)],
+            [t.perPiece, '≈ ' + int(e.piece) + ' ' + t.sum]
+        ];
+        var cv = document.createElement('canvas');
+        var ctx = cv.getContext('2d');
+        var wrap = function (text, font, maxW) {
+            ctx.font = font;
+            var lines = [], line = '';
+            text.split(' ').forEach(function (word) {
+                var next = line ? line + ' ' + word : word;
+                if (line && ctx.measureText(next).width > maxW) {
+                    lines.push(line);
+                    line = word;
+                } else line = next;
+            });
+            if (line) lines.push(line);
+            return lines;
+        };
+        var clip = function (text, maxW) {
+            if (ctx.measureText(text).width <= maxW) return text;
+            while (text.length > 1 && ctx.measureText(text + '…').width > maxW) text = text.slice(0, -1);
+            return text + '…';
+        };
+        var NOTE_FONT = '400 26px ' + SANS;
+        var note = wrap(t.card.note, NOTE_FONT, W - P * 2);
+        var H = P + 96 + (shot ? shotH + 32 : 0) + rows.length * ROW + 40 + 150 + note.length * 36 + 30 + 44 + P;
+        cv.width = W;
+        cv.height = H;
+
+        ctx.fillStyle = '#0c0e0f';
+        ctx.fillRect(0, 0, W, H);
+        ctx.textBaseline = 'alphabetic';
+
+        // header
+        var y = P + 44;
+        ctx.fillStyle = '#eceeed';
+        ctx.font = '700 44px ' + DISPLAY;
+        ctx.fillText('3DPie', P, y);
+        var d = new Date();
+        var two = function (n) { return (n < 10 ? '0' : '') + n; };
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#6f787b';
+        ctx.font = '400 26px ' + SANS;
+        ctx.fillText(two(d.getDate()) + '.' + two(d.getMonth() + 1) + '.' + d.getFullYear(), W - P, y - 34);
+        ctx.fillStyle = '#a9b0b2';
+        ctx.font = '500 30px ' + SANS;
+        ctx.fillText(t.card.title, W - P, y + 4);
+        ctx.textAlign = 'left';
+        y = P + 96;
+
+        // preview
+        if (shot) {
+            ctx.fillStyle = '#121516';
+            ctx.fillRect(P, y, W - P * 2, shotH);
+            var k = Math.min((W - P * 2) / shot.width, shotH / shot.height);
+            var sw = shot.width * k, sh = shot.height * k;
+            ctx.drawImage(shot, P + (W - P * 2 - sw) / 2, y + (shotH - sh) / 2, sw, sh);
+            ctx.strokeStyle = '#252a2c';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(P + 1, y + 1, W - P * 2 - 2, shotH - 2);
+            y += shotH + 32;
+        }
+
+        // rows
+        rows.forEach(function (r) {
+            ctx.fillStyle = '#252a2c';
+            ctx.fillRect(P, y, W - P * 2, 2);
+            ctx.font = '400 27px ' + SANS;
+            ctx.fillStyle = '#6f787b';
+            var label = clip(r[0], W * 0.48);
+            ctx.fillText(label, P, y + 40);
+            ctx.font = '600 28px ' + SANS;
+            ctx.fillStyle = '#eceeed';
+            ctx.textAlign = 'right';
+            ctx.fillText(clip(plain(r[1]), W - P * 2 - ctx.measureText(label).width - 60), W - P, y + 40);
+            ctx.textAlign = 'left';
+            y += ROW;
+        });
+        ctx.fillStyle = '#252a2c';
+        ctx.fillRect(P, y, W - P * 2, 2);
+        y += 40;
+
+        // total
+        ctx.fillStyle = '#6f787b';
+        ctx.font = '500 26px ' + SANS;
+        ctx.fillText(t.total.toUpperCase(), P, y + 26);
+        ctx.fillStyle = '#c6f432';
+        ctx.font = '500 68px ' + DISPLAY;
+        ctx.fillText('≈ ' + plain(int(e.total)) + ' ' + t.sum, P, y + 110);
+        y += 150;
+
+        // note + contacts
+        ctx.fillStyle = '#a9b0b2';
+        ctx.font = NOTE_FONT;
+        note.forEach(function (line) {
+            ctx.fillText(line, P, y + 26);
+            y += 36;
+        });
+        y += 30;
+        ctx.fillStyle = '#eceeed';
+        ctx.font = '600 28px ' + SANS;
+        ctx.fillText('Telegram ' + cfg.handle + '  ·  ' + cfg.phone + '  ·  ' + cfg.site, P, y + 30);
+        return cv;
+    }
 
     var zoomBar = $('.calc-zoom');
     zoomBar.addEventListener('click', function (e) {
@@ -651,7 +965,8 @@
         var uRot = gl.getUniformLocation(prog, 'rot');
         var uCol = gl.getUniformLocation(prog, 'col');
         var uLit = gl.getUniformLocation(prog, 'lit');
-        gl.uniform1f(gl.getUniformLocation(prog, 'over'), -Math.sin(C.overhangDeg * Math.PI / 180));
+        var uOver = gl.getUniformLocation(prog, 'over');
+        gl.uniform1f(uOver, overLimit());
         var posBuf = gl.createBuffer();
         var nrmBuf = gl.createBuffer();
         var gridBuf = gl.createBuffer();
@@ -787,6 +1102,18 @@
             request();
         }
 
+        function setOver(limit) {
+            gl.uniform1f(uOver, limit);
+            request();
+        }
+
+        // Draws right now and hands over the canvas: a WebGL buffer can only be copied in the same task.
+        function snapshot() {
+            if (frame) cancelAnimationFrame(frame);
+            draw();
+            return cv;
+        }
+
         // Nearest triangle under the pointer (ray cast, Möller–Trumbore); returns its offset or -1.
         function pick(clientX, clientY) {
             if (!mesh || !lastMvp) return -1;
@@ -884,7 +1211,7 @@
             e.preventDefault();
         });
 
-        return { setMesh: setMesh, zoomBy: zoomBy, fit: fit };
+        return { setMesh: setMesh, zoomBy: zoomBy, fit: fit, setOver: setOver, snapshot: snapshot };
     }
 
     update();
