@@ -1,7 +1,12 @@
-/* STL price calculator (prices page only). Tokens come from styles.css :root. */
+/* STL price calculator (prices page only). Tokens come from styles.css :root.
+   Layout, top to bottom: plates strip → model card (preview, position, numbers) next to its settings → order total. */
 
 .section-calc {
   padding-top: 24px;
+}
+
+.section-calc .section-head {
+  margin-bottom: 32px;
 }
 
 .calc [hidden] {
@@ -10,29 +15,283 @@
 
 .calc {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: 18px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
 }
 
-/* ---------- stage: drop zone, then the 3D preview ---------- */
+.calc-model,
+.calc-panel,
+.calc-summary {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.calc-field > label,
+.calc-field legend,
+.calc-label,
+.calc-total > span {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* ---------- notices about files (unreadable, too big, too many) ---------- */
+
+.calc-alert,
+.calc-msg,
+.calc-order-msg {
+  display: grid;
+  gap: 8px;
+}
+
+.calc-alert:empty,
+.calc-msg:empty,
+.calc-order-msg:empty {
+  display: none;
+}
+
+.calc-alert span,
+.calc-msg span,
+.calc-order-msg span {
+  padding-left: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+  border-left: 2px solid var(--accent);
+}
+
+.calc-alert {
+  padding: 14px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+.calc-alert span {
+  color: var(--text);
+}
+
+/* ---------- plates: one model per plate ---------- */
+
+.calc-plates {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* only the plates scroll sideways: the "add a model" button stays in view */
+.calc-plates-list {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+.calc-plate {
+  position: relative;
+  flex: none;
+  display: flex;
+  width: 296px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.calc-plate:hover {
+  border-color: var(--text-3);
+}
+
+.calc-plate.is-active {
+  border-color: var(--accent);
+  background: linear-gradient(var(--accent-dim), var(--accent-dim)), var(--panel);
+}
+
+.calc-plate-pick {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 8px 40px 8px 8px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  cursor: pointer;
+}
+
+.calc-plate-pick:focus-visible,
+.calc-plate-del:focus-visible,
+.calc-plate-add:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.calc-plate-thumb {
+  flex: none;
+  width: 64px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--bg-2);
+}
+
+.calc-plate-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.calc-plate-n {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.calc-plate.is-active .calc-plate-n {
+  color: var(--accent);
+}
+
+.calc-plate-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.calc-plate-sum {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* the model does not fit the bed: details are shown when the plate is opened */
+.calc-plate.is-warn .calc-plate-sum::after {
+  content: ' ⚠';
+  color: var(--text);
+}
+
+.calc-plate-del {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+  font: 400 20px/1 var(--sans);
+  color: var(--text-3);
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease;
+}
+
+.calc-plate-del:hover {
+  color: var(--text);
+  background: var(--line);
+}
+
+.calc-plate-add {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 66px;
+  padding: 8px 20px 8px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  border: 1px dashed var(--line-2);
+  border-radius: 12px;
+  background: none;
+  cursor: pointer;
+  transition: border-color .2s ease;
+}
+
+.calc-plate-add:hover {
+  border-color: var(--accent);
+}
+
+.calc-plate-plus {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  font: 400 26px/1 var(--sans);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-dim);
+}
+
+.calc-plate-add b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.calc-plate-add small {
+  font-size: 13px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* ---------- model card + its settings ---------- */
+
+.calc-main {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.calc-model {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* the settings column can get long (advanced mode): keep the preview and its numbers in view */
+@media (min-width: 961px) and (min-height: 700px) {
+  .calc-model {
+    position: sticky;
+    top: calc(var(--header-h) + 14px);
+  }
+}
+
+/* stage: drop zone, then the 3D preview */
 
 .calc-stage {
   position: relative;
   display: flex;
-  min-height: 520px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  height: clamp(320px, 52vh, 480px);
+  border-bottom: 1px solid var(--line);
   background:
     radial-gradient(closest-side, rgba(198, 244, 50, .06), transparent 75%),
     var(--bg-2);
-  overflow: hidden;
-  transition: border-color .2s ease, background-color .2s ease;
+  transition: background-color .2s ease;
 }
 
 .calc-stage.is-over {
-  border-color: var(--accent);
-  background-color: var(--panel);
+  background-color: var(--panel-2);
 }
 
 .calc-drop {
@@ -105,6 +364,7 @@
 }
 
 .calc-drop-hint {
+  max-width: 26em;
   font-size: 13px;
   color: var(--text-3);
 }
@@ -164,35 +424,7 @@
   border-color: var(--accent);
 }
 
-/* orientation buttons in the panel */
-.calc-orient {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.calc-orient button {
-  flex: 1 1 auto;
-  background: var(--bg-2);
-}
-
-.calc-orient [data-orient="auto"] {
-  color: var(--accent-ink);
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
-.calc-orient [aria-pressed="true"] {
-  color: var(--text);
-  border-color: var(--accent);
-  background: var(--accent-dim);
-}
-
-.calc-orient button:disabled {
-  opacity: .4;
-  cursor: default;
-}
-
+/* file name and hints over the bottom edge of the preview */
 .calc-bar {
   position: absolute;
   left: 14px;
@@ -235,6 +467,10 @@
   background: #dbe0e0;
 }
 
+.calc-legend[hidden] + .calc-hint {
+  margin-left: auto;
+}
+
 .calc-hint {
   min-width: 0;
   overflow: hidden;
@@ -267,16 +503,108 @@
   border-color: var(--accent);
 }
 
-/* ---------- panel: options and result ---------- */
+/* position on the bed: right under the preview it changes */
+.calc-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.calc-orient {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.calc-orient button {
+  flex: 1 1 auto;
+  background: var(--bg-2);
+}
+
+.calc-orient [data-orient="auto"] {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.calc-orient [aria-pressed="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.calc-orient button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+/* numbers of the open model */
+.calc-out {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+}
+
+.calc-out > div {
+  padding: 14px 18px;
+  background: var(--panel);
+}
+
+.calc-out dt,
+.calc-sum-stats dt {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-3);
+}
+
+.calc-out dd,
+.calc-sum-stats dd {
+  margin-top: 2px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-msg {
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- settings of the open model ---------- */
 
 .calc-panel {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 26px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel);
+  padding: 22px;
+}
+
+.calc-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  font: 500 17px/1.2 var(--display);
+  letter-spacing: -0.02em;
+}
+
+.calc-cur {
+  padding: 5px 10px;
+  font: 600 11px/1 var(--sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-dim);
+}
+
+.calc-cur:empty {
+  display: none;
 }
 
 .calc-field {
@@ -284,16 +612,6 @@
   gap: 8px;
   min-width: 0;
   border: 0;
-}
-
-.calc-field > label,
-.calc-field legend,
-.calc-label {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--text-3);
 }
 
 .calc-field legend {
@@ -352,6 +670,64 @@
 .calc-qty,
 .calc-walls {
   font-variant-numeric: tabular-nums;
+}
+
+.calc-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 12px;
+}
+
+.calc-seg {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.calc-seg input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.calc-seg span {
+  display: grid;
+  gap: 4px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-2);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--bg-2);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+
+.calc-seg b {
+  font: 500 15px/1 var(--display);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.calc-seg span:hover {
+  border-color: var(--text-3);
+}
+
+.calc-seg input:checked + span {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.calc-seg input:checked + span b {
+  color: var(--accent);
+}
+
+.calc-seg input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* advanced mode: switch + extra settings */
@@ -435,13 +811,6 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 18px;
-  border: 1px dashed var(--line-2);
-  border-radius: 10px;
-}
-
-.calc-adv[hidden] {
-  display: none;
 }
 
 .calc-range {
@@ -485,94 +854,22 @@
   color: var(--accent);
 }
 
-.calc-two {
+/* ---------- order: everything on all plates ---------- */
+
+.calc-summary {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: end;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+  align-items: center;
+  gap: 20px 32px;
+  padding: 24px;
+  border-color: var(--line-2);
 }
 
-.calc-seg {
+.calc-sum-main,
+.calc-sum-side {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.calc-seg input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.calc-seg span {
-  display: grid;
-  gap: 4px;
-  padding: 10px 6px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-2);
-  border: 1px solid var(--line-2);
-  border-radius: 10px;
-  background: var(--bg-2);
-  cursor: pointer;
-  transition: border-color .2s ease, background .2s ease, color .2s ease;
-}
-
-.calc-seg b {
-  font: 500 15px/1 var(--display);
-  color: var(--text);
-}
-
-.calc-seg span:hover {
-  border-color: var(--text-3);
-}
-
-.calc-seg input:checked + span {
-  color: var(--text);
-  border-color: var(--accent);
-  background: var(--accent-dim);
-}
-
-.calc-seg input:checked + span b {
-  color: var(--accent);
-}
-
-.calc-seg input:focus-visible + span {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.calc-out {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-
-.calc-out > div {
-  padding: 12px 14px;
-}
-
-.calc-out > div:nth-child(even) {
-  border-left: 1px solid var(--line);
-}
-
-.calc-out > div:nth-child(n + 3) {
-  border-top: 1px solid var(--line);
-}
-
-.calc-out > div:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
-
-.calc-out dt {
-  font-size: 13px;
-  color: var(--text-3);
-}
-
-.calc-out dd {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  gap: 16px;
+  min-width: 0;
 }
 
 .calc-total {
@@ -580,36 +877,17 @@
   gap: 6px;
 }
 
-.calc-total span {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-
 .calc-total output {
-  font: 500 clamp(26px, 2.6vw, 36px)/1.1 var(--display);
+  font: 500 clamp(28px, 3.4vw, 44px)/1.1 var(--display);
   letter-spacing: -0.03em;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
 
-.calc-msg {
-  display: grid;
-  gap: 8px;
-}
-
-.calc-msg:empty {
-  display: none;
-}
-
-.calc-msg span {
-  padding-left: 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-2);
-  border-left: 2px solid var(--accent);
+.calc-sum-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
 }
 
 .calc-actions {
@@ -626,6 +904,13 @@
   flex-basis: 100%;
 }
 
+.calc-save:disabled,
+.calc-copy:disabled {
+  opacity: .45;
+  cursor: default;
+  transform: none;
+}
+
 .calc-status {
   font-size: 14px;
   line-height: 1.5;
@@ -636,35 +921,67 @@
   display: none;
 }
 
-.calc-save:disabled,
-.calc-copy:disabled {
-  opacity: .45;
-  cursor: default;
-  transform: none;
-}
-
 .calc-disclaimer {
+  max-width: 76em;
   font-size: 13px;
   line-height: 1.5;
   color: var(--text-3);
 }
 
 @media (max-width: 960px) {
-  .calc {
+  .calc-main,
+  .calc-summary {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .calc-stage {
-    min-height: 340px;
+    height: clamp(300px, 46vh, 420px);
   }
 }
 
 @media (max-width: 600px) {
   .calc-stage {
-    min-height: 300px;
+    height: 300px;
   }
 
-  .calc-panel {
+  .calc-plates {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calc-plate {
+    width: 264px;
+  }
+
+  .calc-plate-add {
+    min-height: 56px;
+    padding: 6px 16px 6px 6px;
+  }
+
+  .calc-plate-plus {
+    width: 42px;
+    height: 42px;
+  }
+
+  .calc-tools .calc-label {
+    flex-basis: 100%;
+  }
+
+  .calc-tools,
+  .calc-msg {
+    padding: 12px 14px;
+  }
+
+  .calc-out {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calc-out > div {
+    padding: 12px 14px;
+  }
+
+  .calc-panel,
+  .calc-summary {
     padding: 18px;
   }
 
@@ -678,6 +995,10 @@
   }
 
   .calc-hint.is-on {
+    margin-left: auto;
+  }
+
+  .calc-other {
     margin-left: auto;
   }
 }

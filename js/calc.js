@@ -1,7 +1,9 @@
 (function () {
     'use strict';
 
-    // STL price calculator (prices page). The file is read in the browser and never uploaded.
+    // STL price calculator (prices page). Files are read in the browser and never uploaded.
+    // One estimate holds several models, each on its own plate with its own settings; the order total
+    // is the sum of the plates. Only the active plate is shown in the 3D preview.
     // Weight = solid shell (walls + top/bottom skin) + infill share of the inside, times plastic density.
     // Print time = those volumes divided by how fast the nozzle lays plastic, plus layer changes and warm-up.
     // Prices, build volumes, speeds and strings come from CALC / CALC_T in src/site.js (inline JSON block).
@@ -10,9 +12,9 @@
     var dataEl = document.querySelector('.calc-data');
     if (!root || !dataEl) return;
 
-    var cfg = JSON.parse(dataEl.textContent);
-    var C = cfg.calc;
-    var t = cfg.t;
+    var DATA = JSON.parse(dataEl.textContent);
+    var C = DATA.calc;
+    var t = DATA.t;
     var MAX_BYTES = 100 * 1024 * 1024;
     var NBSP = String.fromCharCode(160);
 
@@ -21,18 +23,26 @@
     var fileInput = $('.calc-file');
     var drop = $('.calc-drop');
     var canvas = $('.calc-canvas');
+    var zoomBar = $('.calc-zoom');
     var bar = $('.calc-bar');
+    var nameEl = $('.calc-name');
     var hint = $('.calc-hint');
+    var legend = $('.calc-legend');
+    var alertEl = $('.calc-alert');
+    var platesEl = $('.calc-plates');
+    var platesList = $('.calc-plates-list');
+    var addBtn = $('.calc-plate-add');
+    var curEl = $('.calc-cur');
     var matSel = $('.calc-mat');
     var qtyIn = $('.calc-qty');
     var unitSel = $('.calc-unit');
     var msgEl = $('.calc-msg');
+    var orderMsgEl = $('.calc-order-msg');
     var copyBtn = $('.calc-copy');
     var saveBtn = $('.calc-save');
     var sendLink = $('.calc-send');
     var sendLabel = $('.calc-send-label');
     var statusEl = $('.calc-status');
-    var legend = $('.calc-legend');
     var advToggle = $('.calc-adv-toggle');
     var advBox = $('.calc-adv');
     var rangeIn = $('.calc-infill-range');
@@ -44,18 +54,29 @@
     var out = {};
     root.querySelectorAll('[data-out]').forEach(function (el) { out[el.getAttribute('data-out')] = el; });
 
-    var model = null; // { name, volume mm³, area mm², size [x, y, z] mm, closed }
+    // A plate: { name, orig (vertices as in the file), sign, volume, area, closed, R (rotation on the bed),
+    //            min, max, size, support (mm³ under overhangs), set (its settings), est (last estimate),
+    //            thumb (small canvas with its picture), notice }
+    var items = [];
+    var active = null;      // the plate in the preview and in the settings form
+    var work = null;        // rotated copy of the active mesh: what the preview draws and picks faces on
+    var set = defaults();   // settings in the form: the active plate's, or what the first model will get
     var viewer = null;
+    var order = null;       // totals over all plates
     var copyText = '';
-    var last = null; // the latest estimate, for the saved picture
     var tracked = false;
-    // Print settings. The simple mode keeps the defaults and changes only the infill preset.
-    var S = { infill: C.infillDefault, layer: C.layerDefault, walls: C.walls.def, overhang: C.overhangDeg, supports: true };
+    var replacing = null;   // the plate whose file is being replaced
 
-    function overLimit() {
-        return S.supports ? -Math.sin(S.overhang * Math.PI / 180) : -2; // normal z below this = overhang
+    function defaults() {
+        return {
+            mat: C.materialDefault, qty: 1, unit: C.units[0][0], infill: C.infillDefault,
+            layer: C.layerDefault, walls: C.walls.def, overhang: C.overhangDeg, supports: true
+        };
     }
-    var notice = ''; // one-off note shown above the warnings (e.g. after auto-orientation)
+
+    function overLimit(s) {
+        return s.supports ? -Math.sin(s.overhang * Math.PI / 180) : -2; // normal z below this = overhang
+    }
 
     // ---------- formatting ----------
 
@@ -89,7 +110,14 @@
     }
 
     function plain(str) {
-        return str.replace(/\u00a0/g, ' ');
+        return str.replace(/ /g, ' ');
+    }
+
+    function el(tag, cls, text) {
+        var node = document.createElement(tag);
+        if (cls) node.className = cls;
+        if (text != null) node.textContent = text;
+        return node;
     }
 
     // ---------- STL parsing ----------
@@ -173,11 +201,10 @@
     // A support column under an overhang sample reaches down to the nearest surface below it, or the bed.
     var GRID = 160;
 
-    function supportSpace(pos, m, grid) {
+    function supportSpace(pos, m, limit, grid) {
         var cell = Math.max(m.size[0], m.size[1], 0.01) / (grid || GRID);
         var nx = Math.ceil(m.size[0] / cell) + 1, ny = Math.ceil(m.size[1] / cell) + 1;
         var x0 = m.min[0], y0 = m.min[1], bed = m.min[2];
-        var limit = overLimit();
         var starts = new Uint32Array(nx * ny + 1);
         var zs = null, flags = null, fillAt = null;
 
@@ -247,20 +274,14 @@
 
     // ---------- estimate ----------
 
-    function unitScale() {
-        for (var i = 0; i < C.units.length; i++) if (C.units[i][0] === unitSel.value) return C.units[i][1];
+    function unitScale(id) {
+        for (var i = 0; i < C.units.length; i++) if (C.units[i][0] === id) return C.units[i][1];
         return 1;
     }
 
-    function material() {
-        for (var i = 0; i < C.materials.length; i++) if (C.materials[i].id === matSel.value) return C.materials[i];
+    function material(id) {
+        for (var i = 0; i < C.materials.length; i++) if (C.materials[i].id === id) return C.materials[i];
         return C.materials[0];
-    }
-
-
-    function qty() {
-        var q = Math.round(+qtyIn.value);
-        return q >= 1 ? Math.min(q, 10000) : 1;
     }
 
     function fits(size, bed) {
@@ -269,99 +290,146 @@
         return a[0] <= b[0] && a[1] <= b[1] && a[2] <= b[2];
     }
 
-    function setMsg(list) {
-        msgEl.textContent = '';
-        list.forEach(function (text) {
-            var span = document.createElement('span');
-            span.textContent = text;
-            msgEl.appendChild(span);
-        });
-    }
-
-    // Everything the result block, the summary text and the saved picture need, for the current settings.
-    function estimate() {
-        var s = unitScale();
-        var mat = material();
-        var q = qty();
-        var size = model.size.map(function (v) { return v * s; });
-        var vol = model.volume * s * s * s / 1000;          // cm³
-        var wallMm = C.shellMm * S.walls / C.walls.def;
-        var shell = Math.min(vol, model.area * s * s / 100 * wallMm / 10);
-        var inner = (vol - shell) * S.infill / 100;
-        var supVol = S.supports ? model.support * s * s * s / 1000 * C.supportFill : 0;
-        var sup = supVol * mat.density;
-        var grams = (shell + inner) * mat.density + sup;
-        var piece = Math.max(100, Math.round(grams * mat.price / 100) * 100);
-        var raw = Math.round(piece * q / 1000) * 1000;
-
-        // Time for one piece: each kind of line has its own speed, capped by how much plastic the nozzle melts.
-        var T = C.time;
-        var rate = function (speed) {
-            return Math.min(speed * T.lineWidth * S.layer, T.maxFlow) * (mat.speed || 1); // mm³ per second
-        };
-        var seconds = T.startSec + size[2] / S.layer * T.layerSec +
-            (shell / rate(T.speed.wall) + inner / rate(T.speed.infill) + supVol / rate(T.speed.support)) * 1000 * T.travel;
-
-        return {
-            mat: mat, qty: q, size: size, vol: vol, grams: grams, sup: sup, seconds: seconds,
-            piece: piece, raw: raw, total: Math.max(raw, C.minOrder)
-        };
-    }
-
-    function supportName() {
-        return S.supports ? fill(t.supportAt, { deg: S.overhang }) : t.supportOff;
+    function setLines(box, list) {
+        box.textContent = '';
+        list.forEach(function (text) { box.appendChild(el('span', '', text)); });
     }
 
     function setStatus(text) {
         statusEl.textContent = text || '';
     }
 
+    // One plate with its own settings: numbers for one piece and for the whole plate.
+    function estimate(item) {
+        var s = item.set;
+        var k = unitScale(s.unit);
+        var mat = material(s.mat);
+        var size = item.size.map(function (v) { return v * k; });
+        var vol = item.volume * k * k * k / 1000;          // cm³
+        var wallMm = C.shellMm * s.walls / C.walls.def;
+        var shell = Math.min(vol, item.area * k * k / 100 * wallMm / 10);
+        var inner = (vol - shell) * s.infill / 100;
+        var supVol = s.supports ? item.support * k * k * k / 1000 * C.supportFill : 0;
+        var sup = supVol * mat.density;
+        var grams = (shell + inner) * mat.density + sup;
+        var piece = Math.max(100, Math.round(grams * mat.price / 100) * 100);
+
+        // Time: each kind of line has its own speed, capped by how much plastic the nozzle melts.
+        var T = C.time;
+        var rate = function (speed) {
+            return Math.min(speed * T.lineWidth * s.layer, T.maxFlow) * (mat.speed || 1); // mm³ per second
+        };
+        var print = size[2] / s.layer * T.layerSec +
+            (shell / rate(T.speed.wall) + inner / rate(T.speed.infill) + supVol / rate(T.speed.support)) * 1000 * T.travel;
+
+        return {
+            mat: mat, qty: s.qty, size: size, vol: vol, grams: grams, sup: sup, piece: piece, sum: piece * s.qty,
+            seconds: T.startSec + print,                 // one piece printed alone
+            plateSeconds: T.startSec + print * s.qty,    // the whole plate: one warm-up, then every copy
+            warn: !fits(size, C.bed) ? 'fit' : mat.composite && !fits(size, C.bedComposite) ? 'fitComposite' : ''
+        };
+    }
+
+    function totals() {
+        var o = { pieces: 0, grams: 0, seconds: 0, raw: 0 };
+        items.forEach(function (item) {
+            var e = item.est = estimate(item);
+            o.pieces += e.qty;
+            o.grams += e.grams * e.qty;
+            o.seconds += e.plateSeconds;
+            o.raw += e.sum;
+        });
+        o.raw = Math.round(o.raw / 1000) * 1000;
+        o.total = Math.max(o.raw, C.minOrder);
+        return o;
+    }
+
+    function supportText(e) {
+        return e.sup > 0.05 ? fill(t.copySup, { sup: dec(e.sup) }) : t.copyNoSup;
+    }
+
+    // The estimate as text, for the clipboard and the Telegram message.
+    function summaryText(short) {
+        var lines = [fill(t.copyHead, { site: DATA.site })];
+        items.forEach(function (item, i) {
+            var e = item.est, s = item.set;
+            lines.push(fill(short ? t.copyItemShort : t.copyItem, {
+                n: i + 1, file: item.name, mat: e.mat.name, infill: s.infill, layer: comma(s.layer), walls: s.walls,
+                qty: e.qty, size: dims(e.size), weight: dec(e.grams), time: duration(e.seconds), sum: int(e.sum),
+                sup: supportText(e)
+            }));
+        });
+        lines.push(fill(t.copyTotal, {
+            count: items.length, pieces: order.pieces, weight: dec(order.grams),
+            time: duration(order.seconds), total: int(order.total)
+        }));
+        return plain(lines.join('\n'));
+    }
+
     function update() {
+        var approx = '≈' + NBSP;
         setStatus('');
-        if (!model) {
+        order = items.length ? totals() : null;
+
+        // the active model
+        if (!active) {
             ['size', 'volume', 'weight', 'supports', 'time', 'piece'].forEach(function (k) { out[k].textContent = '—'; });
+            setLines(msgEl, []);
+        } else {
+            var e = active.est;
+            out.size.textContent = dims(e.size) + NBSP + t.mm;
+            out.volume.textContent = dec(e.vol) + NBSP + t.cm3;
+            out.weight.textContent = approx + dec(e.grams) + NBSP + t.g;
+            out.supports.textContent = e.sup > 0.05 ? approx + dec(e.sup) + NBSP + t.g : '—';
+            out.time.textContent = approx + duration(e.seconds);
+            out.piece.textContent = approx + int(e.piece) + NBSP + t.sum;
+
+            var msgs = active.notice ? [active.notice] : [];
+            if (!active.closed) msgs.push(t.msg.open);
+            if (Math.max(e.size[0], e.size[1], e.size[2]) < 2) msgs.push(t.msg.tiny);
+            if (e.warn === 'fit') msgs.push(fill(t.msg.fit, { bed: dims(C.bed) }));
+            if (e.warn === 'fitComposite') msgs.push(fill(t.msg.fitComposite, { bed: dims(C.bedComposite) }));
+            if (!viewer) msgs.push(t.msg.noGl);
+            setLines(msgEl, msgs);
+        }
+
+        // the plates strip
+        items.forEach(function (item) {
+            if (!item.sumEl) return;
+            item.sumEl.textContent = item.est.qty + NBSP + t.pcs + ' · ' + approx + int(item.est.sum) + NBSP + t.sum;
+            item.box.classList.toggle('is-warn', !!item.est.warn);
+        });
+
+        // the order
+        if (!order) {
+            ['models', 'pieces', 'sumWeight', 'sumTime'].forEach(function (k) { out[k].textContent = '—'; });
             out.total.textContent = t.empty;
-            last = null;
+            setLines(orderMsgEl, []);
             copyText = '';
             copyBtn.disabled = saveBtn.disabled = true;
-            sendLink.href = cfg.telegram;
+            sendLink.href = DATA.telegram;
             sendLabel.textContent = t.tg;
             return;
         }
-        var e = last = estimate();
-        var approx = '≈' + NBSP;
+        out.models.textContent = items.length;
+        out.pieces.textContent = int(order.pieces);
+        out.sumWeight.textContent = approx + dec(order.grams) + NBSP + t.g;
+        out.sumTime.textContent = approx + duration(order.seconds);
+        out.total.textContent = approx + int(order.total) + NBSP + t.sum;
+        setLines(orderMsgEl, order.raw < C.minOrder ? [fill(t.msg.min, { min: int(C.minOrder) })] : []);
 
-        out.size.textContent = dims(e.size) + NBSP + t.mm;
-        out.volume.textContent = dec(e.vol) + NBSP + t.cm3;
-        out.weight.textContent = approx + dec(e.grams) + NBSP + t.g;
-        out.supports.textContent = e.sup > 0.05 ? approx + dec(e.sup) + NBSP + t.g : '—';
-        out.time.textContent = approx + duration(e.seconds);
-        out.piece.textContent = approx + int(e.piece) + NBSP + t.sum;
-        out.total.textContent = approx + int(e.total) + NBSP + t.sum;
-
-        var msgs = notice ? [notice] : [];
-        if (!model.closed) msgs.push(t.msg.open);
-        if (Math.max(e.size[0], e.size[1], e.size[2]) < 2) msgs.push(t.msg.tiny);
-        if (!fits(e.size, C.bed)) msgs.push(fill(t.msg.fit, { bed: dims(C.bed) }));
-        else if (e.mat.composite && !fits(e.size, C.bedComposite)) msgs.push(fill(t.msg.fitComposite, { bed: dims(C.bedComposite) }));
-        if (e.raw < C.minOrder) msgs.push(fill(t.msg.min, { min: int(C.minOrder) }));
-        if (!viewer) msgs.push(t.msg.noGl);
-        setMsg(msgs);
-
-        copyText = plain(fill(t.copyText, {
-            file: model.name, mat: e.mat.name, infill: S.infill, layer: comma(S.layer), walls: S.walls, qty: e.qty,
-            size: dims(e.size), weight: dec(e.grams), time: duration(e.seconds), total: int(e.total),
-            sup: e.sup > 0.05 ? fill(t.copySup, { sup: dec(e.sup) }) : t.copyNoSup
-        }));
+        copyText = summaryText(false);
         copyBtn.disabled = saveBtn.disabled = false;
-        // t.me/<name>?text=… opens the chat with the message already typed in
-        sendLink.href = cfg.telegram + '?text=' + encodeURIComponent(copyText);
+        // t.me/<name>?text=… opens the chat with the message already typed in; a long list goes in short form
+        var message = encodeURIComponent(copyText);
+        if (message.length > 3500) message = encodeURIComponent(summaryText(true));
+        sendLink.href = DATA.telegram + '?text=' + message;
         sendLabel.textContent = t.send;
     }
 
     // ---------- orientation on the bed ----------
-    // 3×3 row-major rotations applied to the file coordinates. model.orig keeps the file as loaded,
-    // model.work is the rotated copy that is measured, drawn and re-centred by the preview.
+    // 3×3 row-major rotations applied to the file coordinates. item.orig keeps the file as loaded,
+    // `work` is the rotated copy of the active plate that is measured, drawn and re-centred by the preview.
 
     var IDENTITY = [1, 0, 0, 0, 1, 0, 0, 0, 1];
     var TURN = {
@@ -418,23 +486,55 @@
         return l ? [nx / l * sign, ny / l * sign, nz / l * sign, l / 2] : null;
     }
 
+    // Puts a plate into the preview. With `measureIt` its size and the space under overhangs are
+    // taken again (after a turn or a change of the support threshold).
+    function place(item, keepView, measureIt) {
+        if (!work || work.length !== item.orig.length) work = new Float32Array(item.orig.length);
+        rotateInto(item.orig, item.R, work);
+        if (measureIt) {
+            var b = bounds(work);
+            item.min = b.min;
+            item.max = b.max;
+            item.size = b.size;
+            item.support = supportSpace(work, item, overLimit(item.set)); // before the preview re-centres work in place
+        }
+        if (viewer) {
+            viewer.setOver(overLimit(item.set));
+            viewer.setMesh(work, item, keepView);
+            shoot(item);
+        }
+    }
+
+    // Support space of a plate that is not in the preview right now.
+    function remeasure(item) {
+        var buf = new Float32Array(item.orig.length);
+        rotateInto(item.orig, item.R, buf);
+        item.support = supportSpace(buf, item, overLimit(item.set));
+    }
+
     function applyOrientation(R, keepView) {
-        model.R = R;
-        rotateInto(model.orig, R, model.work);
-        var b = bounds(model.work);
-        model.min = b.min;
-        model.max = b.max;
-        model.size = b.size;
-        model.support = supportSpace(model.work, model); // before the preview re-centres work in place
-        if (viewer) viewer.setMesh(model.work, model, keepView);
+        active.R = R;
+        place(active, keepView, true);
         update();
     }
 
-    // Candidate "down" directions: the six axes plus the largest flat areas of the model.
-    function candidates() {
+    // The plate's small picture: a copy of the preview as it looks now.
+    function shoot(item) {
+        var src = viewer.snapshot();
+        if (!src.width || !src.height) return;
+        var cv = item.thumb, ctx = cv.getContext('2d');
+        var k = Math.max(cv.width / src.width, cv.height / src.height);
+        ctx.fillStyle = '#121516';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(src, (cv.width - src.width * k) / 2, (cv.height - src.height * k) / 2, src.width * k, src.height * k);
+        item.shot = true;
+    }
+
+    // Candidate "down" directions: the six axes plus the largest flat areas of the item.
+    function candidates(item) {
         var bins = {};
-        for (var k = 0; k < model.orig.length; k += 9) {
-            var n = faceNormal(model.orig, k, model.sign);
+        for (var k = 0; k < item.orig.length; k += 9) {
+            var n = faceNormal(item.orig, k, item.sign);
             if (!n) continue;
             var key = Math.round(n[0] * 12) + ',' + Math.round(n[1] * 12) + ',' + Math.round(n[2] * 12);
             var bin = bins[key] || (bins[key] = { a: 0, x: 0, y: 0, z: 0 });
@@ -462,20 +562,21 @@
     // Tries each candidate (coarser grid, one per tick so the page stays responsive)
     // and keeps the one with the least support; near-ties go to the lower part.
     function autoOrient() {
-        var list = candidates();
-        var tmp = new Float32Array(model.orig.length);
-        var current = model;
+        var current = active;
+        var list = candidates(current);
+        var tmp = new Float32Array(current.orig.length);
+        var limit = overLimit(current.set);
         var best = null;
         var i = 0;
         setBusy(true);
-        notice = '';
-        setMsg([t.msg.auto]);
+        current.notice = '';
+        setLines(msgEl, [t.msg.auto]);
         (function step() {
-            if (model !== current) return setBusy(false); // another file was loaded meanwhile
+            if (active !== current) return setBusy(false); // another plate was opened or this one was removed
             var R = downFrom(list[i]);
-            rotateInto(model.orig, R, tmp);
+            rotateInto(current.orig, R, tmp);
             var b = bounds(tmp);
-            var score = supportSpace(tmp, { min: b.min, size: b.size, sign: model.sign }, 100) +
+            var score = supportSpace(tmp, { min: b.min, size: b.size, sign: current.sign }, limit, 100) +
                 (fits(b.size, C.bed) ? 0 : 1e18);
             if (!best || score < best.score * 0.98 || (score <= best.score * 1.02 && b.size[2] < best.h)) {
                 best = { R: R, score: score, h: b.size[2] };
@@ -485,7 +586,7 @@
                 return;
             }
             setBusy(false);
-            notice = t.msg.autoDone;
+            current.notice = t.msg.autoDone;
             applyOrientation(best.R, true);
         })();
     }
@@ -495,11 +596,11 @@
     var picking = false;
 
     function setBusy(on) {
-        orientBtns.forEach(function (b) { b.disabled = on || !model; });
+        orientBtns.forEach(function (b) { b.disabled = on || !active; });
     }
 
     function setPicking(on) {
-        picking = on && !!viewer;
+        picking = on && !!viewer && !!active;
         faceBtn.setAttribute('aria-pressed', picking ? 'true' : 'false');
         canvas.classList.toggle('is-picking', picking);
         hint.textContent = picking ? t.faceHint : t.rotate;
@@ -509,14 +610,14 @@
 
     orientBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            if (!model) return;
+            if (!active) return;
             var kind = btn.getAttribute('data-orient');
             if (kind === 'face') return setPicking(!picking);
             setPicking(false);
-            notice = '';
+            active.notice = '';
             if (kind === 'auto') autoOrient();
             else if (kind === 'reset') applyOrientation(IDENTITY, true);
-            else applyOrientation(mul3(TURN[kind], model.R), true);
+            else applyOrientation(mul3(TURN[kind], active.R), true);
         });
     });
 
@@ -526,147 +627,284 @@
 
     // A tap on the model in "face" mode lays that face on the bed.
     function onTap(k) {
-        if (!picking || k < 0) return;
-        var n = faceNormal(model.orig, k, model.sign);
+        if (!picking || k < 0 || !active) return;
+        var n = faceNormal(active.orig, k, active.sign);
         if (!n) return;
         setPicking(false);
-        notice = '';
+        active.notice = '';
         applyOrientation(downFrom(n), true);
+    }
+
+    // ---------- plates: add, open, remove ----------
+
+    function renderPlates() {
+        platesEl.hidden = !items.length;
+        platesList.textContent = '';
+        items.forEach(function (item, i) {
+            var box = el('div', 'calc-plate' + (item === active ? ' is-active' : ''));
+            var pick = el('button', 'calc-plate-pick');
+            pick.type = 'button';
+            if (item === active) pick.setAttribute('aria-current', 'true');
+            if (viewer) pick.appendChild(item.thumb);
+            var text = el('span', 'calc-plate-text');
+            text.appendChild(el('span', 'calc-plate-n', t.plate + ' ' + (i + 1)));
+            text.appendChild(el('span', 'calc-plate-name', item.name));
+            item.sumEl = el('span', 'calc-plate-sum');
+            text.appendChild(item.sumEl);
+            pick.appendChild(text);
+            pick.addEventListener('click', function () {
+                if (item !== active) setActive(item, false);
+            });
+            var del = el('button', 'calc-plate-del', '×');
+            del.type = 'button';
+            del.title = t.remove;
+            del.setAttribute('aria-label', t.remove + ': ' + item.name);
+            del.addEventListener('click', function () { removeItem(item); });
+            box.appendChild(pick);
+            box.appendChild(del);
+            item.box = box;
+            platesList.appendChild(box);
+        });
+        addBtn.hidden = items.length >= C.maxPlates;
+    }
+
+    function setActive(item, fresh) {
+        active = item;
+        if (item) set = item.set;
+        setPicking(false);
+        setBusy(false);
+        drop.hidden = !!item;
+        bar.hidden = !item;
+        canvas.hidden = zoomBar.hidden = !(item && viewer);
+        nameEl.textContent = item ? item.name : '';
+        curEl.textContent = item ? t.plate + ' ' + (items.indexOf(item) + 1) : '';
+        syncForm();
+        renderPlates();
+        if (item) {
+            place(item, false, fresh);
+            // bring its chip into view inside the strip (sideways only: the page itself must not jump)
+            var left = item.box.offsetLeft, right = left + item.box.offsetWidth;
+            if (left < platesList.scrollLeft) platesList.scrollLeft = left;
+            else if (right > platesList.scrollLeft + platesList.clientWidth) platesList.scrollLeft = right - platesList.clientWidth;
+        }
+        update();
+    }
+
+    function removeItem(item) {
+        var i = items.indexOf(item);
+        if (i === -1) return;
+        setLines(alertEl, []);
+        items.splice(i, 1);
+        if (item === active) setActive(items[i] || items[i - 1] || null, false);
+        else setActive(active, false);
+    }
+
+    function addItem(name, pos, m, slot) {
+        var item = slot;
+        if (!item) {
+            // the first model takes the settings already chosen in the form, the next ones copy the current plate
+            var own = set;
+            if (items.length) {
+                own = {};
+                Object.keys(set).forEach(function (k) { own[k] = set[k]; });
+                own.qty = 1;
+            }
+            item = { set: own, thumb: el('canvas', 'calc-plate-thumb') };
+            item.thumb.width = 480;
+            item.thumb.height = 360;
+            items.push(item);
+        }
+        item.name = name;
+        item.orig = pos;
+        item.sign = m.sign;
+        item.volume = m.volume;
+        item.area = m.area;
+        item.closed = m.closed;
+        item.R = IDENTITY;
+        item.notice = '';
+        if (viewer === null) {
+            viewer = createViewer(canvas, { onTap: onTap, onGrab: function () { if (!picking) hint.hidden = true; } }) || false;
+            if (!viewer) hint.hidden = faceBtn.hidden = true;
+        }
+        setActive(item, true);
     }
 
     // ---------- file loading ----------
 
-    function load(file) {
-        if (!file) return;
-        if (file.size > MAX_BYTES) {
-            setMsg([t.msg.big]);
-            return;
-        }
-        setMsg([t.msg.reading]);
-        file.arrayBuffer().then(function (buf) {
-            var pos = parseStl(buf);
-            var m = pos && pos.length >= 9 ? measure(pos) : null;
-            if (!m || !(m.volume > 0)) throw new Error('bad stl');
-            m.name = file.name;
-            m.orig = pos;
-            m.work = new Float32Array(pos.length);
-            model = m;
-            notice = '';
-            showPreview(m);
-            setPicking(false);
-            setBusy(false);
-            applyOrientation(IDENTITY, false);
-            if (!tracked) {
-                tracked = true;
-                try { if (typeof ym === 'function') ym(105486503, 'reachGoal', 'calc_stl'); } catch (err) {}
-                try { if (typeof gtag === 'function') gtag('event', 'calc_stl', { page_path: location.pathname }); } catch (err) {}
+    function load(fileList) {
+        var files = Array.prototype.slice.call(fileList);
+        var slot = replacing && items.indexOf(replacing) !== -1 ? replacing : null;
+        var alerts = [];
+        replacing = null;
+        if (!files.length) return;
+        if (slot) files = files.slice(0, 1);
+        setLines(alertEl, [t.msg.reading]);
+        var i = 0;
+        (function next() {
+            if (i < files.length && !slot && items.length >= C.maxPlates) {
+                alerts.push(fill(t.msg.limit, { max: C.maxPlates }));
+                i = files.length;
             }
-        }).catch(function () {
-            model = null;
-            drop.hidden = false;
-            canvas.hidden = true;
-            bar.hidden = true;
-            zoomBar.hidden = true;
-            setPicking(false);
-            setBusy(false);
-            update();
-            setMsg([t.msg.bad]);
-        });
+            if (i >= files.length) return setLines(alertEl, alerts);
+            var file = files[i++];
+            if (file.size > MAX_BYTES) {
+                alerts.push(file.name + ': ' + t.msg.big);
+                return next();
+            }
+            file.arrayBuffer().then(function (buf) {
+                var pos = parseStl(buf);
+                var m = pos && pos.length >= 9 ? measure(pos) : null;
+                if (!m || !(m.volume > 0)) throw new Error('bad stl');
+                addItem(file.name, pos, m, slot);
+                if (!tracked) {
+                    tracked = true;
+                    goal('calc_stl');
+                }
+            }).catch(function () {
+                alerts.push(file.name + ': ' + t.msg.bad);
+            }).then(next);
+        })();
     }
 
     fileInput.addEventListener('change', function () {
-        load(fileInput.files[0]);
+        load(fileInput.files);
         fileInput.value = '';
     });
 
-    $('.calc-other').addEventListener('click', function () { fileInput.click(); });
+    // The same hidden input serves three buttons: the drop zone, "add a model" and "replace the file".
+    addBtn.addEventListener('click', function () {
+        replacing = null;
+        fileInput.multiple = true;
+        fileInput.click();
+    });
+    $('.calc-other').addEventListener('click', function () {
+        replacing = active;
+        fileInput.multiple = false;
+        fileInput.click();
+    });
+    drop.addEventListener('click', function (e) {
+        if (e.target === fileInput) return; // the input sits inside this label: its own click() bubbles here
+        replacing = null;
+        fileInput.multiple = true;
+    });
 
+    // Files can be dropped anywhere on the calculator: they become new plates.
     ['dragenter', 'dragover'].forEach(function (type) {
-        stage.addEventListener(type, function (e) {
+        root.addEventListener(type, function (e) {
             e.preventDefault();
             stage.classList.add('is-over');
         });
     });
     ['dragleave', 'drop'].forEach(function (type) {
-        stage.addEventListener(type, function (e) {
+        root.addEventListener(type, function (e) {
             e.preventDefault();
-            if (type === 'dragleave' && stage.contains(e.relatedTarget)) return;
+            if (type === 'dragleave' && root.contains(e.relatedTarget)) return;
             stage.classList.remove('is-over');
-            if (type === 'drop' && e.dataTransfer.files.length) load(e.dataTransfer.files[0]);
+            if (type === 'drop' && e.dataTransfer.files.length) {
+                replacing = null;
+                load(e.dataTransfer.files);
+            }
         });
     });
 
-    [matSel, unitSel, qtyIn].forEach(function (el) { el.addEventListener('input', update); });
+    // ---------- settings of the active plate ----------
 
-    // ---------- print settings: infill presets + the advanced block ----------
+    function syncForm() {
+        matSel.value = set.mat;
+        unitSel.value = set.unit;
+        qtyIn.value = set.qty;
+        rangeIn.value = set.infill;
+        rangeOut.textContent = set.infill + '%';
+        presetRadios.forEach(function (r) { r.checked = +r.value === set.infill; });
+        layerRadios.forEach(function (r) { r.checked = +r.value === set.layer; });
+        wallsIn.value = set.walls;
+        supSel.value = set.supports ? String(set.overhang) : 'off';
+        legend.hidden = !set.supports;
+    }
 
     function setInfill(v) {
-        S.infill = Math.max(0, Math.min(100, Math.round(v)));
-        rangeIn.value = S.infill;
-        rangeOut.textContent = S.infill + '%';
-        presetRadios.forEach(function (el) { el.checked = +el.value === S.infill; });
+        set.infill = Math.max(0, Math.min(100, Math.round(v)));
+        rangeIn.value = set.infill;
+        rangeOut.textContent = set.infill + '%';
+        presetRadios.forEach(function (r) { r.checked = +r.value === set.infill; });
+        update();
     }
 
     // Supports changed: the space under overhangs depends on the threshold, so measure again.
     function supportsChanged() {
-        legend.hidden = !S.supports;
-        if (viewer) viewer.setOver(overLimit());
-        if (model) {
-            notice = '';
-            applyOrientation(model.R, true);
+        legend.hidden = !set.supports;
+        if (active) {
+            active.notice = '';
+            applyOrientation(active.R, true);
         } else update();
     }
 
-    function resetSettings(keepInfill) {
-        var hadSupports = S.supports, hadOver = S.overhang;
-        S.layer = C.layerDefault;
-        S.walls = C.walls.def;
-        S.overhang = C.overhangDeg;
-        S.supports = true;
-        layerRadios.forEach(function (el) { el.checked = +el.value === S.layer; });
-        wallsIn.value = S.walls;
-        supSel.value = String(S.overhang);
+    // Back to the simple-mode values. Returns true when the support settings changed.
+    function resetSet(s, keepInfill) {
+        var changed = !s.supports || s.overhang !== C.overhangDeg;
+        s.layer = C.layerDefault;
+        s.walls = C.walls.def;
+        s.overhang = C.overhangDeg;
+        s.supports = true;
         // a value between the presets has no button in the simple mode, so it goes back to the default
-        setInfill(keepInfill && C.infill.indexOf(S.infill) !== -1 ? S.infill : C.infillDefault);
-        if (hadSupports !== S.supports || hadOver !== S.overhang) supportsChanged();
-        else update();
+        if (!keepInfill || C.infill.indexOf(s.infill) === -1) s.infill = C.infillDefault;
+        return changed;
     }
 
-    presetRadios.forEach(function (el) {
-        el.addEventListener('change', function () {
-            setInfill(+el.value);
-            update();
-        });
-    });
-    rangeIn.addEventListener('input', function () {
-        setInfill(+rangeIn.value);
+    matSel.addEventListener('input', function () {
+        set.mat = matSel.value;
         update();
     });
-    layerRadios.forEach(function (el) {
-        el.addEventListener('change', function () {
-            S.layer = +el.value;
+    unitSel.addEventListener('input', function () {
+        set.unit = unitSel.value;
+        update();
+    });
+    qtyIn.addEventListener('input', function () {
+        var q = Math.round(+qtyIn.value);
+        set.qty = q >= 1 ? Math.min(q, 10000) : 1;
+        update();
+    });
+    qtyIn.addEventListener('change', function () { qtyIn.value = set.qty; });
+    presetRadios.forEach(function (r) {
+        r.addEventListener('change', function () { setInfill(+r.value); });
+    });
+    rangeIn.addEventListener('input', function () { setInfill(+rangeIn.value); });
+    layerRadios.forEach(function (r) {
+        r.addEventListener('change', function () {
+            set.layer = +r.value;
             update();
         });
     });
     wallsIn.addEventListener('input', function () {
         var n = Math.round(+wallsIn.value);
-        S.walls = n >= C.walls.min ? Math.min(n, C.walls.max) : C.walls.def;
+        set.walls = n >= C.walls.min ? Math.min(n, C.walls.max) : C.walls.def;
         update();
     });
-    wallsIn.addEventListener('change', function () { wallsIn.value = S.walls; });
+    wallsIn.addEventListener('change', function () { wallsIn.value = set.walls; });
     supSel.addEventListener('change', function () {
-        S.supports = supSel.value !== 'off';
-        if (S.supports) S.overhang = +supSel.value;
+        set.supports = supSel.value !== 'off';
+        if (set.supports) set.overhang = +supSel.value;
         supportsChanged();
+    });
+    $('.calc-reset').addEventListener('click', function () {
+        var changed = resetSet(set, false);
+        syncForm();
+        if (changed) supportsChanged();
+        else update();
     });
     advToggle.addEventListener('change', function () {
         advBox.hidden = !advToggle.checked;
-        // Hidden settings must not keep changing the price: leaving the advanced mode restores the defaults.
-        if (!advToggle.checked) resetSettings(true);
+        if (advToggle.checked) return;
+        // Hidden settings must not keep changing the price: leaving the advanced mode restores
+        // the defaults on every plate.
+        var changed = resetSet(set, true);
+        items.forEach(function (item) {
+            if (item.set !== set && resetSet(item.set, true)) remeasure(item);
+        });
+        syncForm();
+        if (changed) supportsChanged();
+        else update();
     });
-    $('.calc-reset').addEventListener('click', function () { resetSettings(false); });
-    advToggle.checked = false; // browsers restore form state on reload, the block starts closed
-    resetSettings(false);
 
     // ---------- result: send, save, copy ----------
 
@@ -706,14 +944,18 @@
     });
 
     saveBtn.addEventListener('click', function () {
-        if (!last) return;
+        if (!order) return;
         var fail = function () { setStatus(t.saveFail); };
         try {
-            drawCard(last).toBlob(function (blob) {
+            if (viewer && active) shoot(active); // the open plate as it is turned right now
+            drawCard().toBlob(function (blob) {
                 if (!blob) return fail();
+                var base = items.length === 1
+                    ? items[0].name.replace(/\.stl$/i, '').replace(/[^\wЀ-ӿ-]+/g, '-').slice(0, 40)
+                    : items.length + '-stl';
                 var a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = '3dpie-' + (model.name.replace(/\.stl$/i, '').replace(/[^\w\u0400-\u04ff-]+/g, '-').slice(0, 40) || 'stl') + '.png';
+                a.download = '3dpie-' + (base || 'stl') + '.png';
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -724,27 +966,11 @@
         } catch (err) { fail(); }
     });
 
-    // The saved picture: preview of the part, the settings, the numbers and how to reach the studio.
+    // The saved picture: every plate with its preview and settings, the totals and how to reach the studio.
     // Colours and fonts repeat the site tokens (css/styles.css :root).
-    function drawCard(e) {
-        var W = 1080, P = 64, ROW = 60;
+    function drawCard() {
+        var W = 1080, P = 64, BLOCK = 278, ROW = 58;
         var DISPLAY = '"Unbounded", "Onest", sans-serif', SANS = '"Onest", -apple-system, "Segoe UI", sans-serif';
-        var shot = viewer ? viewer.snapshot() : null;
-        var shotH = shot ? 500 : 0;
-        var rows = [
-            [t.card.file, model.name],
-            [t.material, e.mat.name + ' — ' + int(e.mat.price) + ' ' + t.sum + '/' + t.g],
-            [t.infill, S.infill + '%'],
-            [t.layer, comma(S.layer) + ' ' + t.mm],
-            [t.walls, String(S.walls)],
-            [t.support, supportName()],
-            [t.qty, String(e.qty)],
-            [t.size, dims(e.size) + ' ' + t.mm],
-            [t.volume, dec(e.vol) + ' ' + t.cm3],
-            [t.weight, '≈ ' + dec(e.grams) + ' ' + t.g + (e.sup > 0.05 ? ' (' + fill(t.copySup, { sup: dec(e.sup) }) + ')' : '')],
-            [t.time, '≈ ' + duration(e.seconds)],
-            [t.perPiece, '≈ ' + int(e.piece) + ' ' + t.sum]
-        ];
         var cv = document.createElement('canvas');
         var ctx = cv.getContext('2d');
         var wrap = function (text, font, maxW) {
@@ -765,14 +991,23 @@
             while (text.length > 1 && ctx.measureText(text + '…').width > maxW) text = text.slice(0, -1);
             return text + '…';
         };
+        var rule = function (y) {
+            ctx.fillStyle = '#252a2c';
+            ctx.fillRect(P, y, W - P * 2, 2);
+        };
         var NOTE_FONT = '400 26px ' + SANS;
         var note = wrap(t.card.note, NOTE_FONT, W - P * 2);
-        var H = P + 96 + (shot ? shotH + 32 : 0) + rows.length * ROW + 40 + 150 + note.length * 36 + 30 + 44 + P;
+        var sums = [
+            [t.models, String(items.length)],
+            [t.pieces, int(order.pieces)],
+            [t.sumWeight, '≈ ' + dec(order.grams) + ' ' + t.g],
+            [t.sumTime, '≈ ' + duration(order.seconds)]
+        ];
         cv.width = W;
-        cv.height = H;
+        cv.height = P + 96 + items.length * BLOCK + sums.length * ROW + 40 + 150 + note.length * 36 + 30 + 44 + P;
 
         ctx.fillStyle = '#0c0e0f';
-        ctx.fillRect(0, 0, W, H);
+        ctx.fillRect(0, 0, W, cv.height);
         ctx.textBaseline = 'alphabetic';
 
         // header
@@ -792,45 +1027,65 @@
         ctx.textAlign = 'left';
         y = P + 96;
 
-        // preview
-        if (shot) {
-            ctx.fillStyle = '#121516';
-            ctx.fillRect(P, y, W - P * 2, shotH);
-            var k = Math.min((W - P * 2) / shot.width, shotH / shot.height);
-            var sw = shot.width * k, sh = shot.height * k;
-            ctx.drawImage(shot, P + (W - P * 2 - sw) / 2, y + (shotH - sh) / 2, sw, sh);
-            ctx.strokeStyle = '#252a2c';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(P + 1, y + 1, W - P * 2 - 2, shotH - 2);
-            y += shotH + 32;
-        }
+        // plates
+        items.forEach(function (item, i) {
+            var e = item.est, s = item.set;
+            var tw = 304, th = 228, x = P;
+            rule(y);
+            if (item.shot) {
+                ctx.drawImage(item.thumb, P, y + 24, tw, th);
+                ctx.strokeStyle = '#252a2c';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(P + 1, y + 25, tw - 2, th - 2);
+                x = P + tw + 32;
+            }
+            var room = W - P - x;
+            var price = '≈ ' + plain(int(e.sum)) + ' ' + t.sum;
+            ctx.font = '600 30px ' + SANS;
+            var priceW = ctx.measureText(price).width;
+            ctx.fillStyle = '#c6f432';
+            ctx.font = '600 22px ' + SANS;
+            ctx.fillText((t.plate + ' ' + (i + 1)).toUpperCase(), x, y + 52);
+            ctx.fillStyle = '#eceeed';
+            ctx.font = '600 30px ' + SANS;
+            ctx.textAlign = 'right';
+            ctx.fillText(price, W - P, y + 96);
+            ctx.textAlign = 'left';
+            ctx.fillText(clip(item.name, room - priceW - 24), x, y + 96);
+            ctx.font = '400 25px ' + SANS;
+            ctx.fillStyle = '#a9b0b2';
+            [
+                fill(t.card.line1, { mat: e.mat.name, infill: s.infill, layer: comma(s.layer), walls: s.walls }),
+                fill(t.card.line2, { size: dims(e.size), qty: e.qty }),
+                fill(t.card.line3, { weight: dec(e.grams), sup: supportText(e) }),
+                fill(t.card.line4, { time: duration(e.seconds) })
+            ].forEach(function (line, n) {
+                ctx.fillText(clip(plain(line), room), x, y + 140 + n * 37);
+            });
+            y += BLOCK;
+        });
 
-        // rows
-        rows.forEach(function (r) {
-            ctx.fillStyle = '#252a2c';
-            ctx.fillRect(P, y, W - P * 2, 2);
+        // totals
+        sums.forEach(function (r) {
+            rule(y);
             ctx.font = '400 27px ' + SANS;
             ctx.fillStyle = '#6f787b';
-            var label = clip(r[0], W * 0.48);
-            ctx.fillText(label, P, y + 40);
+            ctx.fillText(r[0], P, y + 38);
             ctx.font = '600 28px ' + SANS;
             ctx.fillStyle = '#eceeed';
             ctx.textAlign = 'right';
-            ctx.fillText(clip(plain(r[1]), W - P * 2 - ctx.measureText(label).width - 60), W - P, y + 40);
+            ctx.fillText(plain(r[1]), W - P, y + 38);
             ctx.textAlign = 'left';
             y += ROW;
         });
-        ctx.fillStyle = '#252a2c';
-        ctx.fillRect(P, y, W - P * 2, 2);
+        rule(y);
         y += 40;
-
-        // total
         ctx.fillStyle = '#6f787b';
         ctx.font = '500 26px ' + SANS;
         ctx.fillText(t.total.toUpperCase(), P, y + 26);
         ctx.fillStyle = '#c6f432';
         ctx.font = '500 68px ' + DISPLAY;
-        ctx.fillText('≈ ' + plain(int(e.total)) + ' ' + t.sum, P, y + 110);
+        ctx.fillText('≈ ' + plain(int(order.total)) + ' ' + t.sum, P, y + 110);
         y += 150;
 
         // note + contacts
@@ -843,11 +1098,10 @@
         y += 30;
         ctx.fillStyle = '#eceeed';
         ctx.font = '600 28px ' + SANS;
-        ctx.fillText('Telegram ' + cfg.handle + '  ·  ' + cfg.phone + '  ·  ' + cfg.site, P, y + 30);
+        ctx.fillText('Telegram ' + DATA.handle + '  ·  ' + DATA.phone + '  ·  ' + DATA.site, P, y + 30);
         return cv;
     }
 
-    var zoomBar = $('.calc-zoom');
     zoomBar.addEventListener('click', function (e) {
         var btn = e.target.closest('[data-zoom]');
         if (!btn || !viewer) return;
@@ -857,20 +1111,6 @@
     });
 
     // ---------- preview (plain WebGL, drawn on demand: no animation loop) ----------
-
-    function showPreview(m) {
-        drop.hidden = true;
-        bar.hidden = false;
-        $('.calc-name').textContent = m.name;
-        if (viewer === null) viewer = createViewer(canvas, { onTap: onTap, onGrab: function () { if (!picking) hint.hidden = true; } }) || false;
-        if (!viewer) {
-            hint.hidden = true;
-            faceBtn.hidden = true;
-            return;
-        }
-        canvas.hidden = false;
-        zoomBar.hidden = false;
-    }
 
     function mul(a, b) {
         var o = new Float32Array(16);
@@ -966,7 +1206,7 @@
         var uCol = gl.getUniformLocation(prog, 'col');
         var uLit = gl.getUniformLocation(prog, 'lit');
         var uOver = gl.getUniformLocation(prog, 'over');
-        gl.uniform1f(uOver, overLimit());
+        gl.uniform1f(uOver, overLimit(set));
         var posBuf = gl.createBuffer();
         var nrmBuf = gl.createBuffer();
         var gridBuf = gl.createBuffer();
@@ -1214,5 +1454,7 @@
         return { setMesh: setMesh, zoomBy: zoomBy, fit: fit, setOver: setOver, snapshot: snapshot };
     }
 
+    advToggle.checked = false; // browsers restore form state on reload: start from the defaults
+    syncForm();
     update();
 })();
