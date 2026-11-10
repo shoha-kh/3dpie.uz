@@ -472,7 +472,7 @@ function renderCalc(lang) {
                     <div class="calc-model">
                         <div class="calc-stage">
                             <label class="calc-drop">
-                                <input class="calc-file" type="file" accept=".stl" multiple>
+                                <input class="calc-file" type="file" accept=".stl,.obj,.3mf" multiple>
                                 <span class="calc-drop-icon" aria-hidden="true"></span>
                                 <span class="calc-drop-text">${c.drop}</span>
                                 <span class="calc-drop-hint">${esc(c.dropHint)}</span>

@@ -48,7 +48,7 @@ module.exports = [
         title: 'Как узнать цену своей детали',
         html: `
 <ol>
-<li>Есть файл STL — загрузите его в <a href="#calc">калькулятор</a> и посмотрите примерную цену. Нет файла — сфотографируйте деталь рядом с линейкой, сверху и сбоку.</li>
+<li>Есть файл STL, OBJ или 3MF — загрузите его в <a href="#calc">калькулятор</a> и посмотрите примерную цену. Нет файла — сфотографируйте деталь рядом с линейкой, сверху и сбоку.</li>
 <li>Пришлите файл или фото в Telegram <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a> или позвоните <a href="tel:+998901391094">+998 90 139 10 94</a>: для чего деталь, сколько штук, к какому сроку.</li>
 <li>Ответим с ценой и сроком. Консультация бесплатная — спрашивать можно о любой идее.</li>
 </ol>
@@ -109,7 +109,7 @@ module.exports = [
         title: 'Detalingiz narxini qanday bilish mumkin',
         html: `
 <ol>
-<li>STL fayl bo'lsa — uni <a href="#calc">kalkulyatorga</a> yuklang va taxminiy narxni ko'ring. Fayl bo'lmasa — detalni chizg'ich yonida yuqoridan va yon tomondan suratga oling.</li>
+<li>STL, OBJ yoki 3MF fayl bo'lsa — uni <a href="#calc">kalkulyatorga</a> yuklang va taxminiy narxni ko'ring. Fayl bo'lmasa — detalni chizg'ich yonida yuqoridan va yon tomondan suratga oling.</li>
 <li>Fayl yoki rasmni Telegramga yuboring <a href="https://t.me/pie3d" target="_blank" rel="noopener">@pie3d</a> yoki qo'ng'iroq qiling <a href="tel:+998901391094">+998 90 139 10 94</a>: detal nima uchun, nechta kerak, qachongacha.</li>
 <li>Narx va muddat bilan javob beramiz. Konsultatsiya bepul — istalgan g'oya haqida so'rashingiz mumkin.</li>
 </ol>

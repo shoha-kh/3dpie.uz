@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    // STL price calculator (prices page). Files are read in the browser and never uploaded.
+    // Price calculator for 3D models — STL, OBJ, 3MF (prices page). Files are read in the browser and never uploaded.
     // One estimate holds several models, each on its own plate; the order total is the sum of the plates.
     // Print settings are common for all plates, and a plate may override any of them (as in a slicer).
     // Only the active plate is shown in the 3D preview.
@@ -289,6 +289,197 @@
             }
         }
         return height * cell * cell;
+    }
+
+    // ---------- other formats: OBJ and 3MF ----------
+    // Both end up as the same flat list of triangle vertices that parseStl returns.
+
+    function parseObj(buf) {
+        var text = new TextDecoder().decode(buf);
+        var v = [], out = [];
+        var at = 0, len = text.length;
+        while (at < len) {
+            var end = text.indexOf('\n', at);
+            if (end === -1) end = len;
+            var c0 = text.charCodeAt(at), c1 = text.charCodeAt(at + 1);
+            if (c0 === 118 && (c1 === 32 || c1 === 9)) {            // "v x y z"
+                var p = text.slice(at + 2, end).trim().split(/\s+/);
+                v.push(+p[0], +p[1], +p[2]);
+            } else if (c0 === 102 && (c1 === 32 || c1 === 9)) {     // "f a/b/c d/e/f …": a fan of triangles
+                var f = text.slice(at + 2, end).trim().split(/\s+/);
+                var idx = [];
+                for (var i = 0; i < f.length; i++) {
+                    var n = parseInt(f[i], 10);                    // the vertex index is what stands before "/"
+                    if (n < 0) n += v.length / 3; else n -= 1;     // negative = counted from the end
+                    if (!(n >= 0 && n < v.length / 3)) return null;
+                    idx.push(n * 3);
+                }
+                for (var k = 1; k + 1 < idx.length; k++) {
+                    out.push(v[idx[0]], v[idx[0] + 1], v[idx[0] + 2],
+                        v[idx[k]], v[idx[k] + 1], v[idx[k] + 2],
+                        v[idx[k + 1]], v[idx[k + 1] + 1], v[idx[k + 1] + 2]);
+                }
+            }
+            at = end + 1;
+        }
+        return new Float32Array(out);
+    }
+
+    // A 3MF file is a zip archive with XML inside. Reads the archive's list of files; each entry can
+    // then be unpacked (the browser's own DecompressionStream does the inflating).
+    function zipEntries(buf) {
+        var dv = new DataView(buf);
+        var eocd = -1;
+        for (var i = buf.byteLength - 22; i >= 0 && i > buf.byteLength - 66000; i--) {
+            if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+        }
+        if (eocd < 0) return null;
+        var count = dv.getUint16(eocd + 10, true);
+        var at = dv.getUint32(eocd + 16, true);
+        var names = {};
+        for (var n = 0; n < count && at + 46 <= buf.byteLength; n++) {
+            if (dv.getUint32(at, true) !== 0x02014b50) break;
+            var nameLen = dv.getUint16(at + 28, true);
+            names[new TextDecoder().decode(new Uint8Array(buf, at + 46, nameLen))] = {
+                method: dv.getUint16(at + 10, true), size: dv.getUint32(at + 20, true), local: dv.getUint32(at + 42, true)
+            };
+            at += 46 + nameLen + dv.getUint16(at + 30, true) + dv.getUint16(at + 32, true);
+        }
+        return {
+            names: names,
+            text: function (name) {
+                var e = names[name];
+                var start = e.local + 30 + dv.getUint16(e.local + 26, true) + dv.getUint16(e.local + 28, true);
+                var bytes = new Uint8Array(buf, start, e.size);
+                if (e.method === 0) return Promise.resolve(new TextDecoder().decode(bytes));
+                if (e.method !== 8 || !('DecompressionStream' in window)) return Promise.reject(new Error('zip method'));
+                var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+                return new Response(stream).text();
+            }
+        };
+    }
+
+    // 3MF transform: 12 numbers, a point is a row vector — p' = p × M.
+    var M_ID = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+
+    function mat3mf(str) {
+        var m = (str || '').trim().split(/\s+/).map(Number);
+        return m.length === 12 && m.every(isFinite) ? m : M_ID;
+    }
+
+    // first a, then b
+    function mulM(a, b) {
+        var o = [];
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 3; c++) {
+                o.push(a[r * 3] * b[c] + a[r * 3 + 1] * b[3 + c] + a[r * 3 + 2] * b[6 + c] + (r === 3 ? b[9 + c] : 0));
+            }
+        }
+        return o;
+    }
+
+    var UNIT_MM = { micron: 0.001, millimeter: 1, centimeter: 10, inch: 25.4, foot: 304.8, meter: 1000 };
+
+    // Collects every mesh the "build" section places on the bed, following components into other model
+    // files of the archive (slicer project files keep the objects there). The result is in millimetres.
+    function parse3mf(buf) {
+        var zip = zipEntries(buf);
+        if (!zip) return Promise.resolve(null);
+        var all = Object.keys(zip.names);
+        var rootName = all.filter(function (n) { return /^3D\/[^/]+\.model$/i.test(n); })[0] ||
+            all.filter(function (n) { return /\.model$/i.test(n); })[0];
+        if (!rootName) return Promise.resolve(null);
+
+        var models = {}; // file name → promise of { scale, objects: { id: { verts, tris } | { parts } } }
+        function model(name) {
+            if (!models[name]) {
+                models[name] = zip.text(name).then(function (xml) {
+                    var doc = new DOMParser().parseFromString(xml, 'application/xml');
+                    var root = doc.documentElement;
+                    var res = { scale: UNIT_MM[root.getAttribute('unit')] || 1, objects: {}, items: [] };
+                    Array.prototype.forEach.call(doc.getElementsByTagName('object'), function (o) {
+                        var mesh = o.getElementsByTagName('mesh')[0];
+                        if (mesh) {
+                            var vs = mesh.getElementsByTagName('vertex'), ts = mesh.getElementsByTagName('triangle');
+                            var verts = new Float32Array(vs.length * 3), tris = new Uint32Array(ts.length * 3);
+                            for (var i = 0; i < vs.length; i++) {
+                                verts[i * 3] = +vs[i].getAttribute('x');
+                                verts[i * 3 + 1] = +vs[i].getAttribute('y');
+                                verts[i * 3 + 2] = +vs[i].getAttribute('z');
+                            }
+                            for (var k = 0; k < ts.length; k++) {
+                                tris[k * 3] = +ts[k].getAttribute('v1');
+                                tris[k * 3 + 1] = +ts[k].getAttribute('v2');
+                                tris[k * 3 + 2] = +ts[k].getAttribute('v3');
+                            }
+                            res.objects[o.getAttribute('id')] = { verts: verts, tris: tris };
+                        } else {
+                            res.objects[o.getAttribute('id')] = {
+                                parts: Array.prototype.map.call(o.getElementsByTagName('component'), ref)
+                            };
+                        }
+                    });
+                    res.items = Array.prototype.map.call(doc.getElementsByTagName('item'), ref);
+                    return res;
+                });
+            }
+            return models[name];
+        }
+        function ref(node) {
+            var path = node.getAttribute('p:path') || node.getAttribute('path');
+            return { id: node.getAttribute('objectid'), file: path ? path.replace(/^\//, '') : null, m: mat3mf(node.getAttribute('transform')) };
+        }
+
+        var chunks = [];
+        function emit(file, id, m, depth) {
+            if (!zip.names[file] || depth > 8) return Promise.resolve();
+            return model(file).then(function (mod) {
+                var o = mod.objects[id];
+                if (!o) return;
+                if (o.parts) {
+                    return o.parts.reduce(function (chain, part) {
+                        return chain.then(function () { return emit(part.file || file, part.id, mulM(part.m, m), depth + 1); });
+                    }, Promise.resolve());
+                }
+                var out = new Float32Array(o.tris.length * 3), s = mod.scale, v = o.verts;
+                for (var i = 0; i < o.tris.length; i++) {
+                    var a = o.tris[i] * 3;
+                    if (a + 2 >= v.length) return;
+                    var x = v[a], y = v[a + 1], z = v[a + 2];
+                    out[i * 3] = (x * m[0] + y * m[3] + z * m[6] + m[9]) * s;
+                    out[i * 3 + 1] = (x * m[1] + y * m[4] + z * m[7] + m[10]) * s;
+                    out[i * 3 + 2] = (x * m[2] + y * m[5] + z * m[8] + m[11]) * s;
+                }
+                chunks.push(out);
+            });
+        }
+
+        return model(rootName).then(function (root) {
+            // no build section: take every object that has a mesh
+            var items = root.items.length ? root.items : Object.keys(root.objects).map(function (id) {
+                return { id: id, file: null, m: M_ID };
+            });
+            return items.reduce(function (chain, item) {
+                return chain.then(function () { return emit(item.file || rootName, item.id, item.m, 0); });
+            }, Promise.resolve());
+        }).then(function () {
+            var total = chunks.reduce(function (n, c) { return n + c.length; }, 0);
+            var pos = new Float32Array(total), at = 0;
+            chunks.forEach(function (c) {
+                pos.set(c, at);
+                at += c.length;
+            });
+            return pos;
+        });
+    }
+
+    // By the file extension; anything unknown is tried as STL.
+    function readModel(name, buf) {
+        var ext = (/\.([a-z0-9]+)$/i.exec(name) || [])[1];
+        ext = ext ? ext.toLowerCase() : '';
+        if (ext === 'obj') return Promise.resolve(parseObj(buf));
+        if (ext === '3mf') return parse3mf(buf);
+        return Promise.resolve(parseStl(buf));
     }
 
     // ---------- estimate ----------
@@ -796,9 +987,10 @@
                 return next();
             }
             file.arrayBuffer().then(function (buf) {
-                var pos = parseStl(buf);
+                return readModel(file.name, buf);
+            }).then(function (pos) {
                 var m = pos && pos.length >= 9 ? measure(pos) : null;
-                if (!m || !(m.volume > 0)) throw new Error('bad stl');
+                if (!m || !(m.volume > 0)) throw new Error('bad model');
                 addItem(file.name, pos, m, slot);
                 if (!tracked) {
                     tracked = true;
@@ -1045,7 +1237,7 @@
             drawCard().toBlob(function (blob) {
                 if (!blob) return fail();
                 var base = items.length === 1
-                    ? items[0].name.replace(/\.stl$/i, '').replace(/[^\wЀ-ӿ-]+/g, '-').slice(0, 40)
+                    ? items[0].name.replace(/\.(stl|obj|3mf)$/i, '').replace(/[^\wЀ-ӿ-]+/g, '-').slice(0, 40)
                     : items.length + '-stl';
                 var a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);

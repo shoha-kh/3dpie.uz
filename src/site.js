@@ -369,10 +369,10 @@ function businessNode(lang) {
 
 const CALC_T = {
   ru: {
-    title: 'Калькулятор по <em>STL</em>',
+    title: 'Калькулятор <em>3D-печати</em>',
     note: 'Загрузите одну или несколько моделей: посчитаем вес, время печати и примерную цену прямо в браузере. Файлы никуда не отправляются и не сохраняются.',
-    drop: '<b>Перетащите STL-файлы сюда</b> или нажмите, чтобы выбрать',
-    dropHint: 'Можно несколько: каждая модель — на отдельном столе. STL до 100 МБ',
+    drop: '<b>Перетащите файлы моделей сюда</b> или нажмите, чтобы выбрать',
+    dropHint: 'STL, OBJ или 3MF до 100 МБ. Можно несколько: каждая модель — на отдельном столе',
     plate: 'Стол',
     plates: 'Столы с моделями',
     platesTitle: 'Столы',
@@ -441,7 +441,7 @@ const CALC_T = {
     min: 'мин',
     perPiece: 'Цена 1 шт',
     total: 'Примерная стоимость',
-    empty: 'Загрузите STL',
+    empty: 'Загрузите модель',
     sum: 'сум',
     g: 'г',
     cm3: 'см³',
@@ -451,8 +451,8 @@ const CALC_T = {
     send: 'Отправить расчёт в Telegram',
     save: 'Сохранить',
     copy: 'Скопировать',
-    copied: 'Скопировано — вставьте в чат и приложите STL-файл.',
-    sent: 'Расчёт подставлен в сообщение — приложите к нему STL-файл.',
+    copied: 'Скопировано — вставьте в чат и приложите файл модели.',
+    sent: 'Расчёт подставлен в сообщение — приложите к нему файл модели.',
     saved: 'Картинка с расчётом сохранена — её можно отправить нам в Telegram.',
     saveFail: 'Не получилось сохранить картинку — скопируйте расчёт текстом.',
     disclaimer:
@@ -467,7 +467,7 @@ const CALC_T = {
     },
     msg: {
       reading: 'Читаем файл…',
-      bad: 'Не получилось прочитать файл. Нужен STL; STEP и другие форматы пришлите в Telegram — посчитаем вручную.',
+      bad: 'Не получилось прочитать файл. Подходят STL, OBJ и 3MF; STEP и другие форматы пришлите в Telegram — посчитаем вручную.',
       big: 'Файл больше 100 МБ — пришлите его в Telegram, посчитаем вручную.',
       auto: 'Подбираем положение с наименьшими поддержками…',
       autoDone: 'Выбрано положение с наименьшими поддержками. Его можно изменить кнопками выше.',
@@ -480,7 +480,7 @@ const CALC_T = {
       noGl: 'Предпросмотр недоступен в этом браузере, но расчёт работает.',
       limit: 'В одном расчёте — до {max} моделей. Остальные пришлите в Telegram.',
     },
-    copyHead: '3D-печать по STL — расчёт на сайте {site}',
+    copyHead: '3D-печать — расчёт на сайте {site}',
     copyItem:
       '{n}) {file} — {mat}, заполнение {infill}%, слой {layer} мм, стенок: {walls}, {qty} шт. Габариты {size} мм, ≈ {weight} г/шт ({sup}), печать 1 шт ≈ {time}, ≈ {sum} сум',
     copyItemShort: '{n}) {file} — {mat}, {qty} шт, ≈ {sum} сум',
@@ -490,10 +490,10 @@ const CALC_T = {
     copyNoSup: 'без поддержек',
   },
   uz: {
-    title: "<em>STL</em> bo'yicha kalkulyator",
+    title: '3D chop etish <em>kalkulyatori</em>',
     note: "Bitta yoki bir nechta modelni yuklang: og'irligi, chop etish vaqti va taxminiy narxini shu yerda, brauzerda hisoblaymiz. Fayllar hech qayerga yuborilmaydi va saqlanmaydi.",
-    drop: '<b>STL fayllarni shu yerga tashlang</b> yoki tanlash uchun bosing',
-    dropHint: 'Bir nechta fayl mumkin: har bir model — alohida stolda. STL 100 MB gacha',
+    drop: '<b>Model fayllarini shu yerga tashlang</b> yoki tanlash uchun bosing',
+    dropHint: 'STL, OBJ yoki 3MF, 100 MB gacha. Bir nechta fayl mumkin: har bir model — alohida stolda',
     plate: 'Stol',
     plates: 'Modelli stollar',
     platesTitle: 'Stollar',
@@ -557,7 +557,7 @@ const CALC_T = {
     min: 'daq.',
     perPiece: '1 dona narxi',
     total: 'Taxminiy narx',
-    empty: 'STL yuklang',
+    empty: 'Modelni yuklang',
     sum: "so'm",
     g: 'g',
     cm3: 'sm³',
@@ -567,8 +567,8 @@ const CALC_T = {
     send: 'Hisobni Telegramga yuborish',
     save: 'Saqlash',
     copy: 'Nusxalash',
-    copied: "Nusxalandi — chatga qo'ying va STL faylni biriktiring.",
-    sent: "Hisob xabarga qo'yildi — unga STL faylni biriktiring.",
+    copied: "Nusxalandi — chatga qo'ying va model faylini biriktiring.",
+    sent: "Hisob xabarga qo'yildi — unga model faylini biriktiring.",
     saved: 'Hisob rasmi saqlandi — uni bizga Telegramda yuborishingiz mumkin.',
     saveFail: "Rasmni saqlab bo'lmadi — hisobni matn sifatida nusxalang.",
     disclaimer:
@@ -583,7 +583,7 @@ const CALC_T = {
     },
     msg: {
       reading: "Fayl o'qilmoqda…",
-      bad: "Faylni o'qib bo'lmadi. STL kerak; STEP va boshqa formatlarni Telegramga yuboring — qo'lda hisoblaymiz.",
+      bad: "Faylni o'qib bo'lmadi. STL, OBJ va 3MF mos keladi; STEP va boshqa formatlarni Telegramga yuboring — qo'lda hisoblaymiz.",
       big: "Fayl 100 MB dan katta — uni Telegramga yuboring, qo'lda hisoblaymiz.",
       auto: 'Eng kam tayanchli holat tanlanmoqda…',
       autoDone: "Eng kam tayanchli holat tanlandi. Uni yuqoridagi tugmalar bilan o'zgartirish mumkin.",
@@ -596,7 +596,7 @@ const CALC_T = {
       noGl: "Bu brauzerda oldindan ko'rish mavjud emas, lekin hisob ishlaydi.",
       limit: 'Bitta hisobda {max} tagacha model. Qolganlarini Telegramga yuboring.',
     },
-    copyHead: "STL bo'yicha 3D chop etish — {site} saytidagi hisob",
+    copyHead: '3D chop etish — {site} saytidagi hisob',
     copyItem:
       "{n}) {file} — {mat}, to'ldirish {infill}%, qatlam {layer} mm, devorlar: {walls}, {qty} dona. O'lchamlari {size} mm, ≈ {weight} g/dona ({sup}), 1 dona chop etish ≈ {time}, ≈ {sum} so'm",
     copyItemShort: "{n}) {file} — {mat}, {qty} dona, ≈ {sum} so'm",
