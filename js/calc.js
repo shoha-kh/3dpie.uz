@@ -369,6 +369,7 @@
     function update() {
         var approx = '≈' + NBSP;
         setStatus('');
+        markOrient();
         order = items.length ? totals() : null;
 
         // the active model
@@ -586,6 +587,7 @@
                 return;
             }
             setBusy(false);
+            current.byAuto = true;
             current.notice = t.msg.autoDone;
             applyOrientation(best.R, true);
         })();
@@ -597,6 +599,20 @@
 
     function setBusy(on) {
         orientBtns.forEach(function (b) { b.disabled = on || !active; });
+    }
+
+    // The highlighted button says how the open model lies right now: as in the file (that is how every
+    // model starts), as "Auto" laid it, or neither after a manual turn.
+    function markOrient() {
+        var asFile = !!active;
+        for (var i = 0; asFile && i < 9; i++) asFile = Math.abs(active.R[i] - IDENTITY[i]) < 1e-6;
+        var byAuto = !!active && active.byAuto;
+        [['auto', byAuto], ['reset', asFile && !byAuto]].forEach(function (pair) {
+            var btn = $('[data-orient="' + pair[0] + '"]');
+            btn.classList.toggle('is-current', pair[1]);
+            if (pair[1]) btn.setAttribute('aria-current', 'true');
+            else btn.removeAttribute('aria-current');
+        });
     }
 
     function setPicking(on) {
@@ -615,6 +631,7 @@
             if (kind === 'face') return setPicking(!picking);
             setPicking(false);
             active.notice = '';
+            if (kind !== 'auto') active.byAuto = false;
             if (kind === 'auto') autoOrient();
             else if (kind === 'reset') applyOrientation(IDENTITY, true);
             else applyOrientation(mul3(TURN[kind], active.R), true);
@@ -632,6 +649,7 @@
         if (!n) return;
         setPicking(false);
         active.notice = '';
+        active.byAuto = false;
         applyOrientation(downFrom(n), true);
     }
 
@@ -721,6 +739,7 @@
         item.area = m.area;
         item.closed = m.closed;
         item.R = IDENTITY;
+        item.byAuto = false;
         item.notice = '';
         if (viewer === null) {
             viewer = createViewer(canvas, { onTap: onTap, onGrab: function () { if (!picking) hint.hidden = true; } }) || false;
