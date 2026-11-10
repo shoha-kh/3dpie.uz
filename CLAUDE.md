@@ -62,3 +62,5 @@ Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywo
   download with yt-dlp: `python -m pip install --target .tools/pylib yt-dlp`, then
   `PYTHONPATH=.tools/pylib python -m yt_dlp -o ".tools/ig/%(id)s.%(ext)s" <url>` (`.tools/` is gitignored).
 - Deploy: push to `main` → `.github/workflows/deploy.yml` (rsync public files only, then IndexNow). Commit only when asked.
+  GitHub's built-in Jekyll build also runs on every push (Pages source is still "Deploy from a branch"); `_config.yml`
+  keeps sources and notes out of it — a new private file/folder goes into **both** `_config.yml` and the rsync excludes.

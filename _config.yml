@@ -1,0 +1,14 @@
+# Read only by GitHub's built-in "pages build and deployment" (Jekyll). It runs next to
+# .github/workflows/deploy.yml for as long as Settings → Pages → Source is "Deploy from a branch",
+# and without this file it publishes the whole repository for a few minutes on every push.
+# Keep this list in step with the rsync excludes in deploy.yml.
+# (Dot-folders such as .github, .claude, .shots and .tools are skipped by Jekyll on its own.)
+exclude:
+  - src
+  - scripts
+  - data
+  - docs
+  - node_modules
+  - "*.md"
+  - package.json
+  - package-lock.json
