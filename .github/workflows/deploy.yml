@@ -37,7 +37,8 @@ jobs:
             --exclude '.git' --exclude '.github' --exclude '_site' \
             --exclude 'src' --exclude 'scripts' --exclude 'data' --exclude 'node_modules' \
             --exclude '*.md' --exclude 'package*.json' --exclude '.gitignore' \
-            --exclude '.claude' --exclude '.shots' --exclude '.tools' --exclude 'docs'
+            --exclude '.claude' --exclude '.shots' --exclude '.tools' --exclude 'docs' \
+            --exclude '_config.yml'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
