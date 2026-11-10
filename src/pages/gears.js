@@ -52,7 +52,7 @@ module.exports = [
       { q: 'Сколько служит напечатанная шестерня?', a: 'Зависит от нагрузки и пластика. Шестерня из нейлона в бытовой технике работает долго; для тяжёлых промышленных нагрузок подскажем, стоит ли печатать или лучше искать металл.' },
       { q: 'Сколько стоит шестерня на заказ?', a: `От ${P.min} сум. Цена зависит от размера, сложности и того, нужно ли моделировать с нуля. Пришлите фото в Telegram — назовём цену до начала работы.` }
     ],
-    related: ['modeling', 'scanning', 'auto', 'materials'],
+    related: ['modeling', 'scanning', 'rubber', 'auto', 'materials'],
     service: { name: 'Изготовление шестерён и деталей для техники на 3D-принтере', serviceType: '3D-печать шестерён', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp']
@@ -103,7 +103,7 @@ module.exports = [
       { q: 'Chop etilgan shesternya qancha xizmat qiladi?', a: "Yuklama va plastikka bog'liq. Maishiy texnikada neylon shesternya uzoq ishlaydi; og'ir sanoat yuklamalari uchun chop etish kerakmi yoki metall izlash yaxshiroqmi — maslahat beramiz." },
       { q: 'Buyurtma asosida shesternya qancha turadi?', a: `${P.min} so'mdan. Narx o'lcham, murakkablik va noldan modellashtirish kerak-kerakmasligiga bog'liq. Rasmni Telegramga yuboring — ish boshlanishidan oldin narxini aytamiz.` }
     ],
-    related: ['modeling', 'scanning', 'auto', 'materials'],
+    related: ['modeling', 'scanning', 'rubber', 'auto', 'materials'],
     service: { name: "3D printerda tishli g'ildiraklar va texnika detallarini tayyorlash", serviceType: "Tishli g'ildiraklarni 3D chop etish", minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp']

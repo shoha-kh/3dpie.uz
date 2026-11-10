@@ -262,6 +262,7 @@ function renderFooter(page, registry) {
   const services = registry
     .filter(p => p.lang === page.lang && p.type === 'service')
     .map(p => `                    <li><a href="${p.path}">${esc(p.navTitle || p.breadcrumb)}</a></li>`).join('\n');
+  const privacy = registry.find(p => p.id === 'privacy' && p.lang === page.lang);
   const info = t.footerInfoLinks
     .map(l => `                    <li><a href="${l.href}">${esc(l.label)}</a></li>`).join('\n');
 
@@ -299,7 +300,7 @@ ${info}
         <div class="wrap footer-mark" aria-hidden="true">3DPie</div>
         <div class="wrap footer-bottom">
             <p>${esc(t.copyright)}</p>
-            <p><a href="/" hreflang="ru">Русский</a> · <a href="/uz.html" hreflang="uz">O'zbekcha</a></p>
+            <p>${privacy ? `<a href="${privacy.path}">${esc(privacy.breadcrumb)}</a> · ` : ''}<a href="/" hreflang="ru">Русский</a> · <a href="/uz.html" hreflang="uz">O'zbekcha</a></p>
         </div>
     </footer>
 

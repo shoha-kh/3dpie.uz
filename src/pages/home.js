@@ -84,9 +84,9 @@ const ruServices = [
   { href: '/3d-skanirovanie/', t: '3D-сканирование и реверс-инжиниринг', d: 'Снимаем сложную форму сканером, восстанавливаем и усиливаем сломанные детали.' },
   { href: '/avtozapchasti/', t: 'Автозапчасти и детали салона', d: 'Клипсы, заглушки, дефлекторы, решётки, накладки под твитеры, рамки, декоративные элементы.' },
   { href: '/shesterni/', t: 'Шестерни и детали для техники', d: 'Шестерни для мясорубок и блендеров, втулки, ролики, ручки — когда оригинал не найти.' },
-  { href: '/materialy/', t: 'Резиновые детали из TPU', d: 'Гибкие, износостойкие уплотнители, втулки и накладки — служат дольше силикона.' },
-  { href: '/#work-cable-clips-batch', t: 'Серийные партии', d: 'Одинаковые детали десятками и сотнями: 200 креплений для кабеля — за 2 дня.' },
-  { href: '/#gallery', t: 'Корпуса и изделия на заказ', d: 'Корпуса для электроники, короба из PETG-CF, декор для аквариума — по вашей идее.' }
+  { href: '/rezinovye-detali/', t: 'Резиновые детали из TPU', d: 'Гибкие, износостойкие уплотнители, втулки и накладки — служат дольше силикона.' },
+  { href: '/seriynaya-pechat/', t: 'Серийные партии', d: 'Одинаковые детали десятками и сотнями: 200 креплений для кабеля — за 2 дня.' },
+  { href: '/korpusa/', t: 'Корпуса и изделия на заказ', d: 'Корпуса для электроники, короба из PETG-CF, декор для аквариума — по вашей идее.' }
 ];
 
 const ruMaterials = [
@@ -262,9 +262,9 @@ const uzServices = [
   { href: '/uz/3d-skanerlash/', t: '3D skanerlash va teskari muhandislik', d: "Murakkab shaklni skaner bilan olamiz, singan detallarni tiklaymiz va mustahkamlaymiz." },
   { href: '/uz/avtoehtiyot-qismlar/', t: 'Avtoehtiyot qismlar va salon detallari', d: "Klipsalar, tiqinlar, deflektorlar, panjaralar, tvitter nakladkalari, ramkalar, dekorativ elementlar." },
   { href: '/uz/tishli-gildiraklar/', t: "Texnika uchun tishli g'ildiraklar va detallar", d: "Go'sht qiymalagich va blender shesternyalari, vtulkalar, roliklar, dastaklar." },
-  { href: '/uz/materiallar/', t: 'TPU dan rezina detallar', d: "Egiluvchan, yeyilishga chidamli zichlagichlar, vtulkalar va nakladkalar — silikondan uzoqroq xizmat qiladi." },
-  { href: '/uz.html#work-cable-clips-batch', t: 'Seriyali partiyalar', d: "Bir xil detallar o'nlab va yuzlab: 200 ta kabel mahkamlagichi — 2 kunda." },
-  { href: '/uz.html#gallery', t: 'Korpuslar va buyurtma asosida buyumlar', d: "Elektronika korpuslari, PETG-CF qutilar, akvarium bezaklari — sizning g'oyangiz bo'yicha." }
+  { href: '/uz/rezina-detallar/', t: 'TPU dan rezina detallar', d: "Egiluvchan, yeyilishga chidamli zichlagichlar, vtulkalar va nakladkalar — silikondan uzoqroq xizmat qiladi." },
+  { href: '/uz/seriyali-chop-etish/', t: 'Seriyali partiyalar', d: "Bir xil detallar o'nlab va yuzlab: 200 ta kabel mahkamlagichi — 2 kunda." },
+  { href: '/uz/korpuslar/', t: 'Korpuslar va buyurtma asosida buyumlar', d: "Elektronika korpuslari, PETG-CF qutilar, akvarium bezaklari — sizning g'oyangiz bo'yicha." }
 ];
 
 const uzMaterials = [

@@ -40,9 +40,13 @@
 - [3D-сканирование и реверс-инжиниринг](https://3dpie.uz/3d-skanirovanie/): копии сложных и сломанных деталей по 3D-скану.
 - [3D-моделирование по фото и образцу](https://3dpie.uz/3d-modelirovanie/): модели по обломку, фото или эскизу, файлы STL и STEP.
 - [Автозапчасти на 3D-принтере](https://3dpie.uz/avtozapchasti/): клипсы, заглушки, дефлекторы, решётки, накладки под твитеры, детали салона.
+- [Резиновые детали из TPU](https://3dpie.uz/rezinovye-detali/): уплотнители, втулки, демпферы, накладки из гибкого TPU по образцу или фото.
+- [Серийная 3D-печать](https://3dpie.uz/seriynaya-pechat/): партии одинаковых деталей, скидки на серии, договор для юрлиц.
+- [Корпуса для электроники](https://3dpie.uz/korpusa/): корпуса и короба по чертежу, эскизу или образцу, восстановление сломанных корпусов.
 - [Шестерни и детали для техники](https://3dpie.uz/shesterni/): шестерни для мясорубок и блендеров, втулки, ролики, ручки.
 - [Цены на 3D-печать](https://3dpie.uz/ceny/): цены за грамм по материалам, калькулятор стоимости по STL-файлу, сроки, скидки.
 - [Какой материал выбрать](https://3dpie.uz/materialy/): сравнение PLA, PETG, PETG-CF, ABS, TPU, Nylon.
+- [Политика конфиденциальности](https://3dpie.uz/politika-konfidencialnosti/): какие данные собирает сайт и как отказаться от статистики.
 
 ## Sahifalar (o'zbekcha)
 
@@ -50,6 +54,10 @@
 - [3D skanerlash va teskari muhandislik](https://3dpie.uz/uz/3d-skanerlash/)
 - [Rasm va namuna bo'yicha 3D modellashtirish](https://3dpie.uz/uz/3d-modellashtirish/)
 - [3D printerda avtoehtiyot qismlar](https://3dpie.uz/uz/avtoehtiyot-qismlar/)
+- [TPU dan rezina detallar](https://3dpie.uz/uz/rezina-detallar/)
+- [Seriyali 3D chop etish](https://3dpie.uz/uz/seriyali-chop-etish/)
+- [Elektronika uchun korpuslar](https://3dpie.uz/uz/korpuslar/)
 - [Tishli g'ildiraklar va texnika detallari](https://3dpie.uz/uz/tishli-gildiraklar/)
 - [3D chop etish narxlari](https://3dpie.uz/uz/narxlar/)
 - [Qaysi plastikni tanlash kerak](https://3dpie.uz/uz/materiallar/)
+- [Maxfiylik siyosati](https://3dpie.uz/uz/maxfiylik-siyosati/)

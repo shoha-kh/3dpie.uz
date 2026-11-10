@@ -42,6 +42,22 @@
         <image:image><image:loc>https://3dpie.uz/gallery/car-air-deflector/car-air-deflector-poster.webp</image:loc></image:image>
     </url>
     <url>
+        <loc>https://3dpie.uz/korpusa/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/korpusa/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/korpuslar/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/korpusa/"/>
+        <image:image><image:loc>https://3dpie.uz/gallery/microchip-cases/microchip-cases-poster.webp</image:loc></image:image>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/uz/korpuslar/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/korpusa/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/korpuslar/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/korpusa/"/>
+        <image:image><image:loc>https://3dpie.uz/gallery/microchip-cases/microchip-cases-poster.webp</image:loc></image:image>
+    </url>
+    <url>
         <loc>https://3dpie.uz/shesterni/</loc>
         <lastmod>2026-10-12</lastmod>
         <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/shesterni/"/>
@@ -102,6 +118,36 @@
         <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/ceny/"/>
     </url>
     <url>
+        <loc>https://3dpie.uz/politika-konfidencialnosti/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/politika-konfidencialnosti/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/maxfiylik-siyosati/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/politika-konfidencialnosti/"/>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/uz/maxfiylik-siyosati/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/politika-konfidencialnosti/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/maxfiylik-siyosati/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/politika-konfidencialnosti/"/>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/rezinovye-detali/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/rezinovye-detali/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/rezina-detallar/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/rezinovye-detali/"/>
+        <image:image><image:loc>https://3dpie.uz/gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp</image:loc></image:image>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/uz/rezina-detallar/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/rezinovye-detali/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/rezina-detallar/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/rezinovye-detali/"/>
+        <image:image><image:loc>https://3dpie.uz/gallery/flexible-rubber-parts/flexible-rubber-parts-poster.webp</image:loc></image:image>
+    </url>
+    <url>
         <loc>https://3dpie.uz/3d-skanirovanie/</loc>
         <lastmod>2026-10-12</lastmod>
         <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/3d-skanirovanie/"/>
@@ -118,5 +164,21 @@
         <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/3d-skanirovanie/"/>
         <image:image><image:loc>https://3dpie.uz/gallery/ev-charger-adapter/ev-charger-adapter-poster.webp</image:loc></image:image>
         <image:image><image:loc>https://3dpie.uz/gallery/ac-frame/ac-frame-poster.webp</image:loc></image:image>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/seriynaya-pechat/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/seriynaya-pechat/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/seriyali-chop-etish/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/seriynaya-pechat/"/>
+        <image:image><image:loc>https://3dpie.uz/gallery/socket-box-caps/socket-box-caps-poster.webp</image:loc></image:image>
+    </url>
+    <url>
+        <loc>https://3dpie.uz/uz/seriyali-chop-etish/</loc>
+        <lastmod>2026-11-10</lastmod>
+        <xhtml:link rel="alternate" hreflang="ru-UZ" href="https://3dpie.uz/seriynaya-pechat/"/>
+        <xhtml:link rel="alternate" hreflang="uz-UZ" href="https://3dpie.uz/uz/seriyali-chop-etish/"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://3dpie.uz/seriynaya-pechat/"/>
+        <image:image><image:loc>https://3dpie.uz/gallery/socket-box-caps/socket-box-caps-poster.webp</image:loc></image:image>
     </url>
 </urlset>

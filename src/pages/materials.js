@@ -79,7 +79,7 @@ module.exports = [
       { q: 'Можно ли напечатать деталь, похожую на резину?', a: 'Да, из TPU. Он гибкий, как резина, и при этом износостойкий.' },
       { q: 'Безопасен ли пластик для контакта с едой?', a: 'Напечатанные детали имеют пористую поверхность, поэтому для постоянного контакта с едой мы их не рекомендуем. Для деталей кухонной техники, которые не касаются продуктов напрямую (шестерни, ручки, крышки), это не проблема.' }
     ],
-    related: ['auto', 'gears', 'scanning', 'prices'],
+    related: ['auto', 'gears', 'rubber', 'enclosures', 'prices'],
     sitemapImages: []
   },
   {
@@ -158,7 +158,7 @@ module.exports = [
       { q: 'Rezinaga o\'xshash detal chop etish mumkinmi?', a: "Ha, TPU dan. U rezinadek egiluvchan va shu bilan birga yeyilishga chidamli." },
       { q: 'Plastik oziq-ovqat bilan aloqa uchun xavfsizmi?', a: "Chop etilgan detallar g'ovak sirtga ega, shuning uchun oziq-ovqat bilan doimiy aloqa uchun tavsiya etmaymiz. Mahsulotlarga bevosita tegmaydigan oshxona texnikasi detallari (shesternyalar, dastaklar, qopqoqlar) uchun bu muammo emas." }
     ],
-    related: ['auto', 'gears', 'scanning', 'prices'],
+    related: ['auto', 'gears', 'rubber', 'enclosures', 'prices'],
     sitemapImages: []
   }
 ];

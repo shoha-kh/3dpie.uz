@@ -92,7 +92,7 @@ ${s.html.trim().split('\n').map(l => '                ' + l.trim()).join('\n')}
                 <p class="kicker">${layout.esc(page.kicker)}</p>
                 <h1 class="h1">${page.h1Html || layout.esc(page.h1)}</h1>
                 <p class="lead">${page.lead}</p>
-                ${layout.renderCtaButtons(page.lang)}
+                ${page.type === 'info' ? '' : layout.renderCtaButtons(page.lang)}
             </div>
             <div class="page-hero-aside">${figure}${spec}
             </div>
@@ -104,7 +104,7 @@ ${s.html.trim().split('\n').map(l => '                ' + l.trim()).join('\n')}
     page.type === 'service' ? layout.renderSteps(page.lang) : '',
     page.faq && page.faq.length ? layout.renderFaq(page.lang, page.faq, { openFirst: true }) : '',
     layout.renderRelated(page, registry),
-    layout.renderCtaBand(page.lang)
+    page.type === 'info' ? '' : layout.renderCtaBand(page.lang)
   ];
   return parts.filter(Boolean).join('\n\n');
 }

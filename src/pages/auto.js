@@ -52,7 +52,7 @@ module.exports = [
       { q: 'Выдержит ли деталь жару в салоне летом?', a: 'Для деталей салона используем ABS и PETG — они держат нагрев на солнце. PLA для авто не рекомендуем.' },
       { q: 'Сколько стоит напечатать автозапчасть?', a: `Минимальный заказ — ${P.min} сум. Точную цену назовём по фото в Telegram, консультация бесплатная. Партия одинаковых клипс обходится дешевле в пересчёте на штуку.` }
     ],
-    related: ['modeling', 'scanning', 'gears', 'materials'],
+    related: ['modeling', 'scanning', 'gears', 'rubber', 'materials'],
     service: { name: 'Изготовление автозапчастей на 3D-принтере', serviceType: '3D-печать автозапчастей', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/images/work-tweeter.webp', '/gallery/car-air-deflector/car-air-deflector-poster.webp']
@@ -103,7 +103,7 @@ module.exports = [
       { q: 'Detal yozda salondagi issiqqa chidaydimi?', a: "Salon detallari uchun ABS va PETG ishlatamiz — ular quyoshdagi qizishga chidaydi. Avtomobil uchun PLA tavsiya etmaymiz." },
       { q: 'Avtoehtiyot qismni chop etish qancha turadi?', a: `Minimal buyurtma — ${P.min} so'm. Aniq narxni Telegramdagi rasm bo'yicha aytamiz, konsultatsiya bepul. Bir xil klipsalar partiyasi dona hisobida arzonroq tushadi.` }
     ],
-    related: ['modeling', 'scanning', 'gears', 'materials'],
+    related: ['modeling', 'scanning', 'gears', 'rubber', 'materials'],
     service: { name: '3D printerda avtoehtiyot qismlar tayyorlash', serviceType: 'Avtoehtiyot qismlarni 3D chop etish', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/images/work-tweeter.webp', '/gallery/car-air-deflector/car-air-deflector-poster.webp']

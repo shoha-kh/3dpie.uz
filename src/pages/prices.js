@@ -45,6 +45,17 @@ module.exports = [
 </div>`
       },
       {
+        title: 'Что входит в цену',
+        html: `
+<ul>
+<li><strong>Консультация</strong> — бесплатно: подскажем, можно ли напечатать деталь и из какого пластика.</li>
+<li><strong>Цена до начала работы</strong> — называем заранее, без скрытых доплат.</li>
+<li><strong>Подбор пластика под задачу</strong> — по тому, где будет стоять деталь, какую нагрузку и температуру выдержит.</li>
+<li><strong>Проверка каждой детали</strong> перед выдачей. Брак переделываем бесплатно.</li>
+</ul>
+<p>Отдельно считаются 3D-моделирование и 3D-сканирование, если готовой модели нет, и доставка.</p>`
+      },
+      {
         title: 'Как узнать цену своей детали',
         html: `
 <ol>
@@ -62,7 +73,7 @@ module.exports = [
       { q: 'Сколько стоит напечатать одну маленькую деталь?', a: `Минимальный заказ — ${P.min} сум. Мелкие детали выгоднее заказывать партией: например, 200 креплений для кабеля мы напечатали за 2 дня.` },
       { q: 'Есть ли скидки?', a: 'Да: на серии одинаковых деталей и для постоянных клиентов.' }
     ],
-    related: ['modeling', 'scanning', 'auto', 'gears'],
+    related: ['modeling', 'scanning', 'series', 'auto', 'gears'],
     service: { name: '3D-печать на заказ', serviceType: '3D-печать', minPrice: P.minOrder },
     sitemapImages: []
   },
@@ -106,6 +117,17 @@ module.exports = [
 </div>`
       },
       {
+        title: 'Narxga nimalar kiradi',
+        html: `
+<ul>
+<li><strong>Konsultatsiya</strong> — bepul: detalni chop etish mumkinmi va qaysi plastikdan, maslahat beramiz.</li>
+<li><strong>Narx ish boshlanishidan oldin</strong> — oldindan aytamiz, yashirin to'lovlarsiz.</li>
+<li><strong>Vazifaga mos plastik tanlash</strong> — detal qayerda turishi, qanday yuklama va haroratga chidashi kerakligiga qarab.</li>
+<li><strong>Har bir detalni tekshirish</strong> — topshirishdan oldin. Nuqsonli detalni bepul qayta tayyorlaymiz.</li>
+</ul>
+<p>Tayyor model bo'lmasa, 3D modellashtirish va 3D skanerlash, shuningdek yetkazib berish alohida hisoblanadi.</p>`
+      },
+      {
         title: 'Detalingiz narxini qanday bilish mumkin',
         html: `
 <ol>
@@ -123,7 +145,7 @@ module.exports = [
       { q: 'Bitta kichik detalni chop etish qancha turadi?', a: `Minimal buyurtma — ${P.min} so'm. Mayda detallarni partiya bilan buyurtma qilish foydaliroq: masalan, 200 ta kabel mahkamlagichini 2 kunda chop etdik.` },
       { q: 'Chegirmalar bormi?', a: "Ha: bir xil detallar seriyasiga va doimiy mijozlar uchun." }
     ],
-    related: ['modeling', 'scanning', 'auto', 'gears'],
+    related: ['modeling', 'scanning', 'series', 'auto', 'gears'],
     service: { name: 'Buyurtma asosida 3D chop etish', serviceType: '3D chop etish', minPrice: P.minOrder },
     sitemapImages: []
   }

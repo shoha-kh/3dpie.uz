@@ -57,7 +57,7 @@ module.exports = [
       { q: 'Можно ли получить только файл, без печати?', a: 'Да. Отдадим модель в STL (для печати) или STEP (для доработки в CAD). Печать можно заказать у нас позже.' },
       { q: 'Насколько точной получится копия?', a: 'Посадочные размеры снимаем с образца штангенциркулем. Для деталей, которые должны встать на место, сначала можем напечатать пробный образец и проверить посадку.' }
     ],
-    related: ['scanning', 'auto', 'gears', 'prices'],
+    related: ['scanning', 'enclosures', 'auto', 'gears', 'prices'],
     service: { name: '3D-моделирование деталей на заказ', serviceType: '3D-моделирование', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/microchip-cases/microchip-cases-poster.webp']
@@ -113,7 +113,7 @@ module.exports = [
       { q: 'Faqat faylni olish mumkinmi, chop etmasdan?', a: "Ha. Modelni STL (chop etish uchun) yoki STEP (CAD'da tahrirlash uchun) formatida beramiz. Chop etishni keyinroq bizdan buyurtma qilishingiz mumkin." },
       { q: 'Nusxa qanchalik aniq chiqadi?', a: "O'rnatish o'lchamlarini namunadan shtangensirkul bilan olamiz. Joyiga tushishi kerak bo'lgan detallar uchun avval sinov namunasini chop etib, mosligini tekshirishimiz mumkin." }
     ],
-    related: ['scanning', 'auto', 'gears', 'prices'],
+    related: ['scanning', 'enclosures', 'auto', 'gears', 'prices'],
     service: { name: 'Buyurtma asosida detallarni 3D modellashtirish', serviceType: '3D modellashtirish', minPrice: P.minOrder },
     hasGallery: true,
     sitemapImages: ['/gallery/microchip-cases/microchip-cases-poster.webp']
