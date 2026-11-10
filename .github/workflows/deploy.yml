@@ -1,7 +1,8 @@
 # Deploy 3DPie.uz to GitHub Pages
 # - Runs on every push to main
 # - Publishes only the public site files (sources, scripts and notes are excluded)
-# - HTML is generated locally (run `npm run build` before commit)
+# - Pages are built and checked here before publishing; keep committing the generated HTML too
+#   (GitHub's own Pages build, while it is still on, publishes what is in the repository)
 # - After deploy, pings IndexNow (Bing, Yandex) with all sitemap URLs
 
 name: Deploy to GitHub Pages
@@ -29,6 +30,22 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Pages come from src/ and data/. Building here means a forgotten `npm run build` cannot publish
+      # stale HTML, and a failed check (broken link, banned phrase, llms.txt out of step) stops the deploy.
+      - name: Build and check
+        run: |
+          npm run build
+          npm run check
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::warning::Generated files in the repository are out of date - run npm run build and commit them."
+            git status --short | head -20
+          fi
 
       - name: Collect public files
         run: |

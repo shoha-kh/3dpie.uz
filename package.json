@@ -2,7 +2,7 @@
   "name": "3dpie-uz",
   "version": "2.0.0",
   "private": true,
-  "description": "3DPie.uz — static site (RU/UZ). scripts/build-site.js renders all pages from src/pages, the gallery from data/gallery.json, and sitemap.xml.",
+  "description": "3DPie.uz — static site (RU/UZ). scripts/build-site.js renders all pages from src/pages and data/gallery.json (work pages), and sitemap.xml.",
   "scripts": {
     "build": "node scripts/build-site.js",
     "check": "node scripts/check-site.js",
@@ -11,7 +11,8 @@
     "video": "node scripts/prepare-video.js",
     "build:gallery": "node scripts/build-gallery.js",
     "indexnow": "node scripts/indexnow.js",
-    "prepush": "npm run build && npm run check"
+    "prepush": "npm run build && npm run check && npm test",
+    "test": "node scripts/tests/calc.test.js"
   },
   "engines": {
     "node": ">=18"

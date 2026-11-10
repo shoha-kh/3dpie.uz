@@ -1005,6 +1005,7 @@
     fileInput.addEventListener('change', function () {
         load(fileInput.files);
         fileInput.value = '';
+        fileInput.multiple = true; // 'replace the file' had made it single
     });
 
     // The same hidden input serves three buttons: the drop zone, "add a model" and "replace the file".

@@ -2109,6 +2109,13 @@ ol {
   }
 }
 
+/* On the narrowest screens the slash between the languages goes, so the header row still fits. */
+@media (max-width: 359px) {
+  .lang > span {
+    display: none;
+  }
+}
+
 /* Touch layouts: links and switches that were under 40px tall get a comfortable tap area. */
 @media (max-width: 960px) {
   .brand {
@@ -2119,7 +2126,7 @@ ol {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
+    min-width: clamp(34px, 11vw, 40px); /* 40px from 364px up, a bit narrower on 320px screens */
     min-height: 40px;
   }
 
