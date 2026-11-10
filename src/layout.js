@@ -430,6 +430,8 @@ function renderCalc(lang) {
     phone: CONTACTS.phoneHuman, site: SITE_URL.replace('https://', '')
   }).replace(/</g, '\\u003c');
 
+  // shown next to a parameter that the open plate overrides: one click puts the common value back
+  const own = key => `<button class="calc-own" type="button" data-own="${key}" hidden><span aria-hidden="true">↺</span> ${esc(c.asCommon)}</button>`;
   const stat = ([k, label]) => `<div><dt>${esc(label)}</dt><dd data-out="${k}">—</dd></div>`;
   const sum = [['models', c.models], ['pieces', c.pieces], ['sumWeight', c.sumWeight], ['sumTime', c.sumTime]].map(stat).join('');
 
@@ -481,28 +483,33 @@ function renderCalc(lang) {
                                 <button type="button" data-orient="reset" disabled>${esc(c.orientReset)}</button>
                             </div>
                         </div>
+                        <div class="calc-piece">
+                            <div class="calc-field">
+                                <label for="calc-qty">${esc(c.qty)}</label>
+                                <input id="calc-qty" class="calc-qty" type="number" min="1" max="10000" step="1" value="1" inputmode="numeric" disabled>
+                            </div>
+                            <div class="calc-field">
+                                <label for="calc-unit">${esc(c.unit)}</label>
+                                <select id="calc-unit" class="calc-unit" disabled>${units}</select>
+                            </div>
+                        </div>
                         <dl class="calc-out">${out}</dl>
                         <p class="calc-msg" role="status"></p>
                     </div>
                     <div class="calc-panel">
-                        <h3 class="calc-h">${esc(c.settings)}<span class="calc-cur"></span></h3>
+                        <h3 class="calc-h">${esc(c.settings)}</h3>
+                        <div class="calc-scope" role="group" aria-label="${esc(c.scopeLabel)}">
+                            <button type="button" data-scope="common" aria-pressed="true"><b>${esc(c.scopeCommon)}</b><small>${esc(c.scopeCommonSub)}</small></button>
+                            <button type="button" data-scope="plate" aria-pressed="false" disabled><b class="calc-scope-plate">${esc(c.plate)}</b><small>${esc(c.scopePlateSub)}</small></button>
+                        </div>
+                        <p class="calc-scope-hint">${esc(c.hintCommon)}</p>
                         <div class="calc-field">
-                            <label for="calc-mat">${esc(c.material)}</label>
+                            <div class="calc-field-head"><label for="calc-mat">${esc(c.material)}</label>${own('mat')}</div>
                             <select id="calc-mat" class="calc-mat">${mats}</select>
                         </div>
-                        <fieldset class="calc-field">
-                            <legend>${esc(c.infill)}</legend>
+                        <div class="calc-field" role="group" aria-labelledby="calc-infill-label">
+                            <div class="calc-field-head"><span class="calc-label" id="calc-infill-label">${esc(c.infill)}</span>${own('infill')}</div>
                             <div class="calc-seg">${infill}
-                            </div>
-                        </fieldset>
-                        <div class="calc-two">
-                            <div class="calc-field">
-                                <label for="calc-qty">${esc(c.qty)}</label>
-                                <input id="calc-qty" class="calc-qty" type="number" min="1" max="10000" step="1" value="1" inputmode="numeric">
-                            </div>
-                            <div class="calc-field">
-                                <label for="calc-unit">${esc(c.unit)}</label>
-                                <select id="calc-unit" class="calc-unit">${units}</select>
                             </div>
                         </div>
                         <label class="calc-mode">
@@ -518,21 +525,21 @@ function renderCalc(lang) {
                                     <output class="calc-infill-val" for="calc-infill-range">${CALC.infillDefault}%</output>
                                 </div>
                             </div>
-                            <fieldset class="calc-field">
-                                <legend>${esc(c.layer)}</legend>
+                            <div class="calc-field" role="group" aria-labelledby="calc-layer-label">
+                                <div class="calc-field-head"><span class="calc-label" id="calc-layer-label">${esc(c.layer)}</span>${own('layer')}</div>
                                 <div class="calc-seg">${layers}
                                 </div>
-                            </fieldset>
+                            </div>
                             <div class="calc-field">
-                                <label for="calc-walls">${esc(c.walls)}</label>
+                                <div class="calc-field-head"><label for="calc-walls">${esc(c.walls)}</label>${own('walls')}</div>
                                 <input id="calc-walls" class="calc-walls" type="number" min="${CALC.walls.min}" max="${CALC.walls.max}" step="1" value="${CALC.walls.def}" inputmode="numeric">
                             </div>
                             <div class="calc-field">
-                                <label for="calc-support">${esc(c.support)}</label>
+                                <div class="calc-field-head"><label for="calc-support">${esc(c.support)}</label>${own('support')}</div>
                                 <select id="calc-support" class="calc-support">${supports}</select>
                             </div>
-                            <button class="calc-reset" type="button">${esc(c.reset)}</button>
                         </div>
+                        <button class="calc-reset" type="button" hidden>${esc(c.reset)}</button>
                     </div>
                 </div>
                 <div class="calc-summary">
