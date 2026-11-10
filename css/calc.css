@@ -76,31 +76,42 @@
 }
 
 /* ---------- plates: one model per plate ---------- */
+/* A grid of cards, so every plate is in view at once (no sideways scrolling on a desktop);
+   the "add a model" cell is always the last one. */
 
 .calc-plates {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   min-width: 0;
 }
 
-/* only the plates scroll sideways: the "add a model" button stays in view */
-.calc-plates-list {
-  position: relative;
+.calc-plates-head {
   display: flex;
+  align-items: baseline;
   gap: 10px;
-  min-width: 0;
-  padding-bottom: 4px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line-2) transparent;
+}
+
+.calc-plates-count {
+  font-size: 13px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-plates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+.calc-plates-list {
+  display: contents;
 }
 
 .calc-plate {
   position: relative;
-  flex: none;
   display: flex;
-  width: 296px;
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--panel);
@@ -122,7 +133,7 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  padding: 8px 40px 8px 8px;
+  padding: 8px 12px 8px 8px;
   font: inherit;
   text-align: left;
   color: inherit;
@@ -141,19 +152,31 @@
 
 .calc-plate-thumb {
   flex: none;
-  width: 64px;
-  height: 48px;
-  border-radius: 8px;
+  width: 58px;
+  height: 58px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  object-fit: cover;
   background: var(--bg-2);
 }
 
+.calc-plate.is-active .calc-plate-thumb {
+  border-color: transparent;
+}
+
 .calc-plate-text {
+  flex: 1;
   display: grid;
-  gap: 2px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3px;
   min-width: 0;
 }
 
 .calc-plate-n {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 22px; /* the remove button sits in this corner */
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .08em;
@@ -165,6 +188,14 @@
   color: var(--accent);
 }
 
+.calc-plate-own {
+  padding: 2px 6px;
+  font-size: 10px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+}
+
 .calc-plate-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -173,28 +204,46 @@
   font-weight: 600;
 }
 
-.calc-plate-sum {
+.calc-plate-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-plate-info {
+  flex: 0 1000 auto; /* gives way first: the price must stay readable */
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
-  color: var(--text-2);
-  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+
+.calc-plate-sum {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
 }
 
 /* the model does not fit the bed: details are shown when the plate is opened */
 .calc-plate.is-warn .calc-plate-sum::after {
   content: ' ⚠';
-  color: var(--text);
 }
 
 .calc-plate-del {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 30px;
-  height: 30px;
-  font: 400 20px/1 var(--sans);
+  top: 4px;
+  right: 4px;
+  width: 26px;
+  height: 26px;
+  font: 400 18px/1 var(--sans);
   color: var(--text-3);
   border: 0;
   border-radius: 8px;
@@ -205,16 +254,16 @@
 
 .calc-plate-del:hover {
   color: var(--text);
-  background: var(--line);
+  background: var(--line-2);
 }
 
 .calc-plate-add {
-  flex: none;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 66px;
-  padding: 8px 20px 8px 10px;
+  min-width: 0;
+  min-height: 76px;
+  padding: 8px 12px 8px 8px;
   font: inherit;
   text-align: left;
   color: var(--text);
@@ -222,22 +271,24 @@
   border-radius: 12px;
   background: none;
   cursor: pointer;
-  transition: border-color .2s ease;
+  transition: border-color .2s ease, background .2s ease;
 }
 
 .calc-plate-add:hover {
   border-color: var(--accent);
+  background: var(--accent-dim);
 }
 
 .calc-plate-plus {
+  flex: none;
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   font: 400 26px/1 var(--sans);
   color: var(--accent);
   border: 1px solid var(--accent);
-  border-radius: 10px;
+  border-radius: 9px;
   background: var(--accent-dim);
 }
 
@@ -245,13 +296,11 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  white-space: nowrap;
 }
 
 .calc-plate-add small {
   font-size: 13px;
   color: var(--text-3);
-  white-space: nowrap;
 }
 
 /* ---------- model card + its settings ---------- */
@@ -713,14 +762,6 @@
   background: var(--accent);
 }
 
-.calc-plate-own {
-  margin-left: 6px;
-  padding: 2px 6px;
-  font-size: 10px;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-}
 
 .calc-field {
   display: grid;
@@ -1048,23 +1089,41 @@
     height: 300px;
   }
 
-  .calc-plates {
+  /* on a phone the cards go in one swipeable row that runs to the screen edges; "add" stays under it */
+  .calc-plates-grid {
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
+  }
+
+  .calc-plates-list {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 0 var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding: 0 var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .calc-plates-list::-webkit-scrollbar {
+    display: none;
   }
 
   .calc-plate {
-    width: 264px;
+    flex: none;
+    width: 272px;
+    scroll-snap-align: start;
   }
 
   .calc-plate-add {
-    min-height: 56px;
-    padding: 6px 16px 6px 6px;
+    min-height: 60px;
   }
 
   .calc-plate-plus {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
   }
 
   .calc-tools .calc-label {
