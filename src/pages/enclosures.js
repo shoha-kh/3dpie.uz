@@ -33,9 +33,9 @@ module.exports = [
         title: 'Какие корпуса делаем',
         html: `
 <ul>
-<li><strong>Корпуса для плат и микросхем</strong> — моделируем по вашим чертежам, эскизам или размерам, как <a href="/#work-microchip-cases">корпус для микросхем</a>.</li>
-<li><strong>Замена сломанному корпусу</strong> — сканируем обломки, строим модель и усиливаем слабые места. Так восстановили <a href="/#work-ev-charger-adapter">корпус переходника зарядки электромобиля</a>: стенки сделали толще.</li>
-<li><strong>Декоративные короба и панели</strong> — например, <a href="/#work-biokamin-box">короб для биокамина</a> из PETG-CF с матовой фактурой.</li>
+<li><strong>Корпуса для плат и микросхем</strong> — моделируем по вашим чертежам, эскизам или размерам, как <a href="/raboty/microchip-cases/">корпус для микросхем</a>.</li>
+<li><strong>Замена сломанному корпусу</strong> — сканируем обломки, строим модель и усиливаем слабые места. Так восстановили <a href="/raboty/ev-charger-adapter/">корпус переходника зарядки электромобиля</a>: стенки сделали толще.</li>
+<li><strong>Декоративные короба и панели</strong> — например, <a href="/raboty/biokamin-box/">короб для биокамина</a> из PETG-CF с матовой фактурой.</li>
 <li><strong>Прототипы и небольшие партии</strong> — один корпус на проверку, затем серия.</li>
 </ul>`
       },
@@ -53,7 +53,7 @@ module.exports = [
       {
         title: 'Крепёж и файлы',
         html: `
-<p>Для винтов можем поставить латунные резьбовые вставки — как в <a href="/#work-broken-part-restore">этой работе</a>.</p>
+<p>Для винтов можем поставить латунные резьбовые вставки — как в <a href="/raboty/broken-part-restore/">этой работе</a>.</p>
 <p>Если модель нужна вам для своего производства, отдаём файлы STL и STEP. Есть готовая модель — посчитайте примерную цену в <a href="/ceny/#calc">калькуляторе</a>.</p>`
       }
     ],
@@ -95,9 +95,9 @@ module.exports = [
         title: 'Qanday korpuslar tayyorlaymiz',
         html: `
 <ul>
-<li><strong>Plata va mikrosxemalar uchun korpuslar</strong> — chizma, eskiz yoki o'lchamlaringiz bo'yicha modellashtiramiz, masalan <a href="/uz.html#work-microchip-cases">mikrosxema korpusi</a>.</li>
-<li><strong>Singan korpus o'rniga yangisi</strong> — siniq bo'laklarni skanerlaymiz, model yaratamiz va zaif joylarini mustahkamlaymiz. <a href="/uz.html#work-ev-charger-adapter">Elektromobil zaryad adapteri korpusi</a> shunday tiklangan: devorlari qalinlashtirilgan.</li>
-<li><strong>Dekorativ quti va panellar</strong> — masalan, mat yuzali PETG-CF dan <a href="/uz.html#work-biokamin-box">biokamin qutisi</a>.</li>
+<li><strong>Plata va mikrosxemalar uchun korpuslar</strong> — chizma, eskiz yoki o'lchamlaringiz bo'yicha modellashtiramiz, masalan <a href="/uz/ishlar/microchip-cases/">mikrosxema korpusi</a>.</li>
+<li><strong>Singan korpus o'rniga yangisi</strong> — siniq bo'laklarni skanerlaymiz, model yaratamiz va zaif joylarini mustahkamlaymiz. <a href="/uz/ishlar/ev-charger-adapter/">Elektromobil zaryad adapteri korpusi</a> shunday tiklangan: devorlari qalinlashtirilgan.</li>
+<li><strong>Dekorativ quti va panellar</strong> — masalan, mat yuzali PETG-CF dan <a href="/uz/ishlar/biokamin-box/">biokamin qutisi</a>.</li>
 <li><strong>Prototiplar va kichik partiyalar</strong> — tekshirish uchun bitta korpus, keyin seriya.</li>
 </ul>`
       },
@@ -115,7 +115,7 @@ module.exports = [
       {
         title: 'Mahkamlash va fayllar',
         html: `
-<p>Vintlar uchun latun rezbali vtulkalar o'rnatishimiz mumkin — <a href="/uz.html#work-broken-part-restore">mana bu ishdagidek</a>.</p>
+<p>Vintlar uchun latun rezbali vtulkalar o'rnatishimiz mumkin — <a href="/uz/ishlar/broken-part-restore/">mana bu ishdagidek</a>.</p>
 <p>Model o'z ishlab chiqarishingiz uchun kerak bo'lsa, STL va STEP fayllarni beramiz. Tayyor model bo'lsa — taxminiy narxni <a href="/uz/narxlar/#calc">kalkulyatorda</a> hisoblang.</p>`
       }
     ],

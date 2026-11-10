@@ -108,6 +108,7 @@ for (const u of urls) {
     }
   }
   for (const u of urls) {
+    if (/^\/(raboty|uz\/ishlar)\//.test(u)) continue; // work pages come from the gallery; llms.txt describes them as a group
     if (!llms.includes(`(${SITE_URL}${u})`)) problems.push(`llms.txt: page ${u} is not listed`);
   }
 })();

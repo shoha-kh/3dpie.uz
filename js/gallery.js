@@ -83,6 +83,7 @@
 
       // Click opens modal
       card.addEventListener('click', (e)=>{
+        if (e.target.closest('.work-meta a')) return; // the title leads to the page of this work
         e.preventDefault();
         openModal(idx, 0);
       });

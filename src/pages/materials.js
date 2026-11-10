@@ -55,7 +55,7 @@ module.exports = [
         title: 'PETG',
         html: `
 <p>Универсальный инженерный пластик: прочнее и ударостойче PLA, не боится влаги и солнца, держит около 70&nbsp;°C. Хороший выбор для креплений, кронштейнов, деталей для улицы, ванной и кухни.</p>
-<p><strong>PETG-CF</strong> — PETG с углеволокном: заметно жёстче и с красивой матовой фактурой. Из него, например, мы сделали <a href="/#work-biokamin-box">декоративный короб для биокамина</a>.</p>`
+<p><strong>PETG-CF</strong> — PETG с углеволокном: заметно жёстче и с красивой матовой фактурой. Из него, например, мы сделали <a href="/raboty/biokamin-box/">декоративный короб для биокамина</a>.</p>`
       },
       {
         title: 'ABS',
@@ -65,7 +65,7 @@ module.exports = [
       {
         title: 'TPU',
         html: `
-<p>Гибкий пластик, похожий на резину. Детали из TPU гнутся, пружинят и не трескаются, износостойкие и часто служат дольше силиконовых. Подходит для уплотнителей, демпферов, ножек, накладок, защитных чехлов. Пример — гибкие детали в <a href="/#work-flexible-rubber-parts">наших работах</a>.</p>`
+<p>Гибкий пластик, похожий на резину. Детали из TPU гнутся, пружинят и не трескаются, износостойкие и часто служат дольше силиконовых. Подходит для уплотнителей, демпферов, ножек, накладок, защитных чехлов. Пример — гибкие детали в <a href="/raboty/flexible-rubber-parts/">наших работах</a>.</p>`
       },
       {
         title: 'Nylon',
@@ -134,7 +134,7 @@ module.exports = [
         title: 'PETG',
         html: `
 <p>Universal muhandislik plastigi: PLA dan mustahkamroq va zarbaga chidamliroq, namlik va quyoshdan qo'rqmaydi, taxminan 70&nbsp;°C ga chidaydi. Mahkamlagichlar, kronshteynlar, ko'cha, hammom va oshxona detallari uchun yaxshi tanlov.</p>
-<p><strong>PETG-CF</strong> — uglerod tolali PETG: ancha qattiqroq va chiroyli mat yuzaga ega. Masalan, undan <a href="/uz.html#work-biokamin-box">biokamin uchun dekorativ quti</a> yasadik.</p>`
+<p><strong>PETG-CF</strong> — uglerod tolali PETG: ancha qattiqroq va chiroyli mat yuzaga ega. Masalan, undan <a href="/uz/ishlar/biokamin-box/">biokamin uchun dekorativ quti</a> yasadik.</p>`
       },
       {
         title: 'ABS',
@@ -144,7 +144,7 @@ module.exports = [
       {
         title: 'TPU',
         html: `
-<p>Rezinaga o'xshash egiluvchan plastik. TPU detallar egiladi, prujinadek qaytadi va yorilmaydi, yeyilishga chidamli va ko'pincha silikondan uzoqroq xizmat qiladi. Zichlagichlar, dempferlar, oyoqchalar, nakladkalar, himoya g'iloflari uchun mos. Misol — <a href="/uz.html#work-flexible-rubber-parts">ishlarimizdagi</a> egiluvchan detallar.</p>`
+<p>Rezinaga o'xshash egiluvchan plastik. TPU detallar egiladi, prujinadek qaytadi va yorilmaydi, yeyilishga chidamli va ko'pincha silikondan uzoqroq xizmat qiladi. Zichlagichlar, dempferlar, oyoqchalar, nakladkalar, himoya g'iloflari uchun mos. Misol — <a href="/uz/ishlar/flexible-rubber-parts/">ishlarimizdagi</a> egiluvchan detallar.</p>`
       },
       {
         title: 'Nylon',

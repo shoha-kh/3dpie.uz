@@ -38,7 +38,7 @@ module.exports = [
 <li><strong>Запчасти для оборудования</strong> — одинаковые детали про запас, когда оригинал не купить.</li>
 <li><strong>Прототип перед тиражом</strong> — сначала один образец на проверку, потом партия.</li>
 </ul>
-<p>Примеры наших серийных изделий — <a href="/#work-socket-box-caps">заглушки для подрозетников</a> в двух вариантах и <a href="/#work-tweeter-mounts">накладки для твитеров</a>.</p>`
+<p>Примеры наших серийных изделий — <a href="/raboty/socket-box-caps/">заглушки для подрозетников</a> в двух вариантах и <a href="/raboty/tweeter-mounts/">накладки для твитеров</a>.</p>`
       },
       {
         title: 'Как считается цена серии',
@@ -101,7 +101,7 @@ module.exports = [
 <li><strong>Uskunalar uchun ehtiyot qismlar</strong> — originalini sotib olib bo'lmaganda zaxira uchun bir xil detallar.</li>
 <li><strong>Tirajdan oldin prototip</strong> — avval tekshirish uchun bitta namuna, keyin partiya.</li>
 </ul>
-<p>Seriyali buyumlarimizga misol — ikki xil turdagi <a href="/uz.html#work-socket-box-caps">podrozetnik himoya qopqoqlari</a> va <a href="/uz.html#work-tweeter-mounts">tweeter nakladkalari</a>.</p>`
+<p>Seriyali buyumlarimizga misol — ikki xil turdagi <a href="/uz/ishlar/socket-box-caps/">podrozetnik himoya qopqoqlari</a> va <a href="/uz/ishlar/tweeter-mounts/">tweeter nakladkalari</a>.</p>`
       },
       {
         title: 'Seriya narxi qanday hisoblanadi',

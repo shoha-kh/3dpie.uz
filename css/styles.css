@@ -631,6 +631,36 @@ ol {
 }
 
 .scan-card figcaption::before,
+/* page of a single work: the video or the first photo */
+.work-figure video,
+.work-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(78vh, 720px);
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+  background: #000;
+}
+
+.work-figure img {
+  aspect-ratio: auto;
+}
+
+.work-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.work-photos img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
 .fig figcaption::before {
   content: '';
   width: 6px;
@@ -2108,6 +2138,16 @@ ol {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+
+  .crumbs {
+    align-items: center;
+  }
+
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 }
 

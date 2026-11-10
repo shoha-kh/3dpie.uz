@@ -202,6 +202,19 @@ function buildSchema(page, alternates) {
     });
   }
 
+  if (page.work) {
+    graph.push({
+      '@type': 'CreativeWork',
+      '@id': `${url}#work`,
+      name: page.h1,
+      description: page.lead,
+      url,
+      inLanguage: page.lang,
+      ...(page.work.image ? { image: abs(page.work.image) } : {}),
+      creator: { '@id': `${SITE_URL}/#business` }
+    });
+  }
+
   if (page.faq && page.faq.length) {
     graph.push({
       '@type': 'FAQPage',
@@ -373,7 +386,7 @@ function renderCtaBand(lang) {
     </section>`;
 }
 
-function renderRelated(page, registry) {
+function renderRelated(page, registry, title) {
   const t = T[page.lang];
   const items = (page.related || [])
     .map(id => registry.find(p => p.id === id && p.lang === page.lang))
@@ -383,7 +396,7 @@ function renderRelated(page, registry) {
   if (!items) return '';
   return `    <section class="section section-related">
         <div class="wrap">
-            <h2 class="h2">${esc(t.relatedTitle)}</h2>
+            <h2 class="h2">${esc(title || t.relatedTitle)}</h2>
             <ul class="related">
 ${items}
             </ul>
