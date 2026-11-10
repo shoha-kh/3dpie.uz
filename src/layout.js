@@ -430,6 +430,9 @@ function renderCalc(lang) {
     phone: CONTACTS.phoneHuman, site: SITE_URL.replace('https://', '')
   }).replace(/</g, '\\u003c');
 
+  const stat = ([k, label]) => `<div><dt>${esc(label)}</dt><dd data-out="${k}">—</dd></div>`;
+  const sum = [['models', c.models], ['pieces', c.pieces], ['sumWeight', c.sumWeight], ['sumTime', c.sumTime]].map(stat).join('');
+
   return `    <section class="section section-calc" id="calc">
         <div class="wrap">
             <div class="section-head">
@@ -437,99 +440,120 @@ function renderCalc(lang) {
                 <p class="section-note">${esc(c.note)}</p>
             </div>
             <div class="calc">
-                <div class="calc-stage">
-                    <label class="calc-drop">
-                        <input class="calc-file" type="file" accept=".stl">
-                        <span class="calc-drop-icon" aria-hidden="true"></span>
-                        <span class="calc-drop-text">${c.drop}</span>
-                        <span class="calc-drop-hint">${esc(c.dropHint)}</span>
-                        <noscript><span class="calc-drop-hint">${esc(c.noscript)}</span></noscript>
-                    </label>
-                    <canvas class="calc-canvas" tabindex="0" hidden></canvas>
-                    <div class="calc-zoom" hidden>
-                        <button type="button" data-zoom="in" aria-label="${esc(c.zoomIn)}" title="${esc(c.zoomIn)}">+</button>
-                        <button type="button" data-zoom="out" aria-label="${esc(c.zoomOut)}" title="${esc(c.zoomOut)}">−</button>
-                        <button type="button" data-zoom="fit" aria-label="${esc(c.zoomFit)}" title="${esc(c.zoomFit)}"><span aria-hidden="true">⤢</span></button>
-                    </div>
-                    <div class="calc-bar" hidden>
-                        <span class="calc-name"></span>
-                        <span class="calc-legend">${esc(c.legend)}</span>
-                        <span class="calc-hint">${esc(c.rotate)}</span>
-                        <button class="calc-other" type="button">${esc(c.other)}</button>
-                    </div>
+                <p class="calc-alert" role="alert"></p>
+                <div class="calc-plates" hidden>
+                    <div class="calc-plates-list" role="group" aria-label="${esc(c.plates)}"></div>
+                    <button class="calc-plate-add" type="button">
+                        <span class="calc-plate-plus" aria-hidden="true">+</span>
+                        <span><b>${esc(c.addModel)}</b><small>${esc(c.addHint)}</small></span>
+                    </button>
                 </div>
-                <div class="calc-panel">
-                    <label class="calc-mode">
-                        <input class="calc-adv-toggle" type="checkbox" aria-controls="calc-adv">
-                        <span class="calc-switch" aria-hidden="true"></span>
-                        <span class="calc-mode-text"><b>${esc(c.advanced)}</b><small>${esc(c.advancedHint)}</small></span>
-                    </label>
-                    <div class="calc-field">
-                        <label for="calc-mat">${esc(c.material)}</label>
-                        <select id="calc-mat" class="calc-mat">${mats}</select>
-                    </div>
-                    <div class="calc-field">
-                        <span class="calc-label" id="calc-orient-label">${esc(c.orient)}</span>
-                        <div class="calc-orient" role="group" aria-labelledby="calc-orient-label">
-                            <button type="button" data-orient="auto" title="${esc(c.orientAutoTitle)}" disabled>${esc(c.orientAuto)}</button>
-                            <button type="button" data-orient="face" aria-pressed="false" disabled>${esc(c.orientFace)}</button>
-                            <button type="button" data-orient="x" aria-label="${esc(c.orientX)}" title="${esc(c.orientX)}" disabled><span aria-hidden="true">↻</span> X</button>
-                            <button type="button" data-orient="y" aria-label="${esc(c.orientY)}" title="${esc(c.orientY)}" disabled><span aria-hidden="true">↻</span> Y</button>
-                            <button type="button" data-orient="reset" disabled>${esc(c.orientReset)}</button>
-                        </div>
-                    </div>
-                    <fieldset class="calc-field">
-                        <legend>${esc(c.infill)}</legend>
-                        <div class="calc-seg">${infill}
-                        </div>
-                    </fieldset>
-                    <div class="calc-adv" id="calc-adv" hidden>
-                        <div class="calc-field">
-                            <label for="calc-infill-range">${esc(c.infillExact)}</label>
-                            <div class="calc-range">
-                                <input id="calc-infill-range" class="calc-infill-range" type="range" min="0" max="100" step="5" value="${CALC.infillDefault}">
-                                <output class="calc-infill-val" for="calc-infill-range">${CALC.infillDefault}%</output>
+                <div class="calc-main">
+                    <div class="calc-model">
+                        <div class="calc-stage">
+                            <label class="calc-drop">
+                                <input class="calc-file" type="file" accept=".stl" multiple>
+                                <span class="calc-drop-icon" aria-hidden="true"></span>
+                                <span class="calc-drop-text">${c.drop}</span>
+                                <span class="calc-drop-hint">${esc(c.dropHint)}</span>
+                                <noscript><span class="calc-drop-hint">${esc(c.noscript)}</span></noscript>
+                            </label>
+                            <canvas class="calc-canvas" tabindex="0" hidden></canvas>
+                            <div class="calc-zoom" hidden>
+                                <button type="button" data-zoom="in" aria-label="${esc(c.zoomIn)}" title="${esc(c.zoomIn)}">+</button>
+                                <button type="button" data-zoom="out" aria-label="${esc(c.zoomOut)}" title="${esc(c.zoomOut)}">−</button>
+                                <button type="button" data-zoom="fit" aria-label="${esc(c.zoomFit)}" title="${esc(c.zoomFit)}"><span aria-hidden="true">⤢</span></button>
                             </div>
+                            <div class="calc-bar" hidden>
+                                <span class="calc-name"></span>
+                                <span class="calc-legend">${esc(c.legend)}</span>
+                                <span class="calc-hint">${esc(c.rotate)}</span>
+                                <button class="calc-other" type="button">${esc(c.other)}</button>
+                            </div>
+                        </div>
+                        <div class="calc-tools">
+                            <span class="calc-label" id="calc-orient-label">${esc(c.orient)}</span>
+                            <div class="calc-orient" role="group" aria-labelledby="calc-orient-label">
+                                <button type="button" data-orient="auto" title="${esc(c.orientAutoTitle)}" disabled>${esc(c.orientAuto)}</button>
+                                <button type="button" data-orient="face" aria-pressed="false" disabled>${esc(c.orientFace)}</button>
+                                <button type="button" data-orient="x" aria-label="${esc(c.orientX)}" title="${esc(c.orientX)}" disabled><span aria-hidden="true">↻</span> X</button>
+                                <button type="button" data-orient="y" aria-label="${esc(c.orientY)}" title="${esc(c.orientY)}" disabled><span aria-hidden="true">↻</span> Y</button>
+                                <button type="button" data-orient="reset" disabled>${esc(c.orientReset)}</button>
+                            </div>
+                        </div>
+                        <dl class="calc-out">${out}</dl>
+                        <p class="calc-msg" role="status"></p>
+                    </div>
+                    <div class="calc-panel">
+                        <h3 class="calc-h">${esc(c.settings)}<span class="calc-cur"></span></h3>
+                        <div class="calc-field">
+                            <label for="calc-mat">${esc(c.material)}</label>
+                            <select id="calc-mat" class="calc-mat">${mats}</select>
                         </div>
                         <fieldset class="calc-field">
-                            <legend>${esc(c.layer)}</legend>
-                            <div class="calc-seg">${layers}
+                            <legend>${esc(c.infill)}</legend>
+                            <div class="calc-seg">${infill}
                             </div>
                         </fieldset>
-                        <div class="calc-field">
-                            <label for="calc-walls">${esc(c.walls)}</label>
-                            <input id="calc-walls" class="calc-walls" type="number" min="${CALC.walls.min}" max="${CALC.walls.max}" step="1" value="${CALC.walls.def}" inputmode="numeric">
+                        <div class="calc-two">
+                            <div class="calc-field">
+                                <label for="calc-qty">${esc(c.qty)}</label>
+                                <input id="calc-qty" class="calc-qty" type="number" min="1" max="10000" step="1" value="1" inputmode="numeric">
+                            </div>
+                            <div class="calc-field">
+                                <label for="calc-unit">${esc(c.unit)}</label>
+                                <select id="calc-unit" class="calc-unit">${units}</select>
+                            </div>
                         </div>
-                        <div class="calc-field">
-                            <label for="calc-support">${esc(c.support)}</label>
-                            <select id="calc-support" class="calc-support">${supports}</select>
+                        <label class="calc-mode">
+                            <input class="calc-adv-toggle" type="checkbox" aria-controls="calc-adv">
+                            <span class="calc-switch" aria-hidden="true"></span>
+                            <span class="calc-mode-text"><b>${esc(c.advanced)}</b><small>${esc(c.advancedHint)}</small></span>
+                        </label>
+                        <div class="calc-adv" id="calc-adv" hidden>
+                            <div class="calc-field">
+                                <label for="calc-infill-range">${esc(c.infillExact)}</label>
+                                <div class="calc-range">
+                                    <input id="calc-infill-range" class="calc-infill-range" type="range" min="0" max="100" step="5" value="${CALC.infillDefault}">
+                                    <output class="calc-infill-val" for="calc-infill-range">${CALC.infillDefault}%</output>
+                                </div>
+                            </div>
+                            <fieldset class="calc-field">
+                                <legend>${esc(c.layer)}</legend>
+                                <div class="calc-seg">${layers}
+                                </div>
+                            </fieldset>
+                            <div class="calc-field">
+                                <label for="calc-walls">${esc(c.walls)}</label>
+                                <input id="calc-walls" class="calc-walls" type="number" min="${CALC.walls.min}" max="${CALC.walls.max}" step="1" value="${CALC.walls.def}" inputmode="numeric">
+                            </div>
+                            <div class="calc-field">
+                                <label for="calc-support">${esc(c.support)}</label>
+                                <select id="calc-support" class="calc-support">${supports}</select>
+                            </div>
+                            <button class="calc-reset" type="button">${esc(c.reset)}</button>
                         </div>
-                        <button class="calc-reset" type="button">${esc(c.reset)}</button>
                     </div>
-                    <div class="calc-two">
-                        <div class="calc-field">
-                            <label for="calc-qty">${esc(c.qty)}</label>
-                            <input id="calc-qty" class="calc-qty" type="number" min="1" max="10000" step="1" value="1" inputmode="numeric">
-                        </div>
-                        <div class="calc-field">
-                            <label for="calc-unit">${esc(c.unit)}</label>
-                            <select id="calc-unit" class="calc-unit">${units}</select>
-                        </div>
-                    </div>
-                    <dl class="calc-out">${out}</dl>
-                    <div class="calc-total">
-                        <span>${esc(c.total)}</span>
-                        <output data-out="total" aria-live="polite">${esc(c.empty)}</output>
-                    </div>
-                    <p class="calc-msg" role="status"></p>
-                    <div class="calc-actions">
-                        <a class="btn btn-accent calc-send" href="${CONTACTS.telegram}" target="_blank" rel="noopener"><span class="calc-send-label">${esc(c.tg)}</span> <span aria-hidden="true">→</span></a>
-                        <button class="btn calc-save" type="button" disabled>${esc(c.save)}</button>
-                        <button class="btn calc-copy" type="button" disabled>${esc(c.copy)}</button>
-                    </div>
-                    <p class="calc-status" role="status"></p>
-                    <p class="calc-disclaimer">${esc(c.disclaimer)}</p>
                 </div>
+                <div class="calc-summary">
+                    <div class="calc-sum-main">
+                        <div class="calc-total">
+                            <span>${esc(c.total)}</span>
+                            <output data-out="total" aria-live="polite">${esc(c.empty)}</output>
+                        </div>
+                        <dl class="calc-sum-stats">${sum}</dl>
+                        <p class="calc-order-msg" role="status"></p>
+                    </div>
+                    <div class="calc-sum-side">
+                        <div class="calc-actions">
+                            <a class="btn btn-accent calc-send" href="${CONTACTS.telegram}" target="_blank" rel="noopener"><span class="calc-send-label">${esc(c.tg)}</span> <span aria-hidden="true">→</span></a>
+                            <button class="btn calc-save" type="button" disabled>${esc(c.save)}</button>
+                            <button class="btn calc-copy" type="button" disabled>${esc(c.copy)}</button>
+                        </div>
+                        <p class="calc-status" role="status"></p>
+                    </div>
+                </div>
+                <p class="calc-disclaimer">${esc(c.disclaimer)}</p>
             </div>
             <script type="application/json" class="calc-data">${data}</script>
         </div>

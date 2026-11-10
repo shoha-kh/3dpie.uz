@@ -30,6 +30,7 @@ const CONTACTS = {
 // machine. Never name the printers on the site. Densities are typical filament values, g/cm³.
 const CALC = {
   minOrder: 100000,
+  maxPlates: 10, // models in one estimate, each on its own plate
   bed: [420, 420, 500],
   bedComposite: [245, 245, 245],
   shellMm: 0.85, // walls + top/bottom skin at the default wall count, counted as solid plastic
@@ -365,12 +366,22 @@ function businessNode(lang) {
 const CALC_T = {
   ru: {
     title: 'Калькулятор по <em>STL</em>',
-    note: 'Загрузите модель: посчитаем вес и примерную цену прямо в браузере. Файл никуда не отправляется и не сохраняется.',
-    drop: '<b>Перетащите STL-файл сюда</b> или нажмите, чтобы выбрать',
-    dropHint: 'Бинарный или текстовый STL, до 100 МБ',
+    note: 'Загрузите одну или несколько моделей: посчитаем вес, время печати и примерную цену прямо в браузере. Файлы никуда не отправляются и не сохраняются.',
+    drop: '<b>Перетащите STL-файлы сюда</b> или нажмите, чтобы выбрать',
+    dropHint: 'Можно несколько: каждая модель — на отдельном столе. STL до 100 МБ',
+    plate: 'Стол',
+    plates: 'Столы с моделями',
+    addModel: 'Добавить модель',
+    addHint: 'на отдельный стол',
+    remove: 'Убрать модель',
+    settings: 'Настройки модели',
+    models: 'Моделей',
+    pieces: 'Деталей',
+    sumWeight: 'Общий вес',
+    sumTime: 'Время печати (примерно)',
     noscript:
       'Для калькулятора нужен JavaScript. Пришлите файл в Telegram — посчитаем вручную.',
-    other: 'Другой файл',
+    other: 'Заменить файл',
     rotate: 'Потяните — повернуть, колесо или щипок — масштаб',
     faceHint: 'Нажмите на грань модели — она ляжет на стол',
     zoomIn: 'Приблизить',
@@ -430,10 +441,13 @@ const CALC_T = {
     saved: 'Картинка с расчётом сохранена — её можно отправить нам в Telegram.',
     saveFail: 'Не получилось сохранить картинку — скопируйте расчёт текстом.',
     disclaimer:
-      'Расчёт ориентировочный. Поддержки считаются под нависания для выбранного положения детали — кнопка «Авто» подберёт положение, где их меньше всего. Время печати — примерное: это работа принтера над одной деталью, без очереди, подготовки и постобработки. Доработка модели не учтена. Точную цену и срок готовности назовём в Telegram.',
+      'Расчёт ориентировочный. Поддержки считаются под нависания для выбранного положения детали — кнопка «Авто» подберёт положение, где их меньше всего. Время печати — примерное: это работа принтера без очереди, подготовки и постобработки; общее время — если печатать столы один за другим. Доработка модели не учтена. Точную цену и срок готовности назовём в Telegram.',
     card: {
       title: 'Расчёт 3D-печати',
-      file: 'Файл',
+      line1: '{mat} · заполнение {infill}% · слой {layer} мм · стенок: {walls}',
+      line2: '{size} мм · {qty} шт',
+      line3: '≈ {weight} г/шт ({sup})',
+      line4: 'Печать 1 шт ≈ {time} (примерно)',
       note: 'Расчёт ориентировочный, время печати примерное. Точную цену и срок назовём в Telegram.',
     },
     msg: {
@@ -449,20 +463,35 @@ const CALC_T = {
         'Композитные пластики печатаем до {bed} мм. Выберите другой пластик или напишите нам — подскажем.',
       min: 'Минимальный заказ — {min} сум, поэтому итог не меньше этой суммы.',
       noGl: 'Предпросмотр недоступен в этом браузере, но расчёт работает.',
+      limit: 'В одном расчёте — до {max} моделей. Остальные пришлите в Telegram.',
     },
-    copyText:
-      '3D-печать по STL: {file}, {mat}, заполнение {infill}%, слой {layer} мм, стенок: {walls}, {qty} шт. Габариты {size} мм, ≈ {weight} г/шт ({sup}). Время печати 1 шт ≈ {time} (примерно). Расчёт на сайте: ≈ {total} сум.',
+    copyHead: '3D-печать по STL — расчёт на сайте {site}',
+    copyItem:
+      '{n}) {file} — {mat}, заполнение {infill}%, слой {layer} мм, стенок: {walls}, {qty} шт. Габариты {size} мм, ≈ {weight} г/шт ({sup}), печать 1 шт ≈ {time}, ≈ {sum} сум',
+    copyItemShort: '{n}) {file} — {mat}, {qty} шт, ≈ {sum} сум',
+    copyTotal:
+      'Итого: моделей — {count}, деталей — {pieces}, ≈ {weight} г. Время печати ≈ {time} (примерно). Расчёт на сайте: ≈ {total} сум.',
     copySup: 'поддержки ≈ {sup} г',
     copyNoSup: 'без поддержек',
   },
   uz: {
     title: "<em>STL</em> bo'yicha kalkulyator",
-    note: "Modelni yuklang: og'irligi va taxminiy narxini shu yerda, brauzerda hisoblaymiz. Fayl hech qayerga yuborilmaydi va saqlanmaydi.",
-    drop: '<b>STL faylni shu yerga tashlang</b> yoki tanlash uchun bosing',
-    dropHint: 'Binar yoki matnli STL, 100 MB gacha',
+    note: "Bitta yoki bir nechta modelni yuklang: og'irligi, chop etish vaqti va taxminiy narxini shu yerda, brauzerda hisoblaymiz. Fayllar hech qayerga yuborilmaydi va saqlanmaydi.",
+    drop: '<b>STL fayllarni shu yerga tashlang</b> yoki tanlash uchun bosing',
+    dropHint: 'Bir nechta fayl mumkin: har bir model — alohida stolda. STL 100 MB gacha',
+    plate: 'Stol',
+    plates: 'Modelli stollar',
+    addModel: "Model qo'shish",
+    addHint: 'alohida stolga',
+    remove: 'Modelni olib tashlash',
+    settings: 'Model sozlamalari',
+    models: 'Modellar',
+    pieces: 'Detallar',
+    sumWeight: "Umumiy og'irlik",
+    sumTime: 'Chop etish vaqti (taxminan)',
     noscript:
       "Kalkulyator uchun JavaScript kerak. Faylni Telegramga yuboring — qo'lda hisoblaymiz.",
-    other: 'Boshqa fayl',
+    other: 'Faylni almashtirish',
     rotate: "Torting — aylantirish, g'ildirak yoki chimdish — masshtab",
     faceHint: 'Model yuzasini bosing — u stolga yotadi',
     zoomIn: 'Yaqinlashtirish',
@@ -517,10 +546,13 @@ const CALC_T = {
     saved: 'Hisob rasmi saqlandi — uni bizga Telegramda yuborishingiz mumkin.',
     saveFail: "Rasmni saqlab bo'lmadi — hisobni matn sifatida nusxalang.",
     disclaimer:
-      "Hisob taxminiy. Tayanchlar tanlangan holat uchun osilgan qismlar ostiga hisoblanadi — «Avto» tugmasi ular eng kam bo'lgan holatni tanlaydi. Chop etish vaqti — taxminiy: bu printerning bitta detal ustidagi ishi, navbat, tayyorgarlik va keyingi ishlovsiz. Modelni tuzatish hisobga olinmagan. Aniq narx va tayyor bo'lish muddatini Telegramda aytamiz.",
+      "Hisob taxminiy. Tayanchlar tanlangan holat uchun osilgan qismlar ostiga hisoblanadi — «Avto» tugmasi ular eng kam bo'lgan holatni tanlaydi. Chop etish vaqti — taxminiy: bu printerning ishi, navbat, tayyorgarlik va keyingi ishlovsiz; umumiy vaqt — stollar ketma-ket chop etilganda. Modelni tuzatish hisobga olinmagan. Aniq narx va tayyor bo'lish muddatini Telegramda aytamiz.",
     card: {
       title: '3D chop etish hisobi',
-      file: 'Fayl',
+      line1: "{mat} · to'ldirish {infill}% · qatlam {layer} mm · devorlar: {walls}",
+      line2: '{size} mm · {qty} dona',
+      line3: '≈ {weight} g/dona ({sup})',
+      line4: '1 dona chop etish ≈ {time} (taxminan)',
       note: 'Hisob taxminiy, chop etish vaqti ham taxminiy. Aniq narx va muddatni Telegramda aytamiz.',
     },
     msg: {
@@ -536,9 +568,14 @@ const CALC_T = {
         'Kompozit plastiklarni {bed} mm gacha chop etamiz. Boshqa plastikni tanlang yoki bizga yozing.',
       min: "Minimal buyurtma — {min} so'm, shuning uchun jami bu summadan kam emas.",
       noGl: "Bu brauzerda oldindan ko'rish mavjud emas, lekin hisob ishlaydi.",
+      limit: 'Bitta hisobda {max} tagacha model. Qolganlarini Telegramga yuboring.',
     },
-    copyText:
-      "STL bo'yicha 3D chop etish: {file}, {mat}, to'ldirish {infill}%, qatlam {layer} mm, devorlar: {walls}, {qty} dona. O'lchamlari {size} mm, ≈ {weight} g/dona ({sup}). 1 dona chop etish vaqti ≈ {time} (taxminan). Saytdagi hisob: ≈ {total} so'm.",
+    copyHead: "STL bo'yicha 3D chop etish — {site} saytidagi hisob",
+    copyItem:
+      "{n}) {file} — {mat}, to'ldirish {infill}%, qatlam {layer} mm, devorlar: {walls}, {qty} dona. O'lchamlari {size} mm, ≈ {weight} g/dona ({sup}), 1 dona chop etish ≈ {time}, ≈ {sum} so'm",
+    copyItemShort: "{n}) {file} — {mat}, {qty} dona, ≈ {sum} so'm",
+    copyTotal:
+      "Jami: modellar — {count}, detallar — {pieces}, ≈ {weight} g. Chop etish vaqti ≈ {time} (taxminan). Saytdagi hisob: ≈ {total} so'm.",
     copySup: 'tayanchlar ≈ {sup} g',
     copyNoSup: 'tayanchlarsiz',
   },
