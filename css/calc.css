@@ -525,14 +525,10 @@
   background: var(--bg-2);
 }
 
-.calc-orient [data-orient="auto"] {
-  color: var(--accent-ink);
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
+/* highlighted = how the model lies now (as in the file / as "Auto" laid it), or the face-picking mode is on */
+.calc-orient .is-current,
 .calc-orient [aria-pressed="true"] {
-  color: var(--text);
+  color: var(--accent);
   border-color: var(--accent);
   background: var(--accent-dim);
 }
