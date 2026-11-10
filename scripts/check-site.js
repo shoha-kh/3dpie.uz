@@ -69,6 +69,34 @@ for (const u of urls) {
   }
 })(ROOT);
 
+// llms.txt is written by hand: make sure it still agrees with src/site.js and lists every page.
+(function checkLlms() {
+  const { SITE_URL, CONTACTS, T, PRICES, money } = require('../src/site');
+  const llms = fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').replace(/ /g, ' ');
+  const facts = [
+    [CONTACTS.phoneHuman, 'phone'],
+    [CONTACTS.telegram, 'Telegram link'],
+    [CONTACTS.instagram, 'Instagram link'],
+    [T.ru.address.street, 'street address'],
+    [T.ru.address.landmarkName, 'landmark'],
+    [CONTACTS.postalCode, 'postal code'],
+    [`Минимальный заказ ${PRICES.min} сум`, 'minimum order'],
+    [`${PRICES.bed} мм`, 'max part size'],
+    [`${PRICES.bedComposite} мм`, 'max composite part size']
+  ];
+  for (const [text, what] of facts) {
+    if (!llms.includes(text)) problems.push(`llms.txt: ${what} differs from src/site.js — expected "${text}"`);
+  }
+  const want = PRICES.tiers.map(t => money(t.price));
+  const have = [...new Set([...llms.matchAll(/(?<!\w)(\d{1,3}(?: \d{3})+|\d+) сум за грамм/g)].map(m => m[1]))];
+  if (want.length !== have.length || want.some(p => !have.includes(p))) {
+    problems.push(`llms.txt: prices per gram (${have.join(', ')}) differ from CALC in src/site.js (${want.join(', ')})`);
+  }
+  for (const u of urls) {
+    if (!llms.includes(`(${SITE_URL}${u})`)) problems.push(`llms.txt: page ${u} is not listed`);
+  }
+})();
+
 console.log(`[check] ${urls.length} pages`);
 if (problems.length) {
   console.log(problems.map(p => '  ✗ ' + p).join('\n'));

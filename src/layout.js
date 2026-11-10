@@ -5,9 +5,23 @@
  * (spec list, order steps, FAQ, CTA band, related links, JSON-LD).
  */
 
-const { SITE_URL, CONTACTS, T, STEPS, STEPS_TITLE, STEP_LABEL, CALC, CALC_T, businessNode } = require('./site');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
-const ASSET_VERSION = '20261012g';
+const { SITE_URL, CONTACTS, T, STEPS, STEPS_TITLE, STEP_LABEL, CALC, CALC_T, money, businessNode } = require('./site');
+
+// Cache-busting for CSS/JS: "?v=" is a hash of the file itself, so it changes exactly when the file
+// changes — nothing to bump by hand. Line endings are normalised so Windows and Linux builds agree.
+const ROOT = path.resolve(__dirname, '..');
+const assetUrls = {};
+function asset(p) {
+  if (!assetUrls[p]) {
+    const text = fs.readFileSync(path.join(ROOT, p), 'utf8').replace(/\r\n/g, '\n');
+    assetUrls[p] = `${p}?v=${crypto.createHash('sha1').update(text).digest('hex').slice(0, 8)}`;
+  }
+  return assetUrls[p];
+}
 
 function esc(str) {
   return String(str == null ? '' : str)
@@ -60,9 +74,9 @@ function renderHead(page, alternates) {
   const preload = page.preloadImage
     ? `\n    <link rel="preload" as="image" href="${page.preloadImage}" fetchpriority="high">` : '';
   const galleryCss = page.hasGallery
-    ? `\n    <link rel="stylesheet" href="/css/gallery.css?v=${ASSET_VERSION}">` : '';
+    ? `\n    <link rel="stylesheet" href="${asset('/css/gallery.css')}">` : '';
   const calcCss = page.calc
-    ? `\n    <link rel="stylesheet" href="/css/calc.css?v=${ASSET_VERSION}">` : '';
+    ? `\n    <link rel="stylesheet" href="${asset('/css/calc.css')}">` : '';
 
   return `<head>
     <meta charset="UTF-8">
@@ -96,7 +110,7 @@ ${altLinks}${xDefault}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="/css/styles.css?v=${ASSET_VERSION}">${galleryCss}${calcCss}${preload}
+    <link rel="stylesheet" href="${asset('/css/styles.css')}">${galleryCss}${calcCss}${preload}
 ${ANALYTICS}
     <script type="application/ld+json">
 ${indentJson(buildSchema(page, alternates), 4)}
@@ -369,9 +383,9 @@ ${items}
 function renderDocument(page, registry, mainHtml) {
   const alternates = registry.filter(p => p.id === page.id);
   const t = T[page.lang];
-  const scripts = [`    <script src="/js/scripts.js?v=${ASSET_VERSION}" defer></script>`];
-  if (page.hasGallery) scripts.push(`    <script src="/js/gallery.js?v=${ASSET_VERSION}" defer></script>`);
-  if (page.calc) scripts.push(`    <script src="/js/calc.js?v=${ASSET_VERSION}" defer></script>`);
+  const scripts = [`    <script src="${asset('/js/scripts.js')}" defer></script>`];
+  if (page.hasGallery) scripts.push(`    <script src="${asset('/js/gallery.js')}" defer></script>`);
+  if (page.calc) scripts.push(`    <script src="${asset('/js/calc.js')}" defer></script>`);
   const gallerySchema = page.type === 'home'
     ? `\n    <!-- GALLERY-SCHEMA:START -->\n    <!-- GALLERY-SCHEMA:END -->` : '';
 
@@ -396,14 +410,10 @@ ${scripts.join('\n')}${gallerySchema}
 
 // STL price calculator (prices page). Everything is computed in the browser by js/calc.js;
 // prices, build volumes and strings come from CALC / CALC_T in src/site.js via an inline JSON block.
-function money(n) {
-  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
-}
-
 function renderCalc(lang) {
   const c = CALC_T[lang];
   const mats = CALC.materials.map(m =>
-    `<option value="${m.id}"${m.id === CALC.materialDefault ? ' selected' : ''}>${esc(m.name)} — ${money(m.price)} ${esc(c.sum)}/${esc(c.g)}</option>`).join('');
+    `<option value="${m.id}"${m.id === CALC.materialDefault ? ' selected' : ''}>${esc(m.name)} — ${money(m.price, '\u00a0')} ${esc(c.sum)}/${esc(c.g)}</option>`).join('');
   const infill = CALC.infill.map(v => `
                             <label><input type="radio" name="calc-infill" value="${v}"${v === CALC.infillDefault ? ' checked' : ''}><span>${esc(c.infillNames[v])}<b>${v}%</b></span></label>`).join('');
   const units = CALC.units.map(([id]) => `<option value="${id}">${esc(c.unitNames[id])}</option>`).join('');
@@ -518,5 +528,5 @@ function renderPrintViz(lang) {
 }
 
 module.exports = {
-  ANALYTICS, esc, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
+  ANALYTICS, asset, esc, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
 };

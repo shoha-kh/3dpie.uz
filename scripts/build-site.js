@@ -149,7 +149,7 @@ function render404(pages) {
     <meta name="theme-color" content="#0c0e0f">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/icon-32.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="${layout.asset('/css/styles.css')}">
 </head>
 <body class="page-404">
     <main id="main">

@@ -1,6 +1,6 @@
 'use strict';
 
-const { CONTACTS } = require('../site');
+const { CONTACTS, PRICES: P, T } = require('../site');
 
 const UPDATED = '2026-10-12';
 
@@ -51,7 +51,7 @@ function factsList(items) {
 const ruFaq = [
   {
     q: 'Сколько стоит 3D-печать в Ташкенте?',
-    a: 'Цена считается по весу пластика: PLA, PETG и ABS — 1 000 сум за грамм, PETG-CF и TPU — 1 500 сум, Nylon PA6 — 5 000 сум. Минимальный заказ — 100 000 сум. Есть STL-файл — посчитайте примерную цену в <a href="/ceny/#calc">калькуляторе</a>. Точную цену назовём в Telegram до начала работы, консультация бесплатная.'
+    a: `Цена считается по весу пластика: ${P.ru.tiers}. Минимальный заказ — ${P.min} сум. Есть STL-файл — посчитайте примерную цену в <a href="/ceny/#calc">калькуляторе</a>. Точную цену назовём в Telegram до начала работы, консультация бесплатная.`
   },
   {
     q: 'Можно ли сделать деталь без чертежа и 3D-модели?',
@@ -63,7 +63,7 @@ const ruFaq = [
   },
   {
     q: 'Где вы находитесь и как получить заказ?',
-    a: 'Производство — в Чирчике (Ташкентская область), ул. Амира Тимура, 62а, ориентир — 10-я автобаза. Заказ можно забрать самому, заказать курьера по Ташкенту и Ташкентской области, а в другие регионы отправляем через BTS или Яндекс Доставку (доставка платная).'
+    a: `Производство — в Чирчике (Ташкентская область), ${T.ru.address.street}, ориентир — ${T.ru.address.landmarkName}. Заказ можно забрать самому, заказать курьера по Ташкенту и Ташкентской области, а в другие регионы отправляем через BTS или Яндекс Доставку (доставка платная).`
   },
   {
     q: 'Из каких материалов вы печатаете?',
@@ -118,7 +118,7 @@ function renderRu(ctx) {
                 ${layout.renderCtaButtons('ru')}
                 ${calcTeaser('ru')}
 ${layout.renderSpec([
-    ['Заказ', 'от 100 000 сум'],
+    ['Заказ', `от ${P.min} сум`],
     ['Простая деталь', '1–2 дня'],
     ['Консультация', 'бесплатно'],
     ['Доставка', 'Ташкент и область, регионы — BTS / Яндекс']
@@ -159,17 +159,15 @@ ${layout.renderSteps('ru', 'how')}
         <div class="wrap price-grid">
             <div>
                 <p class="kicker">Цены</p>
-                <p class="price-big"><small>от</small> 100&nbsp;000 <small>сум</small></p>
-                <p>Минимальный заказ. Платите за граммы пластика: PLA, PETG и ABS — 1&nbsp;000 сум за грамм. Есть STL-файл — загрузите его в калькулятор и сразу увидите примерную цену, а точную назовём в Telegram.</p>
+                <p class="price-big"><small>от</small> ${P.minNb} <small>сум</small></p>
+                <p>Минимальный заказ. Платите за граммы пластика: ${P.ru.baseNames} — ${P.ru.basePerGramNb}. Есть STL-файл — загрузите его в калькулятор и сразу увидите примерную цену, а точную назовём в Telegram.</p>
                 <div class="price-actions">
                     <a class="btn btn-paper" href="/ceny/#calc">Рассчитать по STL <span aria-hidden="true">→</span></a>
                     <a class="price-link" href="/ceny/">Все цены и сроки</a>
                 </div>
             </div>
 ${layout.renderSpec([
-    ['PLA, PETG, ABS', '1 000 сум/г'],
-    ['PETG-CF, TPU', '1 500 сум/г'],
-    ['Nylon PA6', '5 000 сум/г'],
+    ...P.ru.spec,
     ['Простая деталь', '1–2 дня'],
     ['Серии и постоянные клиенты', 'скидки']
   ])}
@@ -210,7 +208,7 @@ ${layout.renderFaq('ru', ruFaq)}
             <div>
                 <h2 class="h2">Как нас <em>найти</em></h2>
                 <dl class="contact-list">
-                    <div><dt>Производство</dt><dd>Ташкентская обл., г. Чирчик, ул. Амира Тимура, 62а<br>Ориентир: 10-я автобаза</dd></div>
+                    <div><dt>Производство</dt><dd>${T.ru.address.full}<br>${T.ru.address.landmark}</dd></div>
                     <div><dt>Телефон</dt><dd><a href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a></dd></div>
                     <div><dt>Telegram</dt><dd><a href="${CONTACTS.telegram}" target="_blank" rel="noopener">${CONTACTS.telegramHandle}</a></dd></div>
                     <div><dt>Instagram</dt><dd><a href="${CONTACTS.instagram}" target="_blank" rel="noopener">${CONTACTS.instagramHandle}</a></dd></div>
@@ -219,7 +217,7 @@ ${layout.renderFaq('ru', ruFaq)}
                 ${layout.renderCtaButtons('ru')}
             </div>
             <div class="map">
-                ${MAP.replace('%TITLE%', 'Карта: 3DPie, Чирчик, ул. Амира Тимура, 62а')}
+                ${MAP.replace('%TITLE%', `Карта: 3DPie, ${T.ru.address.city}, ${T.ru.address.street}`)}
             </div>
         </div>
     </section>`;
@@ -230,7 +228,7 @@ ${layout.renderFaq('ru', ruFaq)}
 const uzFaq = [
   {
     q: 'Toshkentda 3D chop etish qancha turadi?',
-    a: "Narx plastik og'irligi bo'yicha hisoblanadi: PLA, PETG va ABS — grammi 1 000 so'm, PETG-CF va TPU — 1 500 so'm, Nylon PA6 — 5 000 so'm. Minimal buyurtma — 100 000 so'm. STL fayl bo'lsa — taxminiy narxni <a href=\"/uz/narxlar/#calc\">kalkulyatorda</a> hisoblang. Aniq narxni ish boshlanishidan oldin Telegramda aytamiz, konsultatsiya bepul."
+    a: `Narx plastik og'irligi bo'yicha hisoblanadi: ${P.uz.tiers}. Minimal buyurtma — ${P.min} so'm. STL fayl bo'lsa — taxminiy narxni <a href=\"/uz/narxlar/#calc\">kalkulyatorda</a> hisoblang. Aniq narxni ish boshlanishidan oldin Telegramda aytamiz, konsultatsiya bepul.`
   },
   {
     q: 'Chizma va 3D modelsiz detal yasash mumkinmi?',
@@ -242,7 +240,7 @@ const uzFaq = [
   },
   {
     q: 'Qayerda joylashgansiz va buyurtmani qanday olaman?',
-    a: "Ishlab chiqarish Chirchiqda (Toshkent viloyati), Amir Temur ko'chasi, 62a, mo'ljal — 10-avtobaza. Buyurtmani o'zingiz olib ketishingiz yoki Toshkent va Toshkent viloyati bo'ylab kuryer orqali olishingiz mumkin, boshqa viloyatlarga BTS yoki Yandex orqali jo'natamiz (yetkazib berish pullik)."
+    a: `Ishlab chiqarish Chirchiqda (Toshkent viloyati), ${T.uz.address.street}, mo'ljal — ${T.uz.address.landmarkName}. Buyurtmani o'zingiz olib ketishingiz yoki Toshkent va Toshkent viloyati bo'ylab kuryer orqali olishingiz mumkin, boshqa viloyatlarga BTS yoki Yandex orqali jo'natamiz (yetkazib berish pullik).`
   },
   {
     q: 'Qaysi materiallardan chop etasiz?',
@@ -297,7 +295,7 @@ function renderUz(ctx) {
                 ${layout.renderCtaButtons('uz')}
                 ${calcTeaser('uz')}
 ${layout.renderSpec([
-    ['Buyurtma', "100 000 so'mdan"],
+    ['Buyurtma', `${P.min} so'mdan`],
     ['Oddiy detal', '1–2 kun'],
     ['Konsultatsiya', 'bepul'],
     ['Yetkazib berish', 'Toshkent va viloyat, viloyatlarga — BTS / Yandex']
@@ -338,17 +336,15 @@ ${layout.renderSteps('uz', 'how')}
         <div class="wrap price-grid">
             <div>
                 <p class="kicker">Narxlar</p>
-                <p class="price-big">100&nbsp;000 <small>so'mdan</small></p>
-                <p>Minimal buyurtma. Plastik grammlari uchun to'laysiz: PLA, PETG va ABS — grammi 1&nbsp;000 so'm. STL fayl bo'lsa — uni kalkulyatorga yuklang va taxminiy narxni darhol ko'ring, aniq narxni Telegramda aytamiz.</p>
+                <p class="price-big">${P.minNb} <small>so'mdan</small></p>
+                <p>Minimal buyurtma. Plastik grammlari uchun to'laysiz: ${P.uz.baseNames} — ${P.uz.basePerGramNb}. STL fayl bo'lsa — uni kalkulyatorga yuklang va taxminiy narxni darhol ko'ring, aniq narxni Telegramda aytamiz.</p>
                 <div class="price-actions">
                     <a class="btn btn-paper" href="/uz/narxlar/#calc">STL bo'yicha hisoblash <span aria-hidden="true">→</span></a>
                     <a class="price-link" href="/uz/narxlar/">Barcha narxlar va muddatlar</a>
                 </div>
             </div>
 ${layout.renderSpec([
-    ['PLA, PETG, ABS', "1 000 so'm/g"],
-    ['PETG-CF, TPU', "1 500 so'm/g"],
-    ['Nylon PA6', "5 000 so'm/g"],
+    ...P.uz.spec,
     ['Oddiy detal', '1–2 kun'],
     ['Seriyalar va doimiy mijozlar', 'chegirmalar']
   ])}
@@ -389,7 +385,7 @@ ${layout.renderFaq('uz', uzFaq)}
             <div>
                 <h2 class="h2">Bizni qanday <em>topish mumkin</em></h2>
                 <dl class="contact-list">
-                    <div><dt>Ishlab chiqarish</dt><dd>Toshkent viloyati, Chirchiq sh., Amir Temur ko'chasi, 62a<br>Mo'ljal: 10-avtobaza</dd></div>
+                    <div><dt>Ishlab chiqarish</dt><dd>${T.uz.address.full}<br>${T.uz.address.landmark}</dd></div>
                     <div><dt>Telefon</dt><dd><a href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a></dd></div>
                     <div><dt>Telegram</dt><dd><a href="${CONTACTS.telegram}" target="_blank" rel="noopener">${CONTACTS.telegramHandle}</a></dd></div>
                     <div><dt>Instagram</dt><dd><a href="${CONTACTS.instagram}" target="_blank" rel="noopener">${CONTACTS.instagramHandle}</a></dd></div>
@@ -398,7 +394,7 @@ ${layout.renderFaq('uz', uzFaq)}
                 ${layout.renderCtaButtons('uz')}
             </div>
             <div class="map">
-                ${MAP.replace('%TITLE%', "Xarita: 3DPie, Chirchiq, Amir Temur ko'chasi, 62a")}
+                ${MAP.replace('%TITLE%', `Xarita: 3DPie, ${T.uz.address.city}, ${T.uz.address.street}`)}
             </div>
         </div>
     </section>`;
@@ -414,7 +410,7 @@ module.exports = [
     nav: 'home',
     title: '3D-печать в Ташкенте и Чирчике — детали на заказ, 3D-сканирование | 3DPie',
     ogTitle: '3DPie — 3D-печать на заказ в Ташкенте и Чирчике',
-    description: '3D-печать, 3D-сканирование и моделирование на заказ в Ташкенте и Чирчике: автозапчасти, шестерни, корпуса, резиновые детали по фото или образцу. Заказ от 100 000 сум, простая деталь за 1–2 дня. ☎ +998 90 139 10 94',
+    description: `3D-печать, 3D-сканирование и моделирование на заказ в Ташкенте и Чирчике: автозапчасти, шестерни, корпуса, резиновые детали по фото или образцу. Заказ от ${P.min} сум, простая деталь за 1–2 дня. ☎ +998 90 139 10 94`,
     preloadImage: '/images/work-grille.webp',
     hasGallery: true,
     faq: ruFaq,
@@ -430,7 +426,7 @@ module.exports = [
     nav: 'home',
     title: "3D chop etish Toshkent va Chirchiqda — buyurtma asosida detallar | 3DPie",
     ogTitle: '3DPie — Toshkent va Chirchiqda 3D chop etish',
-    description: "Toshkent va Chirchiqda buyurtma asosida 3D chop etish (3D pechat), 3D skanerlash va modellashtirish: avtoehtiyot qismlar, tishli g'ildiraklar, korpuslar, rezina detallar. Buyurtma 100 000 so'mdan, oddiy detal 1–2 kunda. ☎ +998 90 139 10 94",
+    description: `Toshkent va Chirchiqda buyurtma asosida 3D chop etish (3D pechat), 3D skanerlash va modellashtirish: avtoehtiyot qismlar, tishli g'ildiraklar, korpuslar, rezina detallar. Buyurtma ${P.min} so'mdan, oddiy detal 1–2 kunda. ☎ +998 90 139 10 94`,
     preloadImage: '/images/work-grille.webp',
     hasGallery: true,
     faq: uzFaq,

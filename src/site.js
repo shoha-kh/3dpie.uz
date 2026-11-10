@@ -25,6 +25,94 @@ const CONTACTS = {
   whatsapp: 'https://wa.me/998901391094',
 }
 
+// STL calculator on the prices page (js/calc.js reads this as JSON). Estimate only — exact price in Telegram.
+// Prices are per gram of plastic (owner, 2026-10). Build volumes in mm; composites print on a smaller
+// machine. Never name the printers on the site. Densities are typical filament values, g/cm³.
+const CALC = {
+  minOrder: 100000,
+  bed: [420, 420, 500],
+  bedComposite: [245, 245, 245],
+  shellMm: 0.85, // walls + top/bottom skin, counted as solid plastic
+  overhangDeg: 45, // faces tilted more than this from vertical get supports
+  supportFill: 0.15, // share of the space under an overhang filled by support plastic
+  materials: [
+    { id: 'pla', name: 'PLA', price: 1000, density: 1.24 },
+    { id: 'petg', name: 'PETG', price: 1000, density: 1.27 },
+    { id: 'abs', name: 'ABS', price: 1000, density: 1.04 },
+    {
+      id: 'petg-cf',
+      name: 'PETG-CF',
+      price: 1500,
+      density: 1.3,
+      composite: true,
+    },
+    { id: 'tpu', name: 'TPU', price: 1500, density: 1.21 },
+    { id: 'nylon', name: 'Nylon PA6', price: 5000, density: 1.13 },
+  ],
+  materialDefault: 'petg',
+  infill: [15, 20, 40, 100],
+  infillDefault: 20,
+  units: [
+    ['mm', 1],
+    ['cm', 10],
+    ['in', 25.4],
+    ['m', 1000],
+  ],
+}
+
+// Price texts for pages, schema and social images. Always built from CALC, so the calculator,
+// the page texts and JSON-LD cannot disagree. Change a price in CALC — every page follows.
+// llms.txt is hand-written: `npm run check` compares it with these numbers.
+function money(n, sep) {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep || ' ')
+}
+
+const PRICE_WORDS = {
+  ru: { and: 'и', sum: 'сум', perGram: p => `${p} сум за грамм`, short: p => `${p} сум/г` },
+  uz: { and: 'va', sum: "so'm", perGram: p => `grammi ${p} so'm`, short: p => `${p} so'm/g` },
+}
+
+// Materials grouped by price, cheapest first: [{ price, names: ['PLA', 'PETG', 'ABS'] }, …]
+const PRICE_TIERS = []
+for (const m of CALC.materials) {
+  let tier = PRICE_TIERS.find(t => t.price === m.price)
+  if (!tier) PRICE_TIERS.push((tier = { price: m.price, names: [] }))
+  tier.names.push(m.name)
+}
+PRICE_TIERS.sort((x, y) => x.price - y.price)
+
+function priceTexts(lang) {
+  const w = PRICE_WORDS[lang]
+  const list = names =>
+    names.length > 1
+      ? `${names.slice(0, -1).join(', ')} ${w.and} ${names[names.length - 1]}`
+      : names[0]
+  const base = PRICE_TIERS[0]
+  return {
+    baseNames: list(base.names), // "PLA, PETG и ABS"
+    basePerGram: w.perGram(money(base.price)), // "1 000 сум за грамм"
+    basePerGramNb: w.perGram(money(base.price, '&nbsp;')),
+    // "PLA, PETG и ABS — 1 000 сум за грамм, PETG-CF и TPU — 1 500 сум, Nylon PA6 — 5 000 сум"
+    tiers: PRICE_TIERS.map(
+      (t, i) =>
+        `${list(t.names)} — ${i === 0 ? w.perGram(money(t.price)) : `${money(t.price)} ${w.sum}`}`,
+    ).join(', '),
+    // rows for a spec list: ['PLA, PETG, ABS', '1 000 сум/г']
+    spec: PRICE_TIERS.map(t => [t.names.join(', '), w.short(money(t.price))]),
+  }
+}
+
+const PRICES = {
+  minOrder: CALC.minOrder, // number, for JSON-LD
+  min: money(CALC.minOrder), // "100 000"
+  minNb: money(CALC.minOrder, '&nbsp;'),
+  bed: CALC.bed.join(' × '), // "420 × 420 × 500"
+  bedComposite: CALC.bedComposite.join(' × '),
+  tiers: PRICE_TIERS,
+  ru: priceTexts('ru'),
+  uz: priceTexts('uz'),
+}
+
 const T = {
   ru: {
     htmlLang: 'ru',
@@ -52,8 +140,9 @@ const T = {
       region: 'Ташкентская область',
       full: 'Ташкентская обл., г. Чирчик, ул. Амира Тимура, 62а',
       landmark: 'Ориентир: 10-я автобаза',
+      landmarkName: '10-я автобаза',
     },
-    priceRange: 'от 100 000 сум',
+    priceRange: `от ${PRICES.min} сум`,
     footerAbout:
       'Студия 3D-печати, 3D-сканирования и 3D-моделирования: 3д печать пластиковых и резиновых деталей на заказ по фото и образцу. Производство в Чирчике, доставка по Ташкенту и области, отправка по Узбекистану через BTS и Яндекс Доставку.',
     footerServices: 'Услуги',
@@ -77,7 +166,7 @@ const T = {
       'Сфотографируйте деталь или обломок рядом с линейкой и напишите, для чего она. Консультация бесплатная.',
     more: 'Подробнее',
     businessDescription:
-      '3DPie — студия 3D-печати, 3D-сканирования и 3D-моделирования в Чирчике (Ташкентская область, Узбекистан). Изготавливает пластиковые и резиновые детали на заказ для частных клиентов и бизнеса по фото, образцу или чертежу: автозапчасти, шестерни и детали для техники, корпуса, серийные партии, реверс-инжиниринг сломанных деталей. Материалы PLA, PETG, PETG-CF, ABS, TPU, Nylon. Заказ от 100 000 сум, простая деталь — 1–2 дня, консультация бесплатная. Доставка по Ташкенту и Ташкентской области, отправка по Узбекистану через BTS и Яндекс Доставку.',
+      `3DPie — студия 3D-печати, 3D-сканирования и 3D-моделирования в Чирчике (Ташкентская область, Узбекистан). Изготавливает пластиковые и резиновые детали на заказ для частных клиентов и бизнеса по фото, образцу или чертежу: автозапчасти, шестерни и детали для техники, корпуса, серийные партии, реверс-инжиниринг сломанных деталей. Материалы PLA, PETG, PETG-CF, ABS, TPU, Nylon. Заказ от ${PRICES.min} сум, простая деталь — 1–2 дня, консультация бесплатная. Доставка по Ташкенту и Ташкентской области, отправка по Узбекистану через BTS и Яндекс Доставку.`,
     areaNames: {
       chirchiq: 'Чирчик',
       tashkent: 'Ташкент',
@@ -111,8 +200,9 @@ const T = {
       region: 'Toshkent viloyati',
       full: "Toshkent viloyati, Chirchiq sh., Amir Temur ko'chasi, 62a",
       landmark: "Mo'ljal: 10-avtobaza",
+      landmarkName: '10-avtobaza',
     },
-    priceRange: "100 000 so'mdan",
+    priceRange: `${PRICES.min} so'mdan`,
     footerAbout:
       "3D chop etish (3D bosib chiqarish, 3D pechat), 3D skanerlash va 3D modellashtirish studiyasi: rasm va namuna bo'yicha plastik va rezina detallar. Ishlab chiqarish Chirchiqda, Toshkent va viloyat bo'ylab yetkazib berish, O'zbekiston bo'ylab BTS va Yandex orqali jo'natish.",
     footerServices: 'Xizmatlar',
@@ -137,7 +227,7 @@ const T = {
       "Detalni yoki uning siniq bo'lagini chizg'ich yonida suratga oling va nima uchun kerakligini yozing. Konsultatsiya bepul.",
     more: 'Batafsil',
     businessDescription:
-      "3DPie — Chirchiqdagi (Toshkent viloyati, O'zbekiston) 3D chop etish, 3D skanerlash va 3D modellashtirish studiyasi. Jismoniy shaxslar va biznes uchun rasm, namuna yoki chizma asosida plastik va rezina detallarni buyurtma asosida tayyorlaydi: avtoehtiyot qismlar, texnika uchun tishli g'ildiraklar va detallar, korpuslar, seriyali partiyalar, singan detallarni teskari muhandislik orqali tiklash. Materiallar: PLA, PETG, PETG-CF, ABS, TPU, Nylon. Buyurtma 100 000 so'mdan, oddiy detal — 1–2 kun, konsultatsiya bepul. Toshkent va Toshkent viloyati bo'ylab yetkazib berish, O'zbekiston bo'ylab BTS va Yandex orqali jo'natish.",
+      `3DPie — Chirchiqdagi (Toshkent viloyati, O'zbekiston) 3D chop etish, 3D skanerlash va 3D modellashtirish studiyasi. Jismoniy shaxslar va biznes uchun rasm, namuna yoki chizma asosida plastik va rezina detallarni buyurtma asosida tayyorlaydi: avtoehtiyot qismlar, texnika uchun tishli g'ildiraklar va detallar, korpuslar, seriyali partiyalar, singan detallarni teskari muhandislik orqali tiklash. Materiallar: PLA, PETG, PETG-CF, ABS, TPU, Nylon. Buyurtma ${PRICES.min} so'mdan, oddiy detal — 1–2 kun, konsultatsiya bepul. Toshkent va Toshkent viloyati bo'ylab yetkazib berish, O'zbekiston bo'ylab BTS va Yandex orqali jo'natish.`,
     areaNames: {
       chirchiq: 'Chirchiq',
       tashkent: 'Toshkent',
@@ -253,41 +343,6 @@ function businessNode(lang) {
     ],
     sameAs: [CONTACTS.instagram, CONTACTS.telegram],
   }
-}
-
-// STL calculator on the prices page (js/calc.js reads this as JSON). Estimate only — exact price in Telegram.
-// Prices are per gram of plastic (owner, 2026-10). Build volumes in mm; composites print on a smaller
-// machine. Never name the printers on the site. Densities are typical filament values, g/cm³.
-const CALC = {
-  minOrder: 100000,
-  bed: [420, 420, 500],
-  bedComposite: [245, 245, 245],
-  shellMm: 0.85, // walls + top/bottom skin, counted as solid plastic
-  overhangDeg: 45, // faces tilted more than this from vertical get supports
-  supportFill: 0.15, // share of the space under an overhang filled by support plastic
-  materials: [
-    { id: 'pla', name: 'PLA', price: 1000, density: 1.24 },
-    { id: 'petg', name: 'PETG', price: 1000, density: 1.27 },
-    { id: 'abs', name: 'ABS', price: 1000, density: 1.04 },
-    {
-      id: 'petg-cf',
-      name: 'PETG-CF',
-      price: 1500,
-      density: 1.3,
-      composite: true,
-    },
-    { id: 'tpu', name: 'TPU', price: 1500, density: 1.21 },
-    { id: 'nylon', name: 'Nylon PA6', price: 5000, density: 1.13 },
-  ],
-  materialDefault: 'petg',
-  infill: [15, 20, 40, 100],
-  infillDefault: 20,
-  units: [
-    ['mm', 1],
-    ['cm', 10],
-    ['in', 25.4],
-    ['m', 1000],
-  ],
 }
 
 const CALC_T = {
@@ -431,5 +486,7 @@ module.exports = {
   STEP_LABEL,
   CALC,
   CALC_T,
+  PRICES,
+  money,
   businessNode,
 }
