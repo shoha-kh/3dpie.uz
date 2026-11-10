@@ -87,10 +87,21 @@ for (const u of urls) {
   for (const [text, what] of facts) {
     if (!llms.includes(text)) problems.push(`llms.txt: ${what} differs from src/site.js — expected "${text}"`);
   }
-  const want = PRICES.tiers.map(t => money(t.price));
-  const have = [...new Set([...llms.matchAll(/(?<!\w)(\d{1,3}(?: \d{3})+|\d+) сум за грамм/g)].map(m => m[1]))];
-  if (want.length !== have.length || want.some(p => !have.includes(p))) {
-    problems.push(`llms.txt: prices per gram (${have.join(', ')}) differ from CALC in src/site.js (${want.join(', ')})`);
+  // "PLA и PETG 1 000 сум за грамм; ABS, PETG-CF и TPU 1 500 сум за грамм; …" — every material must sit
+  // in the part of the price line that carries its own price.
+  const parts = llms.split(/[;\n]/).map(part => ({
+    part,
+    price: (part.match(/(?<!\w)(\d{1,3}(?: \d{3})+|\d+) сум за грамм/) || [])[1]
+  })).filter(p => p.price);
+  for (const tier of PRICES.tiers) {
+    for (const name of tier.names) {
+      const own = new RegExp(`(?<![\\w-])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`);
+      const hit = parts.find(p => own.test(p.part));
+      if (!hit) problems.push(`llms.txt: no price per gram for ${name} (src/site.js: ${money(tier.price)} сум за грамм)`);
+      else if (hit.price !== money(tier.price)) {
+        problems.push(`llms.txt: ${name} is ${hit.price} сум за грамм, src/site.js says ${money(tier.price)}`);
+      }
+    }
   }
   for (const u of urls) {
     if (!llms.includes(`(${SITE_URL}${u})`)) problems.push(`llms.txt: page ${u} is not listed`);

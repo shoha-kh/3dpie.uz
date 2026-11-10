@@ -2,7 +2,7 @@
 
 const { CONTACTS, PRICES: P, T } = require('../site');
 
-const UPDATED = '2026-10-12';
+const UPDATED = '2026-11-10';
 
 const MAP = `<iframe title="%TITLE%" src="${CONTACTS.mapEmbed}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`;
 

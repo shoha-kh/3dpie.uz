@@ -417,9 +417,18 @@ function renderCalc(lang) {
   const infill = CALC.infill.map(v => `
                             <label><input type="radio" name="calc-infill" value="${v}"${v === CALC.infillDefault ? ' checked' : ''}><span>${esc(c.infillNames[v])}<b>${v}%</b></span></label>`).join('');
   const units = CALC.units.map(([id]) => `<option value="${id}">${esc(c.unitNames[id])}</option>`).join('');
-  const out = [['size', c.size], ['volume', c.volume], ['weight', c.weight], ['supports', c.supports], ['piece', c.perPiece]]
+  const comma = n => String(n).replace('.', ',');
+  const layers = CALC.layers.map(v => `
+                                <label><input type="radio" name="calc-layer" value="${v}"${v === CALC.layerDefault ? ' checked' : ''}><span>${esc(c.layerNames[v])}<b>${comma(v)} ${esc(c.mm)}</b></span></label>`).join('');
+  const supports = CALC.overhangs.map(d =>
+    `<option value="${d}"${d === CALC.overhangDeg ? ' selected' : ''}>${esc(c.supportAt.replace('{deg}', d))}</option>`).join('') +
+    `<option value="off">${esc(c.supportOff)}</option>`;
+  const out = [['size', c.size], ['volume', c.volume], ['weight', c.weight], ['supports', c.supports], ['time', c.time], ['piece', c.perPiece]]
     .map(([k, label]) => `<div><dt>${esc(label)}</dt><dd data-out="${k}">—</dd></div>`).join('');
-  const data = JSON.stringify({ calc: CALC, t: c, telegram: CONTACTS.telegram }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({
+    calc: CALC, t: c, lang, telegram: CONTACTS.telegram, handle: CONTACTS.telegramHandle,
+    phone: CONTACTS.phoneHuman, site: SITE_URL.replace('https://', '')
+  }).replace(/</g, '\\u003c');
 
   return `    <section class="section section-calc" id="calc">
         <div class="wrap">
@@ -450,6 +459,11 @@ function renderCalc(lang) {
                     </div>
                 </div>
                 <div class="calc-panel">
+                    <label class="calc-mode">
+                        <input class="calc-adv-toggle" type="checkbox" aria-controls="calc-adv">
+                        <span class="calc-switch" aria-hidden="true"></span>
+                        <span class="calc-mode-text"><b>${esc(c.advanced)}</b><small>${esc(c.advancedHint)}</small></span>
+                    </label>
                     <div class="calc-field">
                         <label for="calc-mat">${esc(c.material)}</label>
                         <select id="calc-mat" class="calc-mat">${mats}</select>
@@ -469,6 +483,29 @@ function renderCalc(lang) {
                         <div class="calc-seg">${infill}
                         </div>
                     </fieldset>
+                    <div class="calc-adv" id="calc-adv" hidden>
+                        <div class="calc-field">
+                            <label for="calc-infill-range">${esc(c.infillExact)}</label>
+                            <div class="calc-range">
+                                <input id="calc-infill-range" class="calc-infill-range" type="range" min="0" max="100" step="5" value="${CALC.infillDefault}">
+                                <output class="calc-infill-val" for="calc-infill-range">${CALC.infillDefault}%</output>
+                            </div>
+                        </div>
+                        <fieldset class="calc-field">
+                            <legend>${esc(c.layer)}</legend>
+                            <div class="calc-seg">${layers}
+                            </div>
+                        </fieldset>
+                        <div class="calc-field">
+                            <label for="calc-walls">${esc(c.walls)}</label>
+                            <input id="calc-walls" class="calc-walls" type="number" min="${CALC.walls.min}" max="${CALC.walls.max}" step="1" value="${CALC.walls.def}" inputmode="numeric">
+                        </div>
+                        <div class="calc-field">
+                            <label for="calc-support">${esc(c.support)}</label>
+                            <select id="calc-support" class="calc-support">${supports}</select>
+                        </div>
+                        <button class="calc-reset" type="button">${esc(c.reset)}</button>
+                    </div>
                     <div class="calc-two">
                         <div class="calc-field">
                             <label for="calc-qty">${esc(c.qty)}</label>
@@ -486,9 +523,11 @@ function renderCalc(lang) {
                     </div>
                     <p class="calc-msg" role="status"></p>
                     <div class="calc-actions">
-                        <a class="btn btn-accent" href="${CONTACTS.telegram}" target="_blank" rel="noopener">${esc(c.tg)} <span aria-hidden="true">→</span></a>
+                        <a class="btn btn-accent calc-send" href="${CONTACTS.telegram}" target="_blank" rel="noopener"><span class="calc-send-label">${esc(c.tg)}</span> <span aria-hidden="true">→</span></a>
+                        <button class="btn calc-save" type="button" disabled>${esc(c.save)}</button>
                         <button class="btn calc-copy" type="button" disabled>${esc(c.copy)}</button>
                     </div>
+                    <p class="calc-status" role="status"></p>
                     <p class="calc-disclaimer">${esc(c.disclaimer)}</p>
                 </div>
             </div>

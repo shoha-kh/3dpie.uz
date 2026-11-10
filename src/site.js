@@ -26,28 +26,45 @@ const CONTACTS = {
 }
 
 // STL calculator on the prices page (js/calc.js reads this as JSON). Estimate only — exact price in Telegram.
-// Prices are per gram of plastic (owner, 2026-10). Build volumes in mm; composites print on a smaller
+// Prices are per gram of plastic (owner, 2026-10; ABS 1 500 since 2026-11). Build volumes in mm; composites print on a smaller
 // machine. Never name the printers on the site. Densities are typical filament values, g/cm³.
 const CALC = {
   minOrder: 100000,
   bed: [420, 420, 500],
   bedComposite: [245, 245, 245],
-  shellMm: 0.85, // walls + top/bottom skin, counted as solid plastic
+  shellMm: 0.85, // walls + top/bottom skin at the default wall count, counted as solid plastic
   overhangDeg: 45, // faces tilted more than this from vertical get supports
+  // Advanced mode: what the visitor may change. Defaults equal the simple mode.
+  walls: { min: 1, max: 8, def: 2 }, // one wall = shellMm / def
+  layers: [0.12, 0.16, 0.2, 0.28], // layer height, mm
+  layerDefault: 0.2,
+  overhangs: [30, 45, 60], // selectable support thresholds, degrees
+  // Print time estimate (shown as approximate). These are typical FDM figures, NOT measured on the
+  // studio's machines — tune them if the estimate is off. Speeds are averages incl. acceleration, mm/s;
+  // maxFlow caps how much plastic the nozzle melts, mm³/s; materials scale all of it by `speed`.
+  time: {
+    lineWidth: 0.42,
+    speed: { wall: 60, infill: 120, support: 100 },
+    maxFlow: 12,
+    travel: 1.1, // share of non-printing moves
+    layerSec: 3, // layer change
+    startSec: 360, // heating and bed levelling
+  },
   supportFill: 0.15, // share of the space under an overhang filled by support plastic
   materials: [
-    { id: 'pla', name: 'PLA', price: 1000, density: 1.24 },
-    { id: 'petg', name: 'PETG', price: 1000, density: 1.27 },
-    { id: 'abs', name: 'ABS', price: 1000, density: 1.04 },
+    { id: 'pla', name: 'PLA', price: 1000, density: 1.24, speed: 1 },
+    { id: 'petg', name: 'PETG', price: 1000, density: 1.27, speed: 0.8 },
+    { id: 'abs', name: 'ABS', price: 1500, density: 1.04, speed: 0.9 },
     {
       id: 'petg-cf',
       name: 'PETG-CF',
       price: 1500,
       density: 1.3,
+      speed: 0.7,
       composite: true,
     },
-    { id: 'tpu', name: 'TPU', price: 1500, density: 1.21 },
-    { id: 'nylon', name: 'Nylon PA6', price: 5000, density: 1.13 },
+    { id: 'tpu', name: 'TPU', price: 1500, density: 1.21, speed: 0.35 },
+    { id: 'nylon', name: 'Nylon PA6', price: 5000, density: 1.13, speed: 0.6 },
   ],
   materialDefault: 'petg',
   infill: [15, 20, 40, 100],
@@ -368,7 +385,17 @@ const CALC_T = {
     orientReset: 'Как в файле',
     legend: 'нависания',
     material: 'Пластик',
+    advanced: 'Продвинутый режим',
+    advancedHint: 'Высота слоя, стенки, точное заполнение и поддержки',
     infill: 'Заполнение',
+    infillExact: 'Точное заполнение',
+    layer: 'Высота слоя',
+    layerNames: { 0.12: 'Детально', 0.16: 'Тонко', 0.2: 'Обычно', 0.28: 'Быстро' },
+    walls: 'Стенки, шт',
+    support: 'Поддержки',
+    supportOff: 'Без поддержек',
+    supportAt: 'Нависания круче {deg}°',
+    reset: 'Сбросить настройки',
     infillNames: {
       15: 'Лёгкое',
       20: 'Обычное',
@@ -383,6 +410,9 @@ const CALC_T = {
     weight: 'Вес 1 шт',
     supports: 'в т. ч. поддержки',
     perGram: 'Цена за грамм',
+    time: 'Время печати 1 шт (примерно)',
+    h: 'ч',
+    min: 'мин',
     perPiece: 'Цена 1 шт',
     total: 'Примерная стоимость',
     empty: 'Загрузите STL',
@@ -392,10 +422,20 @@ const CALC_T = {
     mm: 'мм',
     pcs: 'шт',
     tg: 'Точная цена в Telegram',
-    copy: 'Скопировать расчёт',
-    copied: 'Скопировано — вставьте в чат и приложите файл',
+    send: 'Отправить расчёт в Telegram',
+    save: 'Сохранить',
+    copy: 'Скопировать',
+    copied: 'Скопировано — вставьте в чат и приложите STL-файл.',
+    sent: 'Расчёт подставлен в сообщение — приложите к нему STL-файл.',
+    saved: 'Картинка с расчётом сохранена — её можно отправить нам в Telegram.',
+    saveFail: 'Не получилось сохранить картинку — скопируйте расчёт текстом.',
     disclaimer:
-      'Расчёт ориентировочный. Поддержки считаются под нависания круче 45° для выбранного положения детали — кнопка «Авто» подберёт положение, где их меньше всего. Постобработка и доработка модели не учтены. Для точной цены и срока пришлите файл в Telegram.',
+      'Расчёт ориентировочный. Поддержки считаются под нависания для выбранного положения детали — кнопка «Авто» подберёт положение, где их меньше всего. Время печати — примерное: это работа принтера над одной деталью, без очереди, подготовки и постобработки. Доработка модели не учтена. Точную цену и срок готовности назовём в Telegram.',
+    card: {
+      title: 'Расчёт 3D-печати',
+      file: 'Файл',
+      note: 'Расчёт ориентировочный, время печати примерное. Точную цену и срок назовём в Telegram.',
+    },
     msg: {
       reading: 'Читаем файл…',
       bad: 'Не получилось прочитать файл. Нужен STL; STEP и другие форматы пришлите в Telegram — посчитаем вручную.',
@@ -411,7 +451,9 @@ const CALC_T = {
       noGl: 'Предпросмотр недоступен в этом браузере, но расчёт работает.',
     },
     copyText:
-      '3D-печать по STL: {file}, {mat}, заполнение {infill}%, {qty} шт. Габариты {size} мм, ≈ {weight} г/шт (поддержки ≈ {sup} г). Расчёт на сайте: ≈ {total} сум.',
+      '3D-печать по STL: {file}, {mat}, заполнение {infill}%, слой {layer} мм, стенок: {walls}, {qty} шт. Габариты {size} мм, ≈ {weight} г/шт ({sup}). Время печати 1 шт ≈ {time} (примерно). Расчёт на сайте: ≈ {total} сум.',
+    copySup: 'поддержки ≈ {sup} г',
+    copyNoSup: 'без поддержек',
   },
   uz: {
     title: "<em>STL</em> bo'yicha kalkulyator",
@@ -435,7 +477,17 @@ const CALC_T = {
     orientReset: 'Fayldagidek',
     legend: 'osilgan qismlar',
     material: 'Plastik',
+    advanced: 'Kengaytirilgan rejim',
+    advancedHint: "Qatlam balandligi, devorlar, aniq to'ldirish va tayanchlar",
     infill: "To'ldirish",
+    infillExact: "Aniq to'ldirish",
+    layer: 'Qatlam balandligi',
+    layerNames: { 0.12: 'Batafsil', 0.16: 'Nozik', 0.2: 'Oddiy', 0.28: 'Tez' },
+    walls: 'Devorlar, dona',
+    support: 'Tayanchlar',
+    supportOff: 'Tayanchlarsiz',
+    supportAt: '{deg}° dan tik osilgan qismlar',
+    reset: 'Sozlamalarni tiklash',
     infillNames: { 15: 'Yengil', 20: 'Oddiy', 40: 'Mustahkam', 100: "To'liq" },
     qty: 'Miqdori, dona',
     unit: "O'lchov birligi",
@@ -445,6 +497,9 @@ const CALC_T = {
     weight: "1 dona og'irligi",
     supports: 'shundan tayanchlar',
     perGram: 'Gramm narxi',
+    time: '1 dona chop etish vaqti (taxminan)',
+    h: 'soat',
+    min: 'daq.',
     perPiece: '1 dona narxi',
     total: 'Taxminiy narx',
     empty: 'STL yuklang',
@@ -454,10 +509,20 @@ const CALC_T = {
     mm: 'mm',
     pcs: 'dona',
     tg: 'Aniq narx Telegramda',
-    copy: 'Hisobni nusxalash',
-    copied: "Nusxalandi — chatga qo'ying va faylni biriktiring",
+    send: 'Hisobni Telegramga yuborish',
+    save: 'Saqlash',
+    copy: 'Nusxalash',
+    copied: "Nusxalandi — chatga qo'ying va STL faylni biriktiring.",
+    sent: "Hisob xabarga qo'yildi — unga STL faylni biriktiring.",
+    saved: 'Hisob rasmi saqlandi — uni bizga Telegramda yuborishingiz mumkin.',
+    saveFail: "Rasmni saqlab bo'lmadi — hisobni matn sifatida nusxalang.",
     disclaimer:
-      "Hisob taxminiy. Tayanchlar 45° dan tik osilgan qismlar ostiga tanlangan holat uchun hisoblanadi — «Avto» tugmasi ular eng kam bo'lgan holatni tanlaydi. Keyingi ishlov va modelni tuzatish hisobga olinmagan. Aniq narx va muddat uchun faylni Telegramga yuboring.",
+      "Hisob taxminiy. Tayanchlar tanlangan holat uchun osilgan qismlar ostiga hisoblanadi — «Avto» tugmasi ular eng kam bo'lgan holatni tanlaydi. Chop etish vaqti — taxminiy: bu printerning bitta detal ustidagi ishi, navbat, tayyorgarlik va keyingi ishlovsiz. Modelni tuzatish hisobga olinmagan. Aniq narx va tayyor bo'lish muddatini Telegramda aytamiz.",
+    card: {
+      title: '3D chop etish hisobi',
+      file: 'Fayl',
+      note: 'Hisob taxminiy, chop etish vaqti ham taxminiy. Aniq narx va muddatni Telegramda aytamiz.',
+    },
     msg: {
       reading: "Fayl o'qilmoqda…",
       bad: "Faylni o'qib bo'lmadi. STL kerak; STEP va boshqa formatlarni Telegramga yuboring — qo'lda hisoblaymiz.",
@@ -473,7 +538,9 @@ const CALC_T = {
       noGl: "Bu brauzerda oldindan ko'rish mavjud emas, lekin hisob ishlaydi.",
     },
     copyText:
-      "STL bo'yicha 3D chop etish: {file}, {mat}, to'ldirish {infill}%, {qty} dona. O'lchamlari {size} mm, ≈ {weight} g/dona (tayanchlar ≈ {sup} g). Saytdagi hisob: ≈ {total} so'm.",
+      "STL bo'yicha 3D chop etish: {file}, {mat}, to'ldirish {infill}%, qatlam {layer} mm, devorlar: {walls}, {qty} dona. O'lchamlari {size} mm, ≈ {weight} g/dona ({sup}). 1 dona chop etish vaqti ≈ {time} (taxminan). Saytdagi hisob: ≈ {total} so'm.",
+    copySup: 'tayanchlar ≈ {sup} g',
+    copyNoSup: 'tayanchlarsiz',
   },
 }
 

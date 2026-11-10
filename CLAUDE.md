@@ -33,6 +33,9 @@ Site sits behind Cloudflare; titles ≤ 80 chars (check fails above), keep keywo
 - Prices per gram, min order and build volumes live only in `CALC` (`src/site.js`). Page texts take them from `PRICES`:
   `${P.min}` ("100 000"), `${P.ru.tiers}` / `${P.uz.tiers}` (full price sentence), `...P.ru.spec` (spec rows), `${P.bed}`.
   Never type these numbers into `src/pages/*.js` by hand. Address: `T[lang].address` (home page reads it too).
+- STL calculator (`js/calc.js`, markup in `renderCalc()`): everything tunable is in `CALC` — advanced-mode options
+  (`layers`, `walls`, `overhangs`) and the print-time model (`CALC.time`, per-material `speed`). The time figures are
+  typical FDM values, not measured on the studio's machines; the site must always call the time approximate.
 - CSS/JS cache-busting is automatic: `?v=` is a hash of the file (`asset()` in `src/layout.js`) — nothing to bump.
 
 ## Commands

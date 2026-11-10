@@ -2,7 +2,7 @@
 
 const { PRICES: P } = require('../site');
 
-const UPDATED = '2026-10-12';
+const UPDATED = '2026-11-10';
 
 module.exports = [
   {
