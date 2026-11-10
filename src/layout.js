@@ -40,6 +40,18 @@ function abs(p) {
   return SITE_URL + p;
 }
 
+// Telegram buttons open the chat with a short greeting already typed (t.me/<name>?text=…), so the studio
+// sees what the visitor came for. The text is the page's `tg`, or the general one for that language.
+// build-site.js calls setPage() before it renders a page; pages built without it get the general text.
+let currentPage = null;
+function setPage(page) {
+  currentPage = page;
+}
+function tgHref(lang) {
+  const text = (currentPage && currentPage.lang === lang && currentPage.tg) || T[lang].tgText;
+  return `${CONTACTS.telegram}?text=${encodeURIComponent(text)}`;
+}
+
 // ---------- head ----------
 
 const ANALYTICS = `
@@ -236,7 +248,7 @@ ${nav}
             <div class="header-tools">
                 <div class="lang" role="group" aria-label="${esc(t.langLabel)}">${langs}</div>
                 <a class="header-phone" href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a>
-                <a class="btn btn-accent btn-sm header-tg" href="${CONTACTS.telegram}" target="_blank" rel="noopener">${esc(t.ctaTelegramShort)}</a>
+                <a class="btn btn-accent btn-sm header-tg" href="${tgHref(page.lang)}" target="_blank" rel="noopener">${esc(t.ctaTelegramShort)}</a>
                 <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
                     <span class="nav-toggle-bars" aria-hidden="true"></span>${esc(t.menu)}
                 </button>
@@ -279,7 +291,7 @@ ${info}
                 <h2 class="footer-h">${esc(t.footerContacts)}</h2>
                 <ul class="footer-links">
                     <li><a href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a></li>
-                    <li><a href="${CONTACTS.telegram}" target="_blank" rel="noopener">Telegram ${CONTACTS.telegramHandle}</a></li>
+                    <li><a href="${tgHref(page.lang)}" target="_blank" rel="noopener">Telegram ${CONTACTS.telegramHandle}</a></li>
                     <li><a href="${CONTACTS.instagram}" target="_blank" rel="noopener">Instagram ${CONTACTS.instagramHandle}</a></li>
                 </ul>
             </div>
@@ -293,7 +305,7 @@ ${info}
 
     <div class="mobile-bar">
         <a href="tel:${CONTACTS.phone}">${esc(t.ctaCall)}</a>
-        <a class="is-accent" href="${CONTACTS.telegram}" target="_blank" rel="noopener">${esc(t.ctaTelegramShort)}</a>
+        <a class="is-accent" href="${tgHref(page.lang)}" target="_blank" rel="noopener">${esc(t.ctaTelegramShort)}</a>
     </div>`;
 }
 
@@ -310,7 +322,7 @@ ${items}
 function renderCtaButtons(lang) {
   const t = T[lang];
   return `<div class="cta-row">
-                    <a class="btn btn-accent" href="${CONTACTS.telegram}" target="_blank" rel="noopener">${esc(t.ctaTelegram)} <span aria-hidden="true">→</span></a>
+                    <a class="btn btn-accent" href="${tgHref(lang)}" target="_blank" rel="noopener">${esc(t.ctaTelegram)} <span aria-hidden="true">→</span></a>
                     <a class="btn btn-line" href="tel:${CONTACTS.phone}">${CONTACTS.phoneHuman}</a>
                 </div>`;
 }
@@ -604,5 +616,5 @@ function renderPrintViz(lang) {
 }
 
 module.exports = {
-  ANALYTICS, asset, esc, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
+  ANALYTICS, asset, esc, setPage, renderPrintViz, renderCalc, renderDocument, renderSpec, renderCtaButtons, renderSteps, renderFaq, renderCtaBand, renderRelated
 };

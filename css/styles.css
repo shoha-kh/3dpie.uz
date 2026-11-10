@@ -24,7 +24,7 @@
   --line-2: #343a3d;
   --text: #eceeed;
   --text-2: #a9b0b2;
-  --text-3: #6f787b;
+  --text-3: #80898c;
   --accent: #c6f432;
   --accent-ink: #0c0e0f;
   --accent-dim: rgba(198, 244, 50, .12);
@@ -2076,6 +2076,38 @@ ol {
   .nav-toggle {
     gap: 8px;
     padding: 0 10px;
+  }
+}
+
+/* Touch layouts: links and switches that were under 40px tall get a comfortable tap area. */
+@media (max-width: 960px) {
+  .brand {
+    min-height: 44px;
+  }
+
+  .lang a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .footer-links li+li {
+    margin-top: 0;
+  }
+
+  .footer-links a,
+  .footer-bottom a {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  .link-arrow,
+  .price-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 }
 

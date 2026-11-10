@@ -1074,6 +1074,13 @@
 }
 
 @media (max-width: 960px) {
+  .calc-zoom button,
+  .calc-orient button,
+  .calc-other {
+    min-width: 42px;
+    min-height: 42px;
+  }
+
   .calc-main,
   .calc-summary {
     grid-template-columns: minmax(0, 1fr);

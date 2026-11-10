@@ -1112,7 +1112,7 @@
         var d = new Date();
         var two = function (n) { return (n < 10 ? '0' : '') + n; };
         ctx.textAlign = 'right';
-        ctx.fillStyle = '#6f787b';
+        ctx.fillStyle = '#80898c';
         ctx.font = '400 26px ' + SANS;
         ctx.fillText(two(d.getDate()) + '.' + two(d.getMonth() + 1) + '.' + d.getFullYear(), W - P, y - 34);
         ctx.fillStyle = '#a9b0b2';
@@ -1163,7 +1163,7 @@
         sums.forEach(function (r) {
             rule(y);
             ctx.font = '400 27px ' + SANS;
-            ctx.fillStyle = '#6f787b';
+            ctx.fillStyle = '#80898c';
             ctx.fillText(r[0], P, y + 38);
             ctx.font = '600 28px ' + SANS;
             ctx.fillStyle = '#eceeed';
@@ -1174,7 +1174,7 @@
         });
         rule(y);
         y += 40;
-        ctx.fillStyle = '#6f787b';
+        ctx.fillStyle = '#80898c';
         ctx.font = '500 26px ' + SANS;
         ctx.fillText(t.total.toUpperCase(), P, y + 26);
         ctx.fillStyle = '#c6f432';

@@ -152,6 +152,8 @@ const T = {
     ctaTelegram: 'Отправить фото в Telegram',
     ctaTelegramShort: 'Telegram',
     ctaCall: 'Позвонить',
+    tgText: 'Здравствуйте! Пишу с сайта 3dpie.uz.',
+    mapsLabel: 'На карте',
     address: {
       street: 'ул. Амира Тимура, 62а',
       city: 'Чирчик',
@@ -212,6 +214,8 @@ const T = {
     ctaTelegram: 'Telegramga rasm yuborish',
     ctaTelegramShort: 'Telegram',
     ctaCall: "Qo'ng'iroq qilish",
+    tgText: 'Assalomu alaykum! 3dpie.uz saytidan yozyapman.',
+    mapsLabel: 'Xaritada',
     address: {
       street: "Amir Temur ko'chasi, 62a",
       city: 'Chirchiq',
