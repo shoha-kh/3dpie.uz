@@ -32,6 +32,7 @@
     var alertEl = $('.calc-alert');
     var platesEl = $('.calc-plates');
     var platesList = $('.calc-plates-list');
+    var platesCount = $('.calc-plates-count');
     var addBtn = $('.calc-plate-add');
     var scopeBtns = root.querySelectorAll('[data-scope]');
     var scopePlateEl = $('.calc-scope-plate');
@@ -416,7 +417,8 @@
         // the plates strip
         items.forEach(function (item) {
             if (!item.sumEl) return;
-            item.sumEl.textContent = item.est.qty + NBSP + t.pcs + ' · ' + approx + int(item.est.sum) + NBSP + t.sum;
+            item.infoEl.textContent = item.est.mat.name + ' · ' + item.est.qty + NBSP + t.pcs;
+            item.sumEl.textContent = approx + int(item.est.sum) + NBSP + t.sum;
             item.box.classList.toggle('is-warn', !!item.est.warn);
             item.ownEl.hidden = !hasOwn(item);
         });
@@ -541,9 +543,9 @@
         update();
     }
 
-    // The plate's small picture: a copy of the preview as it looks now.
+    // The plate's small picture: the model alone (no bed grid), turned as in the preview and fitted to the frame.
     function shoot(item) {
-        var src = viewer.snapshot();
+        var src = viewer.snapshot(true);
         if (!src.width || !src.height) return;
         var cv = item.thumb, ctx = cv.getContext('2d');
         var k = Math.max(cv.width / src.width, cv.height / src.height);
@@ -693,8 +695,12 @@
             label.appendChild(item.ownEl);
             text.appendChild(label);
             text.appendChild(el('span', 'calc-plate-name', item.name));
+            var meta = el('span', 'calc-plate-meta');
+            item.infoEl = el('span', 'calc-plate-info'); // plastic and quantity
             item.sumEl = el('span', 'calc-plate-sum');
-            text.appendChild(item.sumEl);
+            meta.appendChild(item.infoEl);
+            meta.appendChild(item.sumEl);
+            text.appendChild(meta);
             pick.appendChild(text);
             pick.addEventListener('click', function () {
                 if (item !== active) setActive(item, false);
@@ -710,6 +716,7 @@
             platesList.appendChild(box);
         });
         addBtn.hidden = items.length >= C.maxPlates;
+        platesCount.textContent = items.length + ' / ' + C.maxPlates;
     }
 
     function setActive(item, fresh) {
@@ -726,8 +733,8 @@
             place(item, false, fresh);
             // bring its chip into view inside the strip (sideways only: the page itself must not jump)
             var left = item.box.offsetLeft, right = left + item.box.offsetWidth;
-            if (left < platesList.scrollLeft) platesList.scrollLeft = left;
-            else if (right > platesList.scrollLeft + platesList.clientWidth) platesList.scrollLeft = right - platesList.clientWidth;
+            if (left - 16 < platesList.scrollLeft) platesList.scrollLeft = left - 16;
+            else if (right + 16 > platesList.scrollLeft + platesList.clientWidth) platesList.scrollLeft = right + 16 - platesList.clientWidth;
         }
         update();
     }
@@ -1373,14 +1380,15 @@
             gl.drawArrays(gl.LINES, 0, n);
         }
 
-        function draw() {
+        function draw(clean) {
+            clean = clean === true; // requestAnimationFrame calls this with a timestamp
             frame = 0;
             var w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
             gl.viewport(0, 0, w, h);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             if (!count) return;
             var fov = 0.6;
-            var dist = radius / Math.sin(fov / 2) * 1.08 * zoom;
+            var dist = radius / Math.sin(fov / 2) * 1.08 * (clean ? 0.92 : zoom);
             var rot = mul(rotX(pitch - Math.PI / 2), rotZ(yaw));
             var view = mul(translate(0, 0, -dist), mul(rot, translate(0, 0, -height / 2)));
             var reach = Math.max(radius, bedR) * 2 + radius;
@@ -1392,8 +1400,10 @@
             gl.disableVertexAttribArray(aN);
             gl.vertexAttrib3f(aN, 0, 0, 1);
             gl.enableVertexAttribArray(aP);
-            drawLines(gridBuf, gridCount, 0.204, 0.227, 0.239);
-            if (zoom > 1.3) drawLines(bedBuf, 8, 0.44, 0.55, 0.15); // only when zoomed out: up close it is a stray line
+            if (!clean) {
+                drawLines(gridBuf, gridCount, 0.204, 0.227, 0.239);
+                if (zoom > 1.3) drawLines(bedBuf, 8, 0.44, 0.55, 0.15); // only when zoomed out: up close it is a stray line
+            }
 
             gl.uniform1f(uLit, 1);
             gl.uniform3f(uCol, 0.776, 0.957, 0.196);
@@ -1435,9 +1445,13 @@
         }
 
         // Draws right now and hands over the canvas: a WebGL buffer can only be copied in the same task.
-        function snapshot() {
+        // With `clean` the model is drawn alone and fitted (for the small pictures); the normal view
+        // comes back on the next frame.
+        function snapshot(clean) {
             if (frame) cancelAnimationFrame(frame);
-            draw();
+            frame = 0;
+            draw(clean);
+            if (clean) request();
             return cv;
         }
 

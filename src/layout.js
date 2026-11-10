@@ -444,11 +444,17 @@ function renderCalc(lang) {
             <div class="calc">
                 <p class="calc-alert" role="alert"></p>
                 <div class="calc-plates" hidden>
-                    <div class="calc-plates-list" role="group" aria-label="${esc(c.plates)}"></div>
-                    <button class="calc-plate-add" type="button">
-                        <span class="calc-plate-plus" aria-hidden="true">+</span>
-                        <span><b>${esc(c.addModel)}</b><small>${esc(c.addHint)}</small></span>
-                    </button>
+                    <div class="calc-plates-head">
+                        <span class="calc-label">${esc(c.platesTitle)}</span>
+                        <span class="calc-plates-count"></span>
+                    </div>
+                    <div class="calc-plates-grid">
+                        <div class="calc-plates-list" role="group" aria-label="${esc(c.plates)}"></div>
+                        <button class="calc-plate-add" type="button">
+                            <span class="calc-plate-plus" aria-hidden="true">+</span>
+                            <span><b>${esc(c.addModel)}</b><small>${esc(c.addHint)}</small></span>
+                        </button>
+                    </div>
                 </div>
                 <div class="calc-main">
                     <div class="calc-model">
