@@ -88,6 +88,20 @@ function makeFixtures() {
   writeZip('cube-project.3mf', [['3D/3dmodel.model',
     `<?xml version="1.0"?><model unit="millimeter" ${ns}><resources><object id="2" type="model"><components><component p:path="/3D/Objects/object_1.model" objectid="1" transform="1 0 0 0 1 0 0 0 1 5 5 0"/></components></object></resources><build><item objectid="2" transform="2 0 0 0 2 0 0 0 2 100 100 0"/></build></model>`],
   ['3D/Objects/object_1.model', `<?xml version="1.0"?><model unit="millimeter" ${ns}><resources><object id="1" type="model">${mesh(30)}</object></resources><build/></model>`]], true);
+  // Slicer projects with helper bodies that are not plastic: a 100 mm modifier around the 60 mm cube.
+  // Bambu Studio / OrcaSlicer: the modifier is its own component, typed in Metadata/model_settings.config
+  writeZip('cube-bambu.3mf', [['3D/3dmodel.model',
+    `<?xml version="1.0"?><model unit="millimeter" ${ns}><resources><object id="3" type="model"><components>` +
+    `<component p:path="/3D/Objects/object_1.model" objectid="1"/><component p:path="/3D/Objects/object_1.model" objectid="2" transform="1 0 0 0 1 0 0 0 1 -20 -20 -20"/>` +
+    `</components></object></resources><build><item objectid="3" printable="1"/></build></model>`],
+  ['3D/Objects/object_1.model', `<?xml version="1.0"?><model unit="millimeter" ${ns}><resources><object id="1" type="model">${mesh(60)}</object><object id="2" type="model">${mesh(100)}</object></resources><build/></model>`],
+  ['Metadata/model_settings.config', '<?xml version="1.0"?><config><object id="3"><part id="1" subtype="normal_part"/><part id="2" subtype="modifier_part"/></object></config>']], true);
+  // PrusaSlicer: one mesh, the modifier is a triangle range typed in Metadata/Slic3r_PE_model.config
+  const both = corners(60).concat(corners(100).map(v => v.map(c => c - 20)));
+  writeZip('cube-prusa.3mf', [['3D/3dmodel.model',
+    `<?xml version="1.0"?><model unit="millimeter" ${ns}><resources><object id="1" type="model"><mesh><vertices>${both.map(v => `<vertex x="${v[0]}" y="${v[1]}" z="${v[2]}"/>`).join('')}</vertices>` +
+    `<triangles>${[0, 8].flatMap(o => tris.map(t => `<triangle v1="${t[0] + o}" v2="${t[1] + o}" v3="${t[2] + o}"/>`)).join('')}</triangles></mesh></object></resources><build><item objectid="1"/></build></model>`],
+  ['Metadata/Slic3r_PE_model.config', '<?xml version="1.0"?><config><object id="1"><volume firstid="0" lastid="11"/><volume firstid="12" lastid="23"><metadata type="volume" key="modifier" value="1"/></volume></object></config>']], false);
   fs.writeFileSync(file('broken.stl'), 'not a model');
 }
 
@@ -121,6 +135,7 @@ async function main() {
       const o = {};
       document.querySelectorAll('.calc [data-out]').forEach(e => { o[e.dataset.out] = e.textContent.replace(/ /g, ' ').trim(); });
       o.alert = text('.calc-alert');
+      o.msg = text('.calc-msg');
       o.orderMsg = text('.calc-order-msg');
       o.status = text('.calc-status');
       o.name = text('.calc-name');
@@ -181,6 +196,16 @@ async function main() {
   }
   for (let i = 0; i < 5; i++) await page.locator('.calc-plate-del').first().click();
   eq((await state()).plates.length, 0, 'all plates removed');
+
+  console.log('slicer projects: modifiers are not plastic');
+  await load('cube-bambu.3mf', 'cube-prusa.3mf');
+  for (let i = 0; i < 2; i++) {
+    await pick(i);
+    const p = await state();
+    eq(`${p.size} / ${num(p.volume)}`, '60 × 60 × 60 мм / 216', p.name + ' without its modifier');
+    ok(p.msg.includes('модификатор'), p.name + ': the skipped modifier is explained');
+  }
+  for (let i = 0; i < 2; i++) await page.locator('.calc-plate-del').first().click();
 
   console.log('common settings and plate overrides');
   await page.selectOption('.calc-mat', 'abs');

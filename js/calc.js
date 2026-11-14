@@ -380,6 +380,46 @@
 
     var UNIT_MM = { micron: 0.001, millimeter: 1, centimeter: 10, inch: 25.4, foot: 304.8, meter: 1000 };
 
+    // Slicer projects keep helper bodies next to the parts: modifiers (a zone printed with other settings),
+    // negative volumes, support blockers and enforcers. They are not plastic and must not be weighed.
+    // Bambu Studio / OrcaSlicer mark them per component (Metadata/model_settings.config: object → part subtype);
+    // PrusaSlicer marks triangle ranges of one mesh (Metadata/Slic3r_PE_model.config: object → volume firstid..lastid).
+    var HELPER_PART = { modifier_part: 1, negative_part: 1, support_blocker: 1, support_enforcer: 1 };
+    var HELPER_VOLUME = { ModifierVolume: 1, ParameterModifier: 1, NegativeVolume: 1, SupportBlocker: 1, SupportEnforcer: 1 };
+
+    function slicerHelpers(zip) {
+        var out = { parts: {}, ranges: {} };
+        var read = function (name, fn) {
+            if (!zip.names[name]) return Promise.resolve();
+            return zip.text(name).then(function (xml) {
+                fn(new DOMParser().parseFromString(xml, 'application/xml'));
+            }, function () {});
+        };
+        return Promise.all([
+            read('Metadata/model_settings.config', function (doc) {
+                Array.prototype.forEach.call(doc.getElementsByTagName('object'), function (o) {
+                    Array.prototype.forEach.call(o.getElementsByTagName('part'), function (p) {
+                        if (HELPER_PART[p.getAttribute('subtype')]) out.parts[o.getAttribute('id') + ':' + p.getAttribute('id')] = 1;
+                    });
+                });
+            }),
+            read('Metadata/Slic3r_PE_model.config', function (doc) {
+                Array.prototype.forEach.call(doc.getElementsByTagName('object'), function (o) {
+                    Array.prototype.forEach.call(o.getElementsByTagName('volume'), function (v) {
+                        var helper = false;
+                        Array.prototype.forEach.call(v.getElementsByTagName('metadata'), function (md) {
+                            var key = md.getAttribute('key'), val = md.getAttribute('value');
+                            if ((key === 'modifier' && val === '1') || (key === 'volume_type' && HELPER_VOLUME[val])) helper = true;
+                        });
+                        if (!helper) return;
+                        var id = o.getAttribute('id');
+                        (out.ranges[id] = out.ranges[id] || []).push([+v.getAttribute('firstid'), +v.getAttribute('lastid')]);
+                    });
+                });
+            })
+        ]).then(function () { return out; });
+    }
+
     // Collects every mesh the "build" section places on the bed, following components into other model
     // files of the archive (slicer project files keep the objects there). The result is in millimetres.
     function parse3mf(buf) {
@@ -398,6 +438,11 @@
                     var root = doc.documentElement;
                     var res = { scale: UNIT_MM[root.getAttribute('unit')] || 1, objects: {}, items: [] };
                     Array.prototype.forEach.call(doc.getElementsByTagName('object'), function (o) {
+                        var type = o.getAttribute('type');
+                        if (type === 'support' || type === 'solidsupport' || type === 'other') {
+                            res.objects[o.getAttribute('id')] = { skip: true };
+                            return;
+                        }
                         var mesh = o.getElementsByTagName('mesh')[0];
                         if (mesh) {
                             var vs = mesh.getElementsByTagName('vertex'), ts = mesh.getElementsByTagName('triangle');
@@ -427,40 +472,59 @@
         }
         function ref(node) {
             var path = node.getAttribute('p:path') || node.getAttribute('path');
-            return { id: node.getAttribute('objectid'), file: path ? path.replace(/^\//, '') : null, m: mat3mf(node.getAttribute('transform')) };
+            return {
+                id: node.getAttribute('objectid'), file: path ? path.replace(/^\//, '') : null,
+                m: mat3mf(node.getAttribute('transform')), printable: node.getAttribute('printable')
+            };
         }
 
         var chunks = [];
-        function emit(file, id, m, depth) {
+        var help = { parts: {}, ranges: {} };
+        var skipped = 0;
+        // `top` is the object placed by the build item: slicers key their part types by it
+        function emit(file, id, m, depth, top) {
             if (!zip.names[file] || depth > 8) return Promise.resolve();
             return model(file).then(function (mod) {
                 var o = mod.objects[id];
-                if (!o) return;
+                if (!o || o.skip) return;
                 if (o.parts) {
+                    var owner = top || id;
                     return o.parts.reduce(function (chain, part) {
-                        return chain.then(function () { return emit(part.file || file, part.id, mulM(part.m, m), depth + 1); });
+                        if (help.parts[owner + ':' + part.id]) {
+                            skipped++;
+                            return chain;
+                        }
+                        return chain.then(function () { return emit(part.file || file, part.id, mulM(part.m, m), depth + 1, owner); });
                     }, Promise.resolve());
                 }
-                var out = new Float32Array(o.tris.length * 3), s = mod.scale, v = o.verts;
+                var ranges = (!top && help.ranges[id]) || [];
+                if (ranges.length) skipped += ranges.length;
+                var out = new Float32Array(o.tris.length * 3), s = mod.scale, v = o.verts, n = 0;
                 for (var i = 0; i < o.tris.length; i++) {
+                    var tri = Math.floor(i / 3);
+                    if (ranges.length && ranges.some(function (r) { return tri >= r[0] && tri <= r[1]; })) continue;
                     var a = o.tris[i] * 3;
                     if (a + 2 >= v.length) return;
                     var x = v[a], y = v[a + 1], z = v[a + 2];
-                    out[i * 3] = (x * m[0] + y * m[3] + z * m[6] + m[9]) * s;
-                    out[i * 3 + 1] = (x * m[1] + y * m[4] + z * m[7] + m[10]) * s;
-                    out[i * 3 + 2] = (x * m[2] + y * m[5] + z * m[8] + m[11]) * s;
+                    out[n++] = (x * m[0] + y * m[3] + z * m[6] + m[9]) * s;
+                    out[n++] = (x * m[1] + y * m[4] + z * m[7] + m[10]) * s;
+                    out[n++] = (x * m[2] + y * m[5] + z * m[8] + m[11]) * s;
                 }
-                chunks.push(out);
+                chunks.push(n === out.length ? out : out.slice(0, n));
             });
         }
 
-        return model(rootName).then(function (root) {
+        return slicerHelpers(zip).then(function (h) {
+            help = h;
+            return model(rootName);
+        }).then(function (root) {
             // no build section: take every object that has a mesh
             var items = root.items.length ? root.items : Object.keys(root.objects).map(function (id) {
                 return { id: id, file: null, m: M_ID };
             });
             return items.reduce(function (chain, item) {
-                return chain.then(function () { return emit(item.file || rootName, item.id, item.m, 0); });
+                if (item.printable === '0') return chain;
+                return chain.then(function () { return emit(item.file || rootName, item.id, item.m, 0, null); });
             }, Promise.resolve());
         }).then(function () {
             var total = chunks.reduce(function (n, c) { return n + c.length; }, 0);
@@ -469,6 +533,7 @@
                 pos.set(c, at);
                 at += c.length;
             });
+            pos.helpers = skipped; // shown as a notice: these bodies are not weighed
             return pos;
         });
     }
@@ -956,7 +1021,7 @@
         item.closed = m.closed;
         item.R = IDENTITY;
         item.byAuto = false;
-        item.notice = '';
+        item.notice = pos.helpers ? t.msg.helpers : '';
         if (viewer === null) {
             viewer = createViewer(canvas, { onTap: onTap, onGrab: function () { if (!picking) hint.hidden = true; } }) || false;
             if (!viewer) hint.hidden = faceBtn.hidden = true;

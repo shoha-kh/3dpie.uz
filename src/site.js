@@ -495,6 +495,7 @@ const CALC_T = {
       min: 'Минимальный заказ — {min} сум, поэтому итог не меньше этой суммы.',
       noGl: 'Предпросмотр недоступен в этом браузере, но расчёт работает.',
       limit: 'В одном расчёте — до {max} моделей. Остальные пришлите в Telegram.',
+      helpers: 'В проекте слайсера есть модификаторы или другие служебные тела — это не пластик, в расчёт они не входят.',
     },
     copyHead: '3D-печать — расчёт на сайте {site}',
     copyItem:
@@ -611,6 +612,7 @@ const CALC_T = {
       min: "Minimal buyurtma — {min} so'm, shuning uchun jami bu summadan kam emas.",
       noGl: "Bu brauzerda oldindan ko'rish mavjud emas, lekin hisob ishlaydi.",
       limit: 'Bitta hisobda {max} tagacha model. Qolganlarini Telegramga yuboring.',
+      helpers: "Slayser loyihasida modifikatorlar yoki boshqa yordamchi jismlar bor — ular plastik emas, hisobga kiritilmaydi.",
     },
     copyHead: '3D chop etish — {site} saytidagi hisob',
     copyItem:
